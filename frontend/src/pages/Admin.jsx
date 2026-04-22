@@ -20,21 +20,24 @@ import { uploadImage } from "../firebase/uploadImage"
 export default function Admin() {
   const { user, loading } = useAuth()
 
+  const [tab, setTab] = useState("protests")
+
   const [protests, setProtests] = useState([])
   const [petitions, setPetitions] = useState([])
   const [images, setImages] = useState([])
 
+  const [editingProtest, setEditingProtest] = useState(null)
+  const [editingPetition, setEditingPetition] = useState(null)
+
   const [protestImage, setProtestImage] = useState(null)
   const [petitionImage, setPetitionImage] = useState(null)
 
-  const [pTitle, setPTitle] = useState("")
-  const [pDesc, setPDesc] = useState("")
-  const [pDate, setPDate] = useState("")
-
-  const [petTitle, setPetTitle] = useState("")
-  const [petDesc, setPetDesc] = useState("")
-  const [petDate, setPetDate] = useState("")
-  const [petLink, setPetLink] = useState("")
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    date: "",
+    link: "",
+  })
 
   const load = async () => {
     setProtests(await getProtests())
@@ -49,146 +52,230 @@ export default function Admin() {
   if (loading) return <div>Loading...</div>
   if (!user) return <div>Not authorized</div>
 
+  const resetForm = () => {
+    setForm({ title: "", description: "", date: "", link: "" })
+    setEditingProtest(null)
+    setEditingPetition(null)
+    setProtestImage(null)
+    setPetitionImage(null)
+  }
+
+  const panel = { display: "flex", minHeight: "100vh" }
+  const sidebar = { width: 200, borderRight: "1px solid #ddd", padding: 10 }
+  const content = { flex: 1, padding: 20 }
+
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Admin CMS</h1>
+    <div style={panel}>
+      {/* SIDEBAR */}
+      <div style={sidebar}>
+        <h3>Admin</h3>
 
-      {/* ---------------- PROTESTS ---------------- */}
-      <h2>Protests</h2>
+        <button onClick={() => setTab("protests")}>Protests</button>
+        <button onClick={() => setTab("petitions")}>Petitions</button>
+        <button onClick={() => setTab("images")}>Images</button>
+      </div>
 
-      <input placeholder="Title" value={pTitle} onChange={(e) => setPTitle(e.target.value)} />
-      <input placeholder="Description" value={pDesc} onChange={(e) => setPDesc(e.target.value)} />
-      <input placeholder="Date" value={pDate} onChange={(e) => setPDate(e.target.value)} />
+      {/* CONTENT */}
+      <div style={content}>
+        <h1>CMS Dashboard</h1>
 
-      <input type="file" onChange={(e) => setProtestImage(e.target.files[0])} />
+        {/* ---------------- PROTESTS ---------------- */}
+        {tab === "protests" && (
+          <>
+            <h2>Protests</h2>
 
-      <button
-        onClick={async () => {
-          let imageUrl = ""
+            <input
+              placeholder="Title"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            />
 
-          if (protestImage) {
-            imageUrl = await uploadImage(protestImage)
-          }
+            <textarea
+              placeholder="Description"
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+              style={{ width: "100%", height: 120 }}
+            />
 
-          await createProtest({
-            title: pTitle,
-            description: pDesc,
-            date: pDate,
-            image: imageUrl,
-          })
+            <input
+              placeholder="Date"
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+            />
 
-          setPTitle("")
-          setPDesc("")
-          setPDate("")
-          setProtestImage(null)
-          load()
-        }}
-      >
-        Create Protest
-      </button>
+            <input type="file" onChange={(e) => setProtestImage(e.target.files[0])} />
 
-      {protests.map((p) => (
-        <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
-          <h3>{p.title}</h3>
-          <p>{p.description}</p>
+            <button
+              onClick={async () => {
+                let imageUrl = ""
+                if (protestImage) imageUrl = await uploadImage(protestImage)
 
-          {p.image && (
-            <img src={p.image} style={{ width: 150 }} />
-          )}
+                if (editingProtest) {
+                  await updateProtest(editingProtest.id, {
+                    title: form.title,
+                    description: form.description,
+                    date: form.date,
+                    image: imageUrl || editingProtest.image || "",
+                  })
+                } else {
+                  await createProtest({
+                    title: form.title,
+                    description: form.description,
+                    date: form.date,
+                    image: imageUrl,
+                  })
+                }
 
-          <button
-            onClick={() =>
-              updateProtest(p.id, {
-                title: prompt("New title", p.title),
-                description: prompt("New description", p.description),
-              })
-            }
-          >
-            Edit
-          </button>
+                resetForm()
+                load()
+              }}
+            >
+              {editingProtest ? "Update Protest" : "Create Protest"}
+            </button>
 
-          <button onClick={() => deleteProtest(p.id)}>Delete</button>
+            {protests.map((p) => (
+              <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
+                <h3>{p.title}</h3>
+                <p>{p.description}</p>
 
-          <button onClick={() => toggleProtestFeatured(p.id, p.featured)}>
-            {p.featured ? "Unfeature" : "Feature"}
-          </button>
-        </div>
-      ))}
+                {p.image && <img src={p.image} style={{ width: 120 }} />}
 
-      {/* ---------------- PETITIONS ---------------- */}
-      <h2>Petitions</h2>
+                <button
+                  onClick={() => {
+                    setEditingProtest(p)
+                    setForm({
+                      title: p.title,
+                      description: p.description,
+                      date: p.date,
+                      link: "",
+                    })
+                    setTab("protests")
+                  }}
+                >
+                  Edit
+                </button>
 
-      <input placeholder="Title" value={petTitle} onChange={(e) => setPetTitle(e.target.value)} />
-      <input placeholder="Description" value={petDesc} onChange={(e) => setPetDesc(e.target.value)} />
-      <input placeholder="Date" value={petDate} onChange={(e) => setPetDate(e.target.value)} />
-      <input placeholder="Link" value={petLink} onChange={(e) => setPetLink(e.target.value)} />
+                <button onClick={() => deleteProtest(p.id)}>Delete</button>
 
-      <input type="file" onChange={(e) => setPetitionImage(e.target.files[0])} />
+                <button onClick={() => toggleProtestFeatured(p.id, p.featured)}>
+                  {p.featured ? "Unfeature" : "Feature"}
+                </button>
+              </div>
+            ))}
+          </>
+        )}
 
-      <button
-        onClick={async () => {
-          let imageUrl = ""
+        {/* ---------------- PETITIONS ---------------- */}
+        {tab === "petitions" && (
+          <>
+            <h2>Petitions</h2>
 
-          if (petitionImage) {
-            imageUrl = await uploadImage(petitionImage)
-          }
+            <input
+              placeholder="Title"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            />
 
-          await createPetition({
-            title: petTitle,
-            description: petDesc,
-            date: petDate,
-            link: petLink,
-            image: imageUrl,
-          })
+            <textarea
+              placeholder="Description"
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+              style={{ width: "100%", height: 120 }}
+            />
 
-          setPetTitle("")
-          setPetDesc("")
-          setPetDate("")
-          setPetLink("")
-          setPetitionImage(null)
-          load()
-        }}
-      >
-        Create Petition
-      </button>
+            <input
+              placeholder="Date"
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+            />
 
-      {petitions.map((p) => (
-        <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
-          <h3>{p.title}</h3>
-          <p>{p.description}</p>
+            <input
+              placeholder="Link"
+              value={form.link}
+              onChange={(e) => setForm({ ...form, link: e.target.value })}
+            />
 
-          {p.image && (
-            <img src={p.image} style={{ width: 150 }} />
-          )}
+            <input type="file" onChange={(e) => setPetitionImage(e.target.files[0])} />
 
-          <button
-            onClick={() =>
-              updatePetition(p.id, {
-                title: prompt("New title", p.title),
-                description: prompt("New description", p.description),
-              })
-            }
-          >
-            Edit
-          </button>
+            <button
+              onClick={async () => {
+                let imageUrl = ""
+                if (petitionImage) imageUrl = await uploadImage(petitionImage)
 
-          <button onClick={() => deletePetition(p.id)}>Delete</button>
+                if (editingPetition) {
+                  await updatePetition(editingPetition.id, {
+                    title: form.title,
+                    description: form.description,
+                    date: form.date,
+                    link: form.link,
+                    image: imageUrl || editingPetition.image || "",
+                  })
+                } else {
+                  await createPetition({
+                    title: form.title,
+                    description: form.description,
+                    date: form.date,
+                    link: form.link,
+                    image: imageUrl,
+                  })
+                }
 
-          <button onClick={() => togglePetitionFeatured(p.id, p.featured)}>
-            {p.featured ? "Unfeature" : "Feature"}
-          </button>
-        </div>
-      ))}
+                resetForm()
+                load()
+              }}
+            >
+              {editingPetition ? "Update Petition" : "Create Petition"}
+            </button>
 
-      {/* ---------------- IMAGES ---------------- */}
-      <h2>Images</h2>
+            {petitions.map((p) => (
+              <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
+                <h3>{p.title}</h3>
 
-      {images.map((img) => (
-        <div key={img.id}>
-          <img src={img.url} style={{ width: 120 }} />
-          <button onClick={() => deleteImage(img.id)}>Delete</button>
-        </div>
-      ))}
+                {p.image && <img src={p.image} style={{ width: 120 }} />}
+
+                <button
+                  onClick={() => {
+                    setEditingPetition(p)
+                    setForm({
+                      title: p.title,
+                      description: p.description,
+                      date: p.date,
+                      link: p.link,
+                    })
+                    setTab("petitions")
+                  }}
+                >
+                  Edit
+                </button>
+
+                <button onClick={() => deletePetition(p.id)}>Delete</button>
+
+                <button onClick={() => togglePetitionFeatured(p.id, p.featured)}>
+                  {p.featured ? "Unfeature" : "Feature"}
+                </button>
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* ---------------- IMAGES ---------------- */}
+        {tab === "images" && (
+          <>
+            <h2>Images</h2>
+
+            {images.map((img) => (
+              <div key={img.id}>
+                <img src={img.url} style={{ width: 120 }} />
+                <button onClick={() => deleteImage(img.id)}>Delete</button>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
     </div>
   )
 }
