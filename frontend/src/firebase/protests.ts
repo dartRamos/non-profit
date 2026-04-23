@@ -17,6 +17,7 @@ export const createProtest = async (protest: {
   description: string
   date: string
   image?: string
+  location?: string
 }) => {
   await addDoc(protestsRef, {
     ...protest,
@@ -67,7 +68,11 @@ export const createPetition = async (petition: {
   image?: string
 }) => {
   await addDoc(petitionsRef, {
-    ...petition,
+    title: petition.title,
+    description: petition.description,
+    date: petition.date,
+    link: petition.link,
+    image: petition.image || "",
     featured: false,
   })
 }

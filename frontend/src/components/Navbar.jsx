@@ -1,36 +1,21 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom"
+import logo from "../assets/whitelogo.png"
+import "./Nav.css"
 
-function Navbar() {
+export default function Nav({ user }) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container">
-        <Link className="navbar-brand" to="/">NonProfit</Link>
+    <nav className="navbar-custom">
+      <Link to="/">
+        <img src={logo} className="white-logo" alt="logo" />
+      </Link>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#nav"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+      <div className="navbar-links">
+        <Link to="/About">About</Link>
+        <Link to="/protests">Events</Link>
+        <Link to="/petitions">Stay Informed</Link>
 
-        <div className="collapse navbar-collapse" id="nav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to="/petitions">Petitions</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/protests">Protests</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/newsletter">Newsletter</Link>
-            </li>
-          </ul>
-        </div>
+        {user && <Link to="/admin">Admin</Link>}
       </div>
     </nav>
   )
 }
-
-export default Navbar

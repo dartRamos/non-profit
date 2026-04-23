@@ -15,7 +15,6 @@ import {
 } from "../firebase/protests"
 
 import { useAuth } from "../firebase/useAuth"
-import { uploadImage } from "../firebase/uploadImage"
 
 export default function Admin() {
   const { user, loading } = useAuth()
@@ -29,14 +28,13 @@ export default function Admin() {
   const [editingProtest, setEditingProtest] = useState(null)
   const [editingPetition, setEditingPetition] = useState(null)
 
-  const [protestImage, setProtestImage] = useState(null)
-  const [petitionImage, setPetitionImage] = useState(null)
-
   const [form, setForm] = useState({
     title: "",
     description: "",
     date: "",
     link: "",
+    image: "",
+    location: "",
   })
 
   const load = async () => {
@@ -53,11 +51,15 @@ export default function Admin() {
   if (!user) return <div>Not authorized</div>
 
   const resetForm = () => {
-    setForm({ title: "", description: "", date: "", link: "" })
+    setForm({
+      title: "",
+      description: "",
+      date: "",
+      link: "",
+      image: "",
+    })
     setEditingProtest(null)
     setEditingPetition(null)
-    setProtestImage(null)
-    setPetitionImage(null)
   }
 
   const panel = { display: "flex", minHeight: "100vh" }
@@ -105,26 +107,39 @@ export default function Admin() {
               onChange={(e) => setForm({ ...form, date: e.target.value })}
             />
 
-            <input type="file" onChange={(e) => setProtestImage(e.target.files[0])} />
+            <input
+              placeholder="City (e.g. Toronto)"
+              value={form.location}
+              onChange={(e) =>
+                setForm({ ...form, location: e.target.value })
+              }
+            />
+
+            <input
+              placeholder="Image URL (optional)"
+              value={form.image}
+              onChange={(e) =>
+                setForm({ ...form, image: e.target.value })
+              }
+            />
 
             <button
               onClick={async () => {
-                let imageUrl = ""
-                if (protestImage) imageUrl = await uploadImage(protestImage)
-
                 if (editingProtest) {
                   await updateProtest(editingProtest.id, {
                     title: form.title,
                     description: form.description,
                     date: form.date,
-                    image: imageUrl || editingProtest.image || "",
+                    image: form.image || "",
+                    location: form.location || "",
                   })
                 } else {
                   await createProtest({
                     title: form.title,
                     description: form.description,
                     date: form.date,
-                    image: imageUrl,
+                    image: form.image || "",
+                    location: form.location || "",
                   })
                 }
 
@@ -150,8 +165,8 @@ export default function Admin() {
                       description: p.description,
                       date: p.date,
                       link: "",
+                      image: p.image || "",
                     })
-                    setTab("protests")
                   }}
                 >
                   Edit
@@ -199,20 +214,23 @@ export default function Admin() {
               onChange={(e) => setForm({ ...form, link: e.target.value })}
             />
 
-            <input type="file" onChange={(e) => setPetitionImage(e.target.files[0])} />
+            <input
+              placeholder="Image URL (optional)"
+              value={form.image}
+              onChange={(e) =>
+                setForm({ ...form, image: e.target.value })
+              }
+            />
 
             <button
               onClick={async () => {
-                let imageUrl = ""
-                if (petitionImage) imageUrl = await uploadImage(petitionImage)
-
                 if (editingPetition) {
                   await updatePetition(editingPetition.id, {
                     title: form.title,
                     description: form.description,
                     date: form.date,
                     link: form.link,
-                    image: imageUrl || editingPetition.image || "",
+                    image: form.image || "",
                   })
                 } else {
                   await createPetition({
@@ -220,7 +238,7 @@ export default function Admin() {
                     description: form.description,
                     date: form.date,
                     link: form.link,
-                    image: imageUrl,
+                    image: form.image || "",
                   })
                 }
 
@@ -245,8 +263,8 @@ export default function Admin() {
                       description: p.description,
                       date: p.date,
                       link: p.link,
+                      image: p.image || "",
                     })
-                    setTab("petitions")
                   }}
                 >
                   Edit

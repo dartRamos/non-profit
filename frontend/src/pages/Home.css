@@ -65,18 +65,51 @@
 .text-lines {
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
+  margin-top: 60px;
   color: black;
+  font-size: 40px;
+  font-style: italic;
 }
 
 .left {
   align-self: flex-start;
   background-color: #FFC745;
   padding: 10px 20px;
+  margin-bottom: 28px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
 }
 
 .right {
   align-self: flex-end;
   background-color: #FFC745;
   padding: 10px 20px;
+  margin-bottom: 28px;
+  margin-right: px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+}
+
+.left2{
+  align-self: flex-start;
+  background-color: #FFC745;
+  padding: 10px 20px;
+  height: 58px;
+  margin-left: 94px;
+
+  display: flex;
+  align-items: center;
+}
+
+.section-title{
+  font-size: 24px;
+  color: white;
+}
+
+.featured-events-container{
+  margin-top: 95px;
 }

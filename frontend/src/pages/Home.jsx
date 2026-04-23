@@ -7,6 +7,8 @@ import {
 import headerImage from "../assets/image1.png"
 import rectangle54 from "../assets/rectangle54.png"
 import "./Home.css"
+import FeaturedProtests from "../components/FeaturedProtests.jsx"
+import FeaturedPetitions from "../components/FeaturedPetitions.jsx"
 
 export default function Home() {
   const [protests, setProtests] = useState([])
@@ -42,34 +44,27 @@ export default function Home() {
         <div className="text-lines">
           <p className="left">Connecting people and sharing real ways to get involved</p>
           <p className="right">Making change the best way we can: together</p>
-          <p className="left">Stay informed; stay united; stay strong</p>
+          <p className="left2">Stay informed; stay united; stay strong</p>
         </div>
 
-        <h2>Featured Protests</h2>
-        {protests.map((p) => (
-          <div key={p.id}>
-            <h3>{p.title}</h3>
-            <p>{p.description}</p>
-          </div>
-        ))}
+        <div className="featured-events-container">
+          <h2 className="section-title">Upcoming Protests</h2>
+          <FeaturedProtests protests={protests}/>
 
-        <h2>Featured Petitions</h2>
-        {petitions.map((p) => (
-          <div key={p.id}>
-            <h3>{p.title}</h3>
-            <p>{p.description}</p>
+          <h2 className="section-title">Newest Petitions</h2>
+          <FeaturedPetitions petitions={petitions}/>
+          
+          <h2 className="section-title">Social Media Updates</h2>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            {images.map((img) => (
+              <div key={img.id} style={{ width: 200 }}>
+                <img src={img.url} style={{ width: "100%" }} />
+                <p>{img.caption}</p>
+              </div>
+            ))}
           </div>
-        ))}
-
-        <h2>Gallery</h2>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          {images.map((img) => (
-            <div key={img.id} style={{ width: 200 }}>
-              <img src={img.url} style={{ width: "100%" }} />
-              <p>{img.caption}</p>
-            </div>
-          ))}
         </div>
+
       </div>
 
     </div>

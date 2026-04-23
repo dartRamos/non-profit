@@ -1,0 +1,35 @@
+.navbar-custom {
+  display: flex;
+  background-color: #191919;
+  height: 146px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.white-logo {
+  width: 123px;
+  height: 123px;
+  margin-left: 40px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 123px;
+  margin-right: 42px;
+}
+
+.navbar-links a {
+  border: 2px solid white;
+  color: white;
+  background-color: transparent;
+  padding: 10px 15px;
+  text-decoration: none;
+  height: 49px;
+
+  font-weight: 500;
+  font-size: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
