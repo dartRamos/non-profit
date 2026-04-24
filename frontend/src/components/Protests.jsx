@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { getProtests } from "../firebase/protests"
 import "./Protests.css"
+import { Link } from "react-router-dom"
 
 function formatDate(date) {
   if (!date) return "No date"
@@ -39,16 +40,16 @@ export default function Protests() {
   return (
     <div className="protests-wrapper">
 
+    <p>View upcoming protests and see how you can become involved.</p>
       <div className="protests-events-grid">
 
         {visibleProtests.map(protest => (
-          <div key={protest.id} className="protest-card">
+          <div key={protest.id} className="protests-events-card">
 
             <h2 className="protests-events-title">
               {protest.title}
             </h2>
 
-            {/* grouped info */}
             <div className="protests-meta-group">
 
               <p className="protests-events-meta">
@@ -61,6 +62,14 @@ export default function Protests() {
                 {protest.description}
               </p>
 
+              {/* Learn more CTA */}
+              <Link
+                to={`/protests/${protest.id}`}
+                className="protests-learn-more"
+              >
+                Learn More
+              </Link>
+
             </div>
 
           </div>
@@ -68,11 +77,13 @@ export default function Protests() {
 
       </div>
 
+      <div className="see-more-container">
       {visibleCount < protests.length && (
         <button onClick={loadMore} className="load-more-btn">
           Load more
         </button>
       )}
+      </div>
 
     </div>
   )

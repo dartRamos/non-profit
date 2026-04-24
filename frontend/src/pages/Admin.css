@@ -1,0 +1,132 @@
+.admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* SIDEBAR */
+.admin-sidebar {
+  width: 220px;
+  background: #000;
+  padding: 20px;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-sidebar h3 {
+  margin-bottom: 20px;
+}
+
+.admin-sidebar button {
+  background: transparent;
+  border: 1px solid #444;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.admin-sidebar button:hover {
+  background: #222;
+}
+
+/* MAIN CONTENT */
+.admin-content {
+  flex: 1;
+  padding: 30px;
+}
+
+/* INPUTS */
+.admin-content input,
+.admin-content textarea {
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  color: white;
+}
+
+.admin-content textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+/* BUTTONS */
+.admin-content button {
+  background: #ffc745;
+  color: black;
+  border: none;
+  padding: 10px 14px;
+  margin-right: 8px;
+  margin-top: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-content button:hover {
+  opacity: 0.9;
+}
+
+/* CARDS */
+.admin-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 15px;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* IMAGE GRID */
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+/* FORM LAYOUT WRAPPER */
+.admin-content form,
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+}
+
+/* ROWS (for side-by-side inputs like title + date) */
+.admin-row {
+  display: flex;
+  gap: 12px;
+}
+
+/* INPUTS */
+.admin-content input,
+.admin-content textarea {
+  flex: 1;
+  padding: 12px;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* TEXTAREA SIZE */
+.admin-content textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* OPTIONAL: label spacing if you add labels later */
+.admin-label {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}

@@ -61,14 +61,14 @@ export default function Events() {
             className={tab === "petitions" ? "active" : ""}
             onClick={() => setTab("petitions")}
           >
-            Petitions
+            Rallies
           </button>
 
           <button
             className={tab === "volunteer" ? "active" : ""}
             onClick={() => setTab("volunteer")}
           >
-            Volunteer
+            Town Hall Meetings
           </button>
         </div>
 

@@ -1,0 +1,176 @@
+.footer {
+  width: 100%;
+}
+
+/* TOP YELLOW SECTION */
+.footer-top {
+  background: #ffc745;
+  color: black;
+  height: 298px;
+}
+
+/* 2 COLUMN LAYOUT */
+.footer-top-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* LEFT SIDE */
+.footer-left {
+  margin-top: 52px;
+  margin-left: 115px;
+}
+
+.footer-title {
+  font-size: 62px;
+  font-weight: 700;
+}
+
+.footer-text {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.footer-subtext {
+  margin-top: 10px;
+  font-size: 16px;
+  font-style: italic;
+}
+
+/* RIGHT SIDE */
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 63px;
+  margin-right: 177px;
+}
+
+.footer-input-row {
+  display: flex;
+  gap: 40px;
+  max-width: 320px;
+}
+
+.footer-input {
+  width: 232px;
+  height: 72px;
+
+  padding: 10px 14px;
+
+  background: transparent;
+  color: black;
+
+  border: 4px solid black;
+
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.footer-button {
+  width: 504px;
+  height: 72px;
+
+  padding: 10px;
+  background: transparent;
+  color: black;
+
+  border: 4px black solid;
+  cursor: pointer;
+
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* BOTTOM BLACK SECTION */
+.footer-bottom {
+  background: #191919;
+  color: white;
+  padding: 60px 80px;
+}
+
+/* layout */
+.footer-bottom-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 60px;
+}
+
+/* LEFT BRAND */
+.footer-brand {
+  max-width: 400px;
+}
+
+.footer-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-brand-row h3{
+  font-size: 62px;
+  font-weight: 700;
+  margin-left: 20px;
+}
+
+.footer-logo {
+  width: 210px;
+  height: 210px;
+}
+
+.footer-tagline {
+  margin-top: 33px;
+  font-size: 24px;
+  width: 604px;
+}
+
+/* RIGHT AREA */
+.footer-links-area {
+  display: flex;
+  gap: 60px;
+}
+
+/* nav links */
+.footer-links-column {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.footer-links-column a {
+  color: #FFC745;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+/* social section */
+.footer-social-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.social-grid img {
+  width: 55px;
+  height: 45px;
+}
+
+/* privacy text */
+.privacy-text {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.footer-links-text {
+  font-size: 16px;
+  color: white;
+}

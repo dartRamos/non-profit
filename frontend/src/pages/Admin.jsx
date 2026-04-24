@@ -17,6 +17,7 @@ import {
 } from "../firebase/protests"
 
 import { useAuth } from "../firebase/useAuth"
+import "./Admin.css"
 
 export default function Admin() {
   const { user, loading } = useAuth()
@@ -70,9 +71,10 @@ export default function Admin() {
   }
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div className="admin-wrapper">
+
       {/* SIDEBAR */}
-      <div style={{ width: 200, borderRight: "1px solid #ddd", padding: 10 }}>
+      <div className="admin-sidebar">
         <h3>Admin</h3>
 
         <button onClick={() => setTab("protests")}>Protests</button>
@@ -81,7 +83,8 @@ export default function Admin() {
       </div>
 
       {/* CONTENT */}
-      <div style={{ flex: 1, padding: 20 }}>
+      <div className="admin-content">
+
         <h1>CMS Dashboard</h1>
 
         {/* ---------------- PROTESTS ---------------- */}
@@ -89,84 +92,76 @@ export default function Admin() {
           <>
             <h2>Protests</h2>
 
-            <input
-              placeholder="Title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+            <div className="admin-form">
 
-            <textarea
-              placeholder="Description"
-              value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
-              style={{ width: "100%", height: 120 }}
-            />
+              <input
+                placeholder="Title"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
 
-            <input
-              placeholder="YYYY-MM-DD (e.g. 2026-04-24)"
-              value={form.date}
-              onChange={(e) => setForm({ ...form, date: e.target.value })}
-            />
-
-            <p style={{ fontSize: "12px", opacity: 0.7, marginTop: 4 , color: "white"}}>
-              Use ISO format: YYYY-MM-DD so events sort correctly
-            </p>
-
-            <input
-              placeholder="City"
-              value={form.location}
-              onChange={(e) =>
-                setForm({ ...form, location: e.target.value })
-              }
-            />
-
-            <input
-              placeholder="Image URL"
-              value={form.image}
-              onChange={(e) =>
-                setForm({ ...form, image: e.target.value })
-              }
-            />
-
-            <button
-              onClick={async () => {
-                if (editingProtest) {
-                  await updateProtest(editingProtest.id, {
-                    ...form,
-                  })
-                } else {
-                  await createProtest(form)
+              <textarea
+                placeholder="Description"
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
                 }
+              />
 
-                resetForm()
-                load()
-              }}
-            >
-              {editingProtest ? "Update Protest" : "Create Protest"}
-            </button>
+              <div className="admin-row">
+                <input
+                  placeholder="YYYY-MM-DD"
+                  value={form.date}
+                  onChange={(e) =>
+                    setForm({ ...form, date: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="City"
+                  value={form.location}
+                  onChange={(e) =>
+                    setForm({ ...form, location: e.target.value })
+                  }
+                />
+              </div>
+
+              <input
+                placeholder="Image URL"
+                value={form.image}
+                onChange={(e) =>
+                  setForm({ ...form, image: e.target.value })
+                }
+              />
+
+              <button
+                onClick={async () => {
+                  if (editingProtest) {
+                    await updateProtest(editingProtest.id, form)
+                  } else {
+                    await createProtest(form)
+                  }
+                  resetForm()
+                  load()
+                }}
+              >
+                {editingProtest ? "Update Protest" : "Create Protest"}
+              </button>
+
+            </div>
 
             {protests.map((p) => (
-              <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
+              <div key={p.id} className="admin-card">
+
                 {p.image && <img src={p.image} width={120} />}
 
                 <h3>{p.title}</h3>
                 <p>{p.location}</p>
 
-                <button
-                  onClick={() => {
-                    setEditingProtest(p)
-                    setForm({
-                      title: p.title,
-                      description: p.description,
-                      date: p.date,
-                      link: "",
-                      image: p.image || "",
-                      location: p.location || "",
-                    })
-                  }}
-                >
+                <button onClick={() => {
+                  setEditingProtest(p)
+                  setForm(p)
+                }}>
                   Edit
                 </button>
 
@@ -175,6 +170,7 @@ export default function Admin() {
                 <button onClick={() => toggleProtestFeatured(p.id, p.featured)}>
                   {p.featured ? "Unfeature" : "Feature"}
                 </button>
+
               </div>
             ))}
           </>
@@ -185,81 +181,73 @@ export default function Admin() {
           <>
             <h2>Petitions</h2>
 
-            <input
-              placeholder="Title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+            <div className="admin-form">
 
-            <textarea
-              placeholder="Description"
-              value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
-              style={{ width: "100%", height: 120 }}
-            />
+              <input
+                placeholder="Title"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
 
-            <input
-              placeholder="YYYY-MM-DD (e.g. 2026-04-24)"
-              value={form.date}
-              onChange={(e) => setForm({ ...form, date: e.target.value })}
-            />
-
-            <p style={{ fontSize: "12px", opacity: 0.7, marginTop: 4 , color: "white"}}>
-              Use ISO format: YYYY-MM-DD so events sort correctly
-            </p>
-
-            <input
-              placeholder="Link"
-              value={form.link}
-              onChange={(e) => setForm({ ...form, link: e.target.value })}
-            />
-
-            <input
-              placeholder="Image URL"
-              value={form.image}
-              onChange={(e) =>
-                setForm({ ...form, image: e.target.value })
-              }
-            />
-
-            <button
-              onClick={async () => {
-                if (editingPetition) {
-                  await updatePetition(editingPetition.id, {
-                    ...form,
-                  })
-                } else {
-                  await createPetition(form)
+              <textarea
+                placeholder="Description"
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
                 }
+              />
 
-                resetForm()
-                load()
-              }}
-            >
-              {editingPetition ? "Update Petition" : "Create Petition"}
-            </button>
+              <div className="admin-row">
+                <input
+                  placeholder="YYYY-MM-DD"
+                  value={form.date}
+                  onChange={(e) =>
+                    setForm({ ...form, date: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="Link"
+                  value={form.link}
+                  onChange={(e) =>
+                    setForm({ ...form, link: e.target.value })
+                  }
+                />
+              </div>
+
+              <input
+                placeholder="Image URL"
+                value={form.image}
+                onChange={(e) =>
+                  setForm({ ...form, image: e.target.value })
+                }
+              />
+
+              <button
+                onClick={async () => {
+                  if (editingPetition) {
+                    await updatePetition(editingPetition.id, form)
+                  } else {
+                    await createPetition(form)
+                  }
+                  resetForm()
+                  load()
+                }}
+              >
+                {editingPetition ? "Update Petition" : "Create Petition"}
+              </button>
+
+            </div>
 
             {petitions.map((p) => (
-              <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
-                {p.image && <img src={p.image} width={120} />}
+              <div key={p.id} className="admin-card">
 
                 <h3>{p.title}</h3>
 
-                <button
-                  onClick={() => {
-                    setEditingPetition(p)
-                    setForm({
-                      title: p.title,
-                      description: p.description,
-                      date: p.date,
-                      link: p.link,
-                      image: p.image || "",
-                      location: "",
-                    })
-                  }}
-                >
+                <button onClick={() => {
+                  setEditingPetition(p)
+                  setForm(p)
+                }}>
                   Edit
                 </button>
 
@@ -268,48 +256,48 @@ export default function Admin() {
                 <button onClick={() => togglePetitionFeatured(p.id, p.featured)}>
                   {p.featured ? "Unfeature" : "Feature"}
                 </button>
+
               </div>
             ))}
           </>
         )}
 
-        {/* ---------------- IMAGES (FIXED ONLY) ---------------- */}
+        {/* ---------------- IMAGES ---------------- */}
         {tab === "images" && (
           <>
             <h2>Images</h2>
 
-            <input
-              placeholder="Image URL"
-              value={imageForm.url}
-              onChange={(e) =>
-                setImageForm({ ...imageForm, url: e.target.value })
-              }
-            />
+            <div className="admin-form">
 
-            <button
-              onClick={async () => {
-                if (!imageForm.url) return
+              <input
+                placeholder="Image URL"
+                value={imageForm.url}
+                onChange={(e) =>
+                  setImageForm({ ...imageForm, url: e.target.value })
+                }
+              />
 
-                await createImage({
-                  url: imageForm.url,
-                  featured: false,
-                })
+              <button
+                onClick={async () => {
+                  await createImage({
+                    url: imageForm.url,
+                    featured: false,
+                  })
+                  setImageForm({ url: "" })
+                  load()
+                }}
+              >
+                Add Image
+              </button>
 
-                setImageForm({ url: "" })
-                load()
-              }}
-            >
-              Add Image
-            </button>
+            </div>
 
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <div className="image-grid">
               {images.map((img) => (
-                <div key={img.id} style={{ border: "1px solid #ccc", padding: 10 }}>
+                <div key={img.id} className="admin-card">
                   <img src={img.url} width={120} />
 
-                  <button onClick={() => deleteImage(img.id)}>
-                    Delete
-                  </button>
+                  <button onClick={() => deleteImage(img.id)}>Delete</button>
 
                   <button onClick={() => toggleImageFeatured(img.id, img.featured)}>
                     {img.featured ? "Unfeature" : "Feature"}
@@ -319,6 +307,7 @@ export default function Admin() {
             </div>
           </>
         )}
+
       </div>
     </div>
   )

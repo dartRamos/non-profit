@@ -62,13 +62,13 @@ export default function Home() {
 
         <div className="featured-events-container">
 
+          {/* PETITIONS */}
+          <h2 className="section-title">Add Your Name</h2>
+          <FeaturedPetitions petitions={petitions} />
+
           {/* PROTESTS */}
           <h2 className="section-title">Upcoming Protests</h2>
           <FeaturedProtests protests={protests} />
-
-          {/* PETITIONS */}
-          <h2 className="section-title">Newest Petitions</h2>
-          <FeaturedPetitions petitions={petitions} />
 
           {/* IMAGES */}
           <h2 className="section-title">Social Media Updates</h2>

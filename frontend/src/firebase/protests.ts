@@ -8,34 +8,60 @@ import {
   doc,
   orderBy,
   query,
+  arrayUnion,
+  increment,
 } from "firebase/firestore"
 
-// ---------------- PROTESTS ----------------
+// SHARED HELPERS (SIGNUPS)
+
+export const signUpToItem = async (
+  collectionName: string,
+  id: string,
+  email: string
+) => {
+  await updateDoc(doc(db, collectionName, id), {
+    signups: increment(1),
+    signupsList: arrayUnion(email),
+  })
+}
+
+// PROTESTS
 
 const protestsRef = collection(db, "protests")
 
 export const createProtest = async (protest: {
   title: string
-  description: string
-  date: string // MUST be ISO string: "2026-04-24"
+  shortDescription?: string
+  fullDescription: string
+  date: string
   image?: string
   location?: string
+  slug: string
 }) => {
   await addDoc(protestsRef, {
     ...protest,
     featured: false,
+    signups: 0,
+    signupsList: [],
   })
 }
 
 export const getProtests = async () => {
   const q = query(protestsRef, orderBy("date", "desc"))
-
   const snapshot = await getDocs(q)
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }))
+}
+
+export const getProtestBySlug = async (slug: string) => {
+  const snapshot = await getDocs(protestsRef)
+
+  return snapshot.docs
+    .map((doc) => ({ id: doc.id, ...doc.data() }))
+    .find((p: any) => p.slug === slug)
 }
 
 export const deleteProtest = async (id: string) => {
@@ -60,32 +86,43 @@ export const getFeaturedProtests = async () => {
     .filter((p: any) => p.featured === true)
 }
 
-// ---------------- PETITIONS ----------------
+// PETITIONS
 
 const petitionsRef = collection(db, "petitions")
 
 export const createPetition = async (petition: {
   title: string
-  description: string
+  shortDescription?: string
+  fullDescription?: string
   date: string
   link: string
   image?: string
+  slug: string
 }) => {
   await addDoc(petitionsRef, {
     ...petition,
     featured: false,
+    signups: 0,
+    signupsList: [],
   })
 }
 
 export const getPetitions = async () => {
   const q = query(petitionsRef, orderBy("date", "desc"))
-
   const snapshot = await getDocs(q)
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }))
+}
+
+export const getPetitionBySlug = async (slug: string) => {
+  const snapshot = await getDocs(petitionsRef)
+
+  return snapshot.docs
+    .map((doc) => ({ id: doc.id, ...doc.data() }))
+    .find((p: any) => p.slug === slug)
 }
 
 export const deletePetition = async (id: string) => {
@@ -110,7 +147,123 @@ export const getFeaturedPetitions = async () => {
     .filter((p: any) => p.featured === true)
 }
 
-// ---------------- IMAGES ----------------
+// CTA (CALL TO ACTIONS)
+
+const ctaRef = collection(db, "ctas")
+
+export const createCTA = async (cta: {
+  title: string
+  shortDescription: string
+  fullDescription: string
+  slug: string
+  image?: string
+}) => {
+  await addDoc(ctaRef, {
+    ...cta,
+    signups: 0,
+    signupsList: [],
+  })
+}
+
+export const getCTAs = async () => {
+  const snapshot = await getDocs(ctaRef)
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
+}
+
+// RALLIES
+
+const ralliesRef = collection(db, "rallies")
+
+export const createRally = async (rally: {
+  title: string
+  shortDescription: string
+  fullDescription: string
+  date: string
+  location: string
+  image?: string
+  slug: string
+}) => {
+  await addDoc(ralliesRef, {
+    ...rally,
+    signups: 0,
+    signupsList: [],
+    featured: false,
+  })
+}
+
+export const getRallies = async () => {
+  const snapshot = await getDocs(ralliesRef)
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
+}
+
+// TOWN HALLS
+
+const townHallsRef = collection(db, "townhalls")
+
+export const createTownHall = async (event: {
+  title: string
+  shortDescription: string
+  fullDescription: string
+  date: string
+  location: string
+  image?: string
+  zoomLink?: string
+  slug: string
+}) => {
+  await addDoc(townHallsRef, {
+    ...event,
+    signups: 0,
+    signupsList: [],
+    featured: false,
+  })
+}
+
+export const getTownHalls = async () => {
+  const snapshot = await getDocs(townHallsRef)
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
+}
+
+// EMAIL CAMPAIGNS
+
+const emailRef = collection(db, "emailCampaigns")
+
+export const createEmailCampaign = async (campaign: {
+  title: string
+  subject: string
+  previewText: string
+  body: string
+  slug: string
+}) => {
+  await addDoc(emailRef, {
+    ...campaign,
+    signups: 0,
+    signupsList: [],
+    sent: false,
+  })
+}
+
+export const getEmailCampaigns = async () => {
+  const snapshot = await getDocs(emailRef)
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
+}
+
+// IMAGES
 
 const imagesRef = collection(db, "images")
 

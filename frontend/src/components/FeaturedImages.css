@@ -2,7 +2,7 @@
   margin: 38px;
 }
 
-.image-grid {
+.featured-image-grid {
   display: flex;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
