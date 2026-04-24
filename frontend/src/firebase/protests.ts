@@ -68,11 +68,7 @@ export const createPetition = async (petition: {
   image?: string
 }) => {
   await addDoc(petitionsRef, {
-    title: petition.title,
-    description: petition.description,
-    date: petition.date,
-    link: petition.link,
-    image: petition.image || "",
+    ...petition,
     featured: false,
   })
 }
@@ -112,6 +108,16 @@ export const getFeaturedPetitions = async () => {
 
 const imagesRef = collection(db, "images")
 
+export const createImage = async (image: {
+  url: string
+  featured?: boolean
+}) => {
+  await addDoc(imagesRef, {
+    url: image.url,
+    featured: image.featured || false,
+  })
+}
+
 export const getImages = async () => {
   const snapshot = await getDocs(imagesRef)
 
@@ -123,4 +129,18 @@ export const getImages = async () => {
 
 export const deleteImage = async (id: string) => {
   await deleteDoc(doc(db, "images", id))
+}
+
+export const toggleImageFeatured = async (id: string, current: boolean) => {
+  await updateDoc(doc(db, "images", id), {
+    featured: !current,
+  })
+}
+
+export const getFeaturedImages = async () => {
+  const snapshot = await getDocs(imagesRef)
+
+  return snapshot.docs
+    .map((doc) => ({ id: doc.id, ...doc.data() }))
+    .filter((img: any) => img.featured === true)
 }

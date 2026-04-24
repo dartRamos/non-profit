@@ -7,6 +7,7 @@
 .featured-container {
   position: relative;
   height: 922px;
+  margin-bottom: 93px;
 }
 
 /* overlay that sits on top of image */

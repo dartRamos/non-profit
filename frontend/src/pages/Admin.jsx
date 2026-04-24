@@ -11,7 +11,9 @@ import {
   updatePetition,
   togglePetitionFeatured,
   getImages,
+  createImage,
   deleteImage,
+  toggleImageFeatured,
 } from "../firebase/protests"
 
 import { useAuth } from "../firebase/useAuth"
@@ -37,6 +39,10 @@ export default function Admin() {
     location: "",
   })
 
+  const [imageForm, setImageForm] = useState({
+    url: "",
+  })
+
   const load = async () => {
     setProtests(await getProtests())
     setPetitions(await getPetitions())
@@ -57,19 +63,16 @@ export default function Admin() {
       date: "",
       link: "",
       image: "",
+      location: "",
     })
     setEditingProtest(null)
     setEditingPetition(null)
   }
 
-  const panel = { display: "flex", minHeight: "100vh" }
-  const sidebar = { width: 200, borderRight: "1px solid #ddd", padding: 10 }
-  const content = { flex: 1, padding: 20 }
-
   return (
-    <div style={panel}>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
       {/* SIDEBAR */}
-      <div style={sidebar}>
+      <div style={{ width: 200, borderRight: "1px solid #ddd", padding: 10 }}>
         <h3>Admin</h3>
 
         <button onClick={() => setTab("protests")}>Protests</button>
@@ -78,7 +81,7 @@ export default function Admin() {
       </div>
 
       {/* CONTENT */}
-      <div style={content}>
+      <div style={{ flex: 1, padding: 20 }}>
         <h1>CMS Dashboard</h1>
 
         {/* ---------------- PROTESTS ---------------- */}
@@ -108,7 +111,7 @@ export default function Admin() {
             />
 
             <input
-              placeholder="City (e.g. Toronto)"
+              placeholder="City"
               value={form.location}
               onChange={(e) =>
                 setForm({ ...form, location: e.target.value })
@@ -116,7 +119,7 @@ export default function Admin() {
             />
 
             <input
-              placeholder="Image URL (optional)"
+              placeholder="Image URL"
               value={form.image}
               onChange={(e) =>
                 setForm({ ...form, image: e.target.value })
@@ -127,20 +130,10 @@ export default function Admin() {
               onClick={async () => {
                 if (editingProtest) {
                   await updateProtest(editingProtest.id, {
-                    title: form.title,
-                    description: form.description,
-                    date: form.date,
-                    image: form.image || "",
-                    location: form.location || "",
+                    ...form,
                   })
                 } else {
-                  await createProtest({
-                    title: form.title,
-                    description: form.description,
-                    date: form.date,
-                    image: form.image || "",
-                    location: form.location || "",
-                  })
+                  await createProtest(form)
                 }
 
                 resetForm()
@@ -152,10 +145,10 @@ export default function Admin() {
 
             {protests.map((p) => (
               <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
-                <h3>{p.title}</h3>
-                <p>{p.description}</p>
+                {p.image && <img src={p.image} width={120} />}
 
-                {p.image && <img src={p.image} style={{ width: 120 }} />}
+                <h3>{p.title}</h3>
+                <p>{p.location}</p>
 
                 <button
                   onClick={() => {
@@ -166,6 +159,7 @@ export default function Admin() {
                       date: p.date,
                       link: "",
                       image: p.image || "",
+                      location: p.location || "",
                     })
                   }}
                 >
@@ -215,7 +209,7 @@ export default function Admin() {
             />
 
             <input
-              placeholder="Image URL (optional)"
+              placeholder="Image URL"
               value={form.image}
               onChange={(e) =>
                 setForm({ ...form, image: e.target.value })
@@ -226,20 +220,10 @@ export default function Admin() {
               onClick={async () => {
                 if (editingPetition) {
                   await updatePetition(editingPetition.id, {
-                    title: form.title,
-                    description: form.description,
-                    date: form.date,
-                    link: form.link,
-                    image: form.image || "",
+                    ...form,
                   })
                 } else {
-                  await createPetition({
-                    title: form.title,
-                    description: form.description,
-                    date: form.date,
-                    link: form.link,
-                    image: form.image || "",
-                  })
+                  await createPetition(form)
                 }
 
                 resetForm()
@@ -251,9 +235,9 @@ export default function Admin() {
 
             {petitions.map((p) => (
               <div key={p.id} style={{ border: "1px solid #ccc", margin: 10, padding: 10 }}>
-                <h3>{p.title}</h3>
+                {p.image && <img src={p.image} width={120} />}
 
-                {p.image && <img src={p.image} style={{ width: 120 }} />}
+                <h3>{p.title}</h3>
 
                 <button
                   onClick={() => {
@@ -264,6 +248,7 @@ export default function Admin() {
                       date: p.date,
                       link: p.link,
                       image: p.image || "",
+                      location: "",
                     })
                   }}
                 >
@@ -280,17 +265,50 @@ export default function Admin() {
           </>
         )}
 
-        {/* ---------------- IMAGES ---------------- */}
+        {/* ---------------- IMAGES (FIXED ONLY) ---------------- */}
         {tab === "images" && (
           <>
             <h2>Images</h2>
 
-            {images.map((img) => (
-              <div key={img.id}>
-                <img src={img.url} style={{ width: 120 }} />
-                <button onClick={() => deleteImage(img.id)}>Delete</button>
-              </div>
-            ))}
+            <input
+              placeholder="Image URL"
+              value={imageForm.url}
+              onChange={(e) =>
+                setImageForm({ ...imageForm, url: e.target.value })
+              }
+            />
+
+            <button
+              onClick={async () => {
+                if (!imageForm.url) return
+
+                await createImage({
+                  url: imageForm.url,
+                  featured: false,
+                })
+
+                setImageForm({ url: "" })
+                load()
+              }}
+            >
+              Add Image
+            </button>
+
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              {images.map((img) => (
+                <div key={img.id} style={{ border: "1px solid #ccc", padding: 10 }}>
+                  <img src={img.url} width={120} />
+
+                  <button onClick={() => deleteImage(img.id)}>
+                    Delete
+                  </button>
+
+                  <button onClick={() => toggleImageFeatured(img.id, img.featured)}>
+                    {img.featured ? "Unfeature" : "Feature"}
+                  </button>
+                </div>
+              ))}
+            </div>
           </>
         )}
       </div>

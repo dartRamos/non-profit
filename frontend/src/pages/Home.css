@@ -113,3 +113,19 @@
 .featured-events-container{
   margin-top: 95px;
 }
+
+.social-media-container{
+  margin-top: 38px;
+}
+
+.social-text{
+  color: white;
+  font-size: 20px;
+}
+
+.social-media-links{
+  display: flex;
+  gap: 63px;
+  margin-top: 24px;
+  margin-bottom: 130px;
+}
