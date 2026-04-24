@@ -3,6 +3,10 @@ import rectangle19 from "../assets/rectangle19.png"
 import logo from "../assets/aboutLogo.png"
 import line from "../assets/Line1.png"
 import rectangle from "../assets/rectangle24.png"
+import rectangle2 from "../assets/rectangle79.png"
+import rectangle3 from "../assets/rectangle23.png"
+import line2 from "../assets/Line2.png"
+import rectangle4 from "../assets/rectangle80.png"
 
 export default function About() {
   return (
@@ -171,7 +175,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* FOOTER SECTIONS */}
         <div className="about-section">
           <div className="text-lines-4">
             <p className="left-4">“Never doubt that a small group of thoughtful,</p>
@@ -191,13 +194,55 @@ export default function About() {
             </div>
           </div>
 
-        <div className="about-section">
-          <h2>Why It Matters</h2>
-          <p>
-            Change happens when people are informed and organized. Our goal is
-            to make participation simple and accessible for everyone.
-          </p>
-        </div>
+          <div className="about-section">
+
+            <div className="image-stack">
+
+              <img src={rectangle2} className="rect-2" alt="rectangle" />
+
+              <div className="rect-3-wrapper">
+                
+                <img src={rectangle3} className="rect-3" alt="rectangle" />
+
+                <div className="overlay-text">
+
+                  <div className="goal-header-container">
+                    <h2 className="section-title">Goals</h2>
+                    <img src={line2} className="line-2" alt="line" />
+                  </div>
+
+                  <div className="goal-box">
+                    <h3 className="goal-title">Building Community</h3>
+                    <p className="goal-description">
+                      By establishing the Discord server as a centralized space for all resources and information and growing our presence across all social media platforms. OAC aims to expand our reach to as many people as possible throughout Ontario. OAC is an organization designed to meet people where they are, and enable them to access all the resources needed in order to participate at the level they are capable of.
+                    </p>
+                  </div>
+
+                  <div className="goal-box">
+                    <h3 className="goal-title">Information and Education</h3>
+                    <p className="goal-description">
+                      Ultimately, one of our major goals is to help voters better understand their political options.
+                      <br /><br />
+                      Too often, people feel forced to vote for one of two major parties simply to avoid “wasting” their vote. By providing information and direct conversations with different candidates, we hope to empower voters with a broader understanding of the political landscape.
+                    </p>
+                  </div>
+
+                  <div className="goal-box">
+                    <h3 className="goal-title">Recall Act</h3>
+                    <p className="goal-description">                   
+                      Realistically, removing a sitting government is extremely difficult unless a movement grows very quickly.
+                      <br /><br />
+                      However, political change doesn’t only happen through immediate victories. Sometimes the most important work is building the networks and awareness that influence future elections. Even if major political shifts don’t happen right away, the goal is to build enough momentum over the coming years to make a meaningful difference.
+                    </p>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
 
       </div>
     </div>
