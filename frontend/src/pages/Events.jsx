@@ -1,44 +1,88 @@
 import "./Events.css"
+import { useState } from "react"
+
+import img1 from "../assets/event1.png"
+import img2 from "../assets/event2.png"
+import img3 from "../assets/event3.png"
+import img4 from "../assets/event4.png"
+import img5 from "../assets/event5.png"
+import img6 from "../assets/event6.png"
+import img7 from "../assets/event7.png"
+
+import rectangle from "../assets/rectangle91.png"
+
+import Protests from "../components/Protests"
+import Petitions from "../components/Petitions"
+import Volunteer from "../components/Volunteer"
+
+const baseImages = [img1, img2, img3, img4, img5, img6, img7]
+
+const heroImages = Array.from({ length: 10 }, (_, i) => {
+  return baseImages[i % baseImages.length]
+})
 
 export default function Events() {
+  const [tab, setTab] = useState("protests")
+
   return (
     <div className="events-page">
 
-      <div className="events-hero">
-        <h1 className="events-title">Events</h1>
-        <p className="events-subtitle">
-          Protests, rallies, town halls, and community actions across Ontario
-        </p>
-      </div>
+      {/* HERO */}
+      <div className="events-hero-grid">
 
-      <div className="container">
+        {heroImages.map((img, i) => (
+          <img
+            key={i}
+            src={img}
+            className={`hero-img ${i % 2 === 1 ? "offset" : ""}`}
+            alt={`event-${i}`}
+          />
+        ))}
 
-        <div className="events-filters">
-          <button className="filter-btn">All</button>
-          <button className="filter-btn">Protests</button>
-          <button className="filter-btn">Town Halls</button>
-          <button className="filter-btn">Community</button>
+        <div className="hero-center-text">
+          GET INVOLVED
         </div>
 
-        <div className="events-list">
+      </div>
 
-          <div className="event-card">
-            <div className="event-image-placeholder" />
+      {/* BODY */}
+      <div className="container">
 
-            <div className="event-content">
-              <h2 className="event-title">Example Event Title</h2>
+        {/* TABS */}
+        <div className="events-tabs">
+          <button
+            className={tab === "protests" ? "active" : ""}
+            onClick={() => setTab("protests")}
+          >
+            Protests
+          </button>
 
-              <p className="event-description">
-                Short description of the event goes here. This will later come from Firebase.
-              </p>
+          <button
+            className={tab === "petitions" ? "active" : ""}
+            onClick={() => setTab("petitions")}
+          >
+            Petitions
+          </button>
 
-              <div className="event-meta">
-                <p>Date: TBD</p>
-                <p>Location: Ontario</p>
-              </div>
+          <button
+            className={tab === "volunteer" ? "active" : ""}
+            onClick={() => setTab("volunteer")}
+          >
+            Volunteer
+          </button>
+        </div>
 
-              <button className="event-button">View Details</button>
-            </div>
+        {/* RECTANGLE SECTION */}
+        <div className="events-section">
+
+          <img src={rectangle} className="events-bg" alt="background" />
+
+          <div className="events-overlay">
+
+            {tab === "protests" && <Protests />}
+            {tab === "petitions" && <Petitions />}
+            {tab === "volunteer" && <Volunteer />}
+
           </div>
 
         </div>

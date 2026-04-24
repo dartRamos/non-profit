@@ -207,7 +207,7 @@ export default function About() {
                 <div className="overlay-text">
 
                   <div className="goal-header-container">
-                    <h2 className="section-title">Goals</h2>
+                    <h2 className="about-section-title">Goals</h2>
                     <img src={line2} className="line-2" alt="line" />
                   </div>
 

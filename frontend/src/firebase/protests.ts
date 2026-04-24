@@ -6,6 +6,8 @@ import {
   deleteDoc,
   updateDoc,
   doc,
+  orderBy,
+  query,
 } from "firebase/firestore"
 
 // ---------------- PROTESTS ----------------
@@ -15,7 +17,7 @@ const protestsRef = collection(db, "protests")
 export const createProtest = async (protest: {
   title: string
   description: string
-  date: string
+  date: string // MUST be ISO string: "2026-04-24"
   image?: string
   location?: string
 }) => {
@@ -26,7 +28,9 @@ export const createProtest = async (protest: {
 }
 
 export const getProtests = async () => {
-  const snapshot = await getDocs(protestsRef)
+  const q = query(protestsRef, orderBy("date", "desc"))
+
+  const snapshot = await getDocs(q)
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,
@@ -74,7 +78,9 @@ export const createPetition = async (petition: {
 }
 
 export const getPetitions = async () => {
-  const snapshot = await getDocs(petitionsRef)
+  const q = query(petitionsRef, orderBy("date", "desc"))
+
+  const snapshot = await getDocs(q)
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,

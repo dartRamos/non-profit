@@ -105,10 +105,14 @@ export default function Admin() {
             />
 
             <input
-              placeholder="Date"
+              placeholder="YYYY-MM-DD (e.g. 2026-04-24)"
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
             />
+
+            <p style={{ fontSize: "12px", opacity: 0.7, marginTop: 4 , color: "white"}}>
+              Use ISO format: YYYY-MM-DD so events sort correctly
+            </p>
 
             <input
               placeholder="City"
@@ -197,10 +201,14 @@ export default function Admin() {
             />
 
             <input
-              placeholder="Date"
+              placeholder="YYYY-MM-DD (e.g. 2026-04-24)"
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
             />
+
+            <p style={{ fontSize: "12px", opacity: 0.7, marginTop: 4 , color: "white"}}>
+              Use ISO format: YYYY-MM-DD so events sort correctly
+            </p>
 
             <input
               placeholder="Link"
