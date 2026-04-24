@@ -5,11 +5,10 @@ import Petitions from "./pages/Petitions.jsx";
 import Protests from "./pages/Protests.jsx";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import About from "./pages/About"
 import { useAuth } from "./firebase/useAuth";
 import "./App.css";
 import Nav from "./components/Navbar.jsx"
-
-import "./App.css"
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -20,8 +19,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/protests" element={<Protests />} />
-        <Route path="/petitions" element={<Petitions />} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

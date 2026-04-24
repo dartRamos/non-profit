@@ -1,14 +1,19 @@
+.featured-container {
+  position: relative;
+  height: 922px;
+
+  width: 100%;
+  margin-bottom: 93px;
+
+}
+
+
 .rectangle-62 {
   width: 100%;
   object-fit: cover;
   display: block;
 }
 
-.featured-container {
-  position: relative;
-  height: 922px;
-  margin-bottom: 93px;
-}
 
 /* overlay that sits on top of image */
 .protests-overlay {

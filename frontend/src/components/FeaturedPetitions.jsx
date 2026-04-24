@@ -41,8 +41,8 @@ export default function FeaturedPetitions({ petitions }) {
           </div>
 
           <div className="text-lines-2">
-            <p className="left">Together, we can make a change</p>
-            <p className="right">We must fight for what is right</p>
+            <p className="left-2">Together, we can make a change</p>
+            <p className="right-2">We must fight for what is right</p>
           </div>
 
         </div>

@@ -1,0 +1,111 @@
+/* HERO */
+.about-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero-image {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-hero-overlay {
+  position: absolute;
+}
+
+/* TITLE */
+.about-hero-text {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+
+  color: white;
+  background-color: black;
+}
+
+.about-hero-text h1 {
+  font-size: 62px;
+  margin: 0;
+  padding: 8px 20px;
+}
+
+/* BODY OVER IMAGE */
+.about-body-container {
+  position: absolute;
+  top: 320px;
+  left: 40px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 106px;
+
+  color: white;
+}
+
+.about-logo {
+  width: 471px;
+  height: 471px;
+}
+
+.about-text-container {
+  flex: 1;
+}
+
+.about-description {
+  font-size: 24px;
+  width: 733px;
+  color: #fff;
+}
+
+.text-lines-3 {
+  display: flex;
+  flex-direction: column;
+  margin-top: 62px;
+  color: black;
+  font-size: 40px;
+  font-style: italic;
+}
+
+.left-3 {
+  align-self: flex-start;
+  background-color: #FFC745;
+  padding: 10px 20px;
+  margin-bottom: 28px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  margin-left: 40px;
+}
+
+.right-3 {
+  align-self: flex-end;
+  background-color: #FFC745;
+  padding: 10px 20px;
+  margin-bottom: 38px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+}
+
+.plan-section{
+  color: white;
+  width: 670px;
+  margin-left: 40px;
+}
+
+.line-1{
+  margin-top: -18px;
+}
+
+.plan-section p{
+  font-size: 20px;
+  margin-top: 34px;
+}
+
+.plan-details-container{
+  display: flex;
+  gap: 59px;
+}

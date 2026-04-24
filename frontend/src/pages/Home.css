@@ -69,6 +69,7 @@
   color: black;
   font-size: 40px;
   font-style: italic;
+  margin-left: 40px;
 }
 
 .left {
@@ -87,7 +88,7 @@
   background-color: #FFC745;
   padding: 10px 20px;
   margin-bottom: 28px;
-  margin-right: px;
+  margin-right: 40px;
   height: 58px;
 
   display: flex;
@@ -108,6 +109,7 @@
 .section-title{
   font-size: 24px;
   color: white;
+  margin-left: 40px;
 }
 
 .featured-events-container{
@@ -116,6 +118,7 @@
 
 .social-media-container{
   margin-top: 38px;
+  margin-left: 40px;
 }
 
 .social-text{
