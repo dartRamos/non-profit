@@ -6,6 +6,7 @@ import Protests from "./pages/Protests.jsx";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import About from "./pages/About"
+import Events from "./pages/Events";
 import { useAuth } from "./firebase/useAuth";
 import "./App.css";
 import Nav from "./components/Navbar.jsx"
@@ -20,6 +21,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/events" element={<Events />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

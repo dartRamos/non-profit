@@ -239,12 +239,31 @@ export default function About() {
                 </div>
 
               </div>
-
             </div>
 
+            <div className="goal-bottom-wrapper">
+              <img src={rectangle4} className="rect-4" alt="rectangle 4" />
+
+              <div className="rect-4-overlay">
+                <h2 className="rect-4-title">Looking toward the future</h2>
+                <p className="rect-4-text">
+                  Ultimately, the Ontarians Against Corruption is meant to be a community-driven initiative.
+                  <br /> <br />
+                  It only works if people participate—whether that means helping moderate discussions,
+                  contributing research, managing social media, organizing events, or simply staying informed
+                  and sharing information with others.
+                  <br /> <br />
+                  Every movement begins with a small group of people willing to take the first step.
+                  <br /> <br />
+                  We care about the future of Ontario and want to be part of building a more engaged and
+                  informed civic community, and I thank you for joining us.
+                </p>
+              </div>
+            </div>
+
+            </div>
           </div>
 
-      </div>
-    </div>
+        </div>
   )
 }

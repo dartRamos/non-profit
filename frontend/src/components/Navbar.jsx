@@ -11,8 +11,8 @@ export default function Nav({ user }) {
 
       <div className="navbar-links">
         <Link to="/About">About</Link>
-        <Link to="/protests">Events</Link>
-        <Link to="/petitions">Stay Informed</Link>
+        <Link to="/Events">Events</Link>
+        <Link to="/StayInformed">Stay Informed</Link>
 
         {user && <Link to="/admin">Admin</Link>}
       </div>
