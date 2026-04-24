@@ -105,7 +105,100 @@
   margin-top: 34px;
 }
 
-.plan-details-container{
+.plan-details-container {
   display: flex;
-  gap: 59px;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.phase-card {
+  position: relative;
+  width: 100%;
+}
+
+.phase-img {
+  width: 413px;
+  height: 690px;
+}
+
+.phase-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  color: white;
+}
+
+.phase-header{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+
+.phase-number{
+  font-size: 38px;
+}
+
+.phase-title{
+  font-size: 16px !important;
+  margin-top: 0 !important;
+}
+
+.phase-details{
+  font-size: 16px !important;
+  margin-top: 14px !important;
+}
+
+.phase-list li{
+  font-size: 16px !important;
+}
+
+.text-lines-4 {
+  display: flex;
+  flex-direction: column;
+  margin-top: 62px;
+  color: black;
+  font-size: 40px;
+  font-style: italic;
+}
+
+.left-4 {
+  align-self: flex-start;
+  background-color: #FFC745;
+  padding: 10px 20px;
+  margin-bottom: 28px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  margin-left: 155px;
+}
+
+.right-4 {
+  align-self: flex-end;
+  background-color: #FFC745;
+  padding: 10px 20px;
+  margin-bottom: 38px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  margin-right: 155px;
+}
+
+.quote-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.author-text {
+  font-size: 16px;
+  color: black;
+  font-style: normal;
+  white-space: nowrap;
+  color: #FFC745;
+  margin-left: 100px;
 }
