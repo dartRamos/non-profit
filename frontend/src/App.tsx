@@ -25,7 +25,6 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/events" element={<Events />} />
         <Route path="/actions" element={<Actions />} />
-        <Route path="/action/:id" element={<Action />} />
         <Route path="/actions/:id" element={<ActionRouter />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Admin />} />

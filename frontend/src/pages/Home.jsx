@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react"
-import {
-  getFeaturedProtests,
-  getFeaturedPetitions,
-  getFeaturedImages,
-} from "../firebase/protests"
 import { getActionsByType } from "../firebase/actions"
+import { getFeaturedImages } from "../firebase/protests"
 
 import headerImage from "../assets/image1.png"
 import rectangle54 from "../assets/rectangle54.png"
@@ -18,30 +14,35 @@ import tiktok from "../assets/Tiktok.png"
 import twitter from "../assets/Twitter.png"
 import "./Home.css"
 
-import FeaturedProtests from "../components/FeaturedProtests.jsx"
-import FeaturedPetitions from "../components/FeaturedPetitions.jsx"
-import FeaturedCTA from "../components/FeaturedCTA.jsx"
+import FeaturedActions from "../components/FeaturedActions.jsx"
 import FeaturedImages from "../components/FeaturedImages.jsx"
 
 export default function Home() {
-  const [protests, setProtests] = useState([])
-  const [petitions, setPetitions] = useState([])
-  const [images, setImages] = useState([])
+
   const [ctas, setCtas] = useState([])
+  const [petitions, setPetitions] = useState([])
+  const [emails, setEmails] = useState([])
+  const [images, setImages] = useState([])
 
   useEffect(() => {
     const load = async () => {
-      setProtests(await getFeaturedProtests())
-      setPetitions(await getActionsByType("petition"))
-      setImages(await getFeaturedImages())
-      setCtas(await getActionsByType("cta"))
+      const ctaData = await getActionsByType("cta")
+      const petitionData = await getActionsByType("petition")
+      const emailData = await getActionsByType("email")
+      const imageData = await getFeaturedImages()
+
+      setCtas(ctaData)
+      setPetitions(petitionData)
+      setEmails(emailData)
+      setImages(imageData)
     }
-  
+
     load()
   }, [])
 
   return (
     <div>
+
       {/* HERO SECTION */}
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
@@ -58,6 +59,7 @@ export default function Home() {
 
       {/* MAIN CONTENT */}
       <div className="container">
+
         <div className="text-lines">
           <p className="left">Connecting people and sharing real ways to get involved</p>
           <p className="right">Making change the best way we can: together</p>
@@ -66,17 +68,36 @@ export default function Home() {
 
         <div className="featured-events-container">
 
-          {/* CTA SECTION */}
-          <h2 className="section-title">Stay Informed</h2>
-          <FeaturedCTA actions={ctas} />
+          {/* CTA */}
+          <FeaturedActions
+            actions={ctas}
+            type="cta"
+            title="Stay Informed"
+            buttonText="Take Action"
+            seeAllLink="/actions"
+          />
 
           {/* PETITIONS */}
-          <h2 className="section-title">Make Your Voice Heard</h2>
-          <FeaturedPetitions petitions={petitions} />
+          <FeaturedActions
+            actions={petitions}
+            type="petition"
+            title="Make Yourself Heard"
+            buttonText="Add Your Name"
+            seeAllLink="/actions"
+            leftText="Together, we can make a change"
+            rightText="We must fight for what is right"
+          />
 
-          {/* PROTESTS */}
-          <h2 className="section-title">Upcoming Protests</h2>
-          <FeaturedProtests protests={protests} />
+          {/* EMAILS */}
+          <FeaturedActions
+            actions={emails}
+            type="email"
+            title="Combine Our Voices"
+            buttonText="Send Email"
+            seeAllLink="/actions"
+            leftText="Make your voice heard"
+            rightText="Direct action creates change"
+          />
 
           {/* IMAGES */}
           <h2 className="section-title">Social Media Updates</h2>
@@ -85,6 +106,7 @@ export default function Home() {
 
           <FeaturedImages images={images} />
 
+          {/* SOCIAL LINKS */}
           <div className="social-media-container">
             <p className="social-text">
               Stay connected with us on social media platforms

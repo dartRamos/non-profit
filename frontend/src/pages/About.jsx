@@ -14,41 +14,44 @@ export default function About() {
 
       {/* HERO */}
       <div className="about-hero">
+
         <img
           src={rectangle19}
           className="about-hero-image"
           alt="about header"
         />
 
-        <div className="about-hero-text">
-          <h1>WHO WE ARE</h1>
+        <div className="about-hero-inner">
+
+          <div className="about-hero-text">
+            <h1>WHO WE ARE</h1>
+          </div>
+
+          <div className="about-body-container">
+            <img src={logo} className="about-logo" alt="oac logo" />
+
+            <div className="about-text-container">
+
+              <p className="about-description">
+                Many people across Ontario feel frustrated with the current state of provincial politics.
+                Whether it’s transparency, accountability, or representation, there’s a growing sense that a lot of us feel disconnected from the political process.
+                <br /><br />
+                Ontarians Against Corruption is being built to help change that. We are a centralized, accessible hub where people can learn, organize, and take action together on provincial and municipal issues.
+              </p>
+
+              <div className="text-lines-3">
+                <p className="left-3">A project built by the community</p>
+                <p className="right-3">for the community</p>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       </div>
 
       {/* BODY */}
       <div className="container">
-
-        <div className="about-body-container">
-
-          <img src={logo} className="about-logo" alt="oac logo" />
-
-          <div className="about-text-container">
-
-            <p className="about-description">
-              Many people across Ontario feel frustrated with the current state of provincial politics.
-              Whether it’s transparency, accountability, or representation, there’s a growing sense that a lot of us feel disconnected from the political process.
-              <br /><br />
-
-              Ontarians Against Corruption is being built to help change that. We are a centralized, accessible hub where people can learn, organize, and take action together on provincial and municipal issues.
-            </p>
-
-            <div className="text-lines-3">
-              <p className="left-3">A project built by the community</p>
-              <p className="right-3">for the community</p>
-            </div>
-
-          </div>
-        </div>
 
         {/* PLAN SECTION */}
         <div className="plan-section">

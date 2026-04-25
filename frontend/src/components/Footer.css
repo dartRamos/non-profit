@@ -19,7 +19,7 @@
 /* LEFT SIDE */
 .footer-left {
   margin-top: 52px;
-  margin-left: 115px;
+  margin-left: 40px;
 }
 
 .footer-title {
@@ -34,7 +34,7 @@
 
 .footer-subtext {
   margin-top: 10px;
-  font-size: 16px;
+  font-size: 20px;
   font-style: italic;
 }
 
@@ -89,14 +89,13 @@
 .footer-bottom {
   background: #191919;
   color: white;
-  padding: 60px 80px;
+  padding: 35px 40px;
 }
 
 /* layout */
 .footer-bottom-content {
   display: flex;
   justify-content: space-between;
-  gap: 60px;
 }
 
 /* LEFT BRAND */

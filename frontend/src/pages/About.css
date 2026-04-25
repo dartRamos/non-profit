@@ -1,7 +1,22 @@
 /* HERO */
 .about-hero {
+  height: 784px;
   position: relative;
   overflow: hidden;
+}
+
+.about-hero-inner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100%;
+  max-width: 1440px;
+
+  height: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 .about-hero-image {
@@ -32,20 +47,22 @@
 
 /* BODY OVER IMAGE */
 .about-body-container {
-  position: absolute;
-  top: 320px;
-  left: 40px;
-
   display: flex;
   align-items: flex-start;
   gap: 106px;
 
   color: white;
+
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  right: 0;
 }
 
 .about-logo {
   width: 471px;
   height: 471px;
+  margin-left: 40px;
 }
 
 .about-text-container {
@@ -54,7 +71,7 @@
 
 .about-description {
   font-size: 24px;
-  width: 733px;
+  max-width: 700px;
   color: #fff;
 }
 
@@ -68,7 +85,7 @@
 }
 
 .left-3 {
-  align-self: flex-start;
+  align-self: flex-end;
   background-color: #FFC745;
   padding: 10px 20px;
   margin-bottom: 28px;
@@ -76,7 +93,7 @@
 
   display: flex;
   align-items: center;
-  margin-left: 40px;
+  margin-right: 191px;
 }
 
 .right-3 {
@@ -84,6 +101,7 @@
   background-color: #FFC745;
   padding: 10px 20px;
   margin-bottom: 38px;
+  margin-right: 90px;
   height: 58px;
 
   display: flex;

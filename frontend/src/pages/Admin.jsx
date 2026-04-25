@@ -15,7 +15,7 @@ import {
 export default function Admin() {
   const { user, loading } = useAuth()
 
-  const [tab, setTab] = useState("protests")
+  const [tab, setTab] = useState("emails")
 
   const [actions, setActions] = useState([])
 
@@ -73,6 +73,7 @@ export default function Admin() {
     if (tab === "protests") return a.type === "protest"
     if (tab === "petitions") return a.type === "petition"
     if (tab === "actions") return a.type === "cta"
+    if (tab === "emails") return a.type === "email"
     return true
   })
 
@@ -83,7 +84,7 @@ export default function Admin() {
       <div className="admin-sidebar">
         <h3>Admin</h3>
 
-        <button onClick={() => setTab("protests")}>Protests</button>
+        <button onClick={() => setTab("emails")}>Emails</button>
         <button onClick={() => setTab("petitions")}>Petitions</button>
         <button onClick={() => setTab("actions")}>CTA Actions</button>
       </div>
@@ -167,6 +168,13 @@ export default function Admin() {
             {editingAction ? "Update" : "Create"}
           </button>
 
+          {/* EMAIL HINT */}
+          {form.type === "email" && (
+            <p style={{ color: "#ffc745", fontSize: "12px" }}>
+              Email campaigns will open in the user's email client (mailto link).
+            </p>
+          )}
+
         </div>
 
         {/* ---------------- LIST ---------------- */}
@@ -174,7 +182,14 @@ export default function Admin() {
           <div key={a.id} className="admin-card">
 
             <h3>{a.title}</h3>
-            {a.subtitle && <p>{a.subtitle}</p>}
+
+            {a.subtitle && (
+              <p>
+                {a.type === "email" ? "Subject: " : ""}
+                {a.subtitle}
+              </p>
+            )}
+
             <p>Type: {a.type}</p>
 
             <button onClick={() => loadSignups(a.id)}>
