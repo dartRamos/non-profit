@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react"
-import { getProtests, createProtest } from "../firebase/protests"
+import { useEffect, useState } from "react";
+import { getProtests, createProtest } from "../firebase/protests";
 
 export default function Protests() {
-  const [protests, setProtests] = useState([])
+  const [protests, setProtests] = useState([]);
 
   useEffect(() => {
-    load()
-  }, [])
+    load();
+  }, []);
 
   const load = async () => {
-    const data = await getProtests()
-    setProtests(data)
-  }
+    const data = await getProtests();
+    setProtests(data);
+  };
 
   return (
     <div style={{ padding: 20 }}>
@@ -25,5 +25,5 @@ export default function Protests() {
         </div>
       ))}
     </div>
-  )
+  );
 }

@@ -6,7 +6,8 @@
   font-family: Arial, sans-serif;
 }
 
-/* SIDEBAR */
+/* ---------------- SIDEBAR ---------------- */
+
 .admin-sidebar {
   width: 220px;
   background: #000;
@@ -28,36 +29,79 @@
   padding: 10px;
   cursor: pointer;
   text-align: left;
+  transition: all 0.2s ease;
 }
 
 .admin-sidebar button:hover {
   background: #222;
+  border-color: #666;
 }
 
-/* MAIN CONTENT */
+/* ---------------- MAIN CONTENT ---------------- */
+
 .admin-content {
   flex: 1;
   padding: 30px;
 }
 
-/* INPUTS */
+/* ---------------- FORM ---------------- */
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 600px;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #222;
+}
+
+/* LABEL (optional use) */
+.admin-label {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+/* ---------------- INPUTS ---------------- */
+
 .admin-content input,
 .admin-content textarea {
   width: 100%;
-  max-width: 600px;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 12px;
   background: #1b1b1b;
   border: 1px solid #333;
   color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border 0.2s ease;
 }
 
+.admin-content input:focus,
+.admin-content textarea:focus {
+  outline: none;
+  border: 1px solid #ffc745;
+}
+
+/* TEXTAREA SIZE */
 .admin-content textarea {
-  height: 120px;
+  min-height: 120px;
   resize: vertical;
 }
 
-/* BUTTONS */
+/* ---------------- ROWS ---------------- */
+
+.admin-row {
+  display: flex;
+  gap: 12px;
+}
+
+.admin-row input {
+  flex: 1;
+}
+
+/* ---------------- BUTTONS ---------------- */
+
 .admin-content button {
   background: #ffc745;
   color: black;
@@ -67,23 +111,41 @@
   margin-top: 5px;
   cursor: pointer;
   font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .admin-content button:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
 }
 
-/* CARDS */
+/* ---------------- CARDS ---------------- */
+
 .admin-card {
   background: #1a1a1a;
   border: 1px solid #333;
-  padding: 15px;
+  padding: 18px;
   margin-top: 15px;
-  width: 100%;
   max-width: 600px;
+  transition: border 0.2s ease;
 }
 
-/* IMAGE GRID */
+.admin-card:hover {
+  border-color: #555;
+}
+
+.admin-card h3 {
+  margin-bottom: 5px;
+}
+
+.admin-card p {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+/* ---------------- IMAGE GRID ---------------- */
+
 .image-grid {
   display: flex;
   flex-wrap: wrap;
@@ -91,42 +153,21 @@
   margin-top: 15px;
 }
 
-/* FORM LAYOUT WRAPPER */
-.admin-content form,
-.admin-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 600px;
-}
+/* ---------------- SIGNUPS PANEL ---------------- */
 
-/* ROWS (for side-by-side inputs like title + date) */
-.admin-row {
-  display: flex;
-  gap: 12px;
-}
-
-/* INPUTS */
-.admin-content input,
-.admin-content textarea {
-  flex: 1;
-  padding: 12px;
-  background: #1b1b1b;
+.admin-signups-panel {
+  margin-top: 30px;
+  padding: 20px;
+  background: #111;
   border: 1px solid #333;
-  color: white;
+}
+
+.admin-signup-card {
+  padding: 10px;
+  border-bottom: 1px solid #222;
+}
+
+.admin-signup-card p {
+  margin: 2px 0;
   font-size: 14px;
-  box-sizing: border-box;
-}
-
-/* TEXTAREA SIZE */
-.admin-content textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-/* OPTIONAL: label spacing if you add labels later */
-.admin-label {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-bottom: 4px;
 }

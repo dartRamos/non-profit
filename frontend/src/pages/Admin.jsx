@@ -1,53 +1,48 @@
 import { useEffect, useState } from "react"
-import {
-  getProtests,
-  createProtest,
-  deleteProtest,
-  updateProtest,
-  toggleProtestFeatured,
-  getPetitions,
-  createPetition,
-  deletePetition,
-  updatePetition,
-  togglePetitionFeatured,
-  getImages,
-  createImage,
-  deleteImage,
-  toggleImageFeatured,
-} from "../firebase/protests"
-
 import { useAuth } from "../firebase/useAuth"
 import "./Admin.css"
+
+import {
+  getActions,
+  createAction,
+  updateAction,
+  deleteAction,
+  toggleActionFeatured,
+  getActionSignups,
+  exportActionSignupsCSV,
+} from "../firebase/actions"
 
 export default function Admin() {
   const { user, loading } = useAuth()
 
   const [tab, setTab] = useState("protests")
 
-  const [protests, setProtests] = useState([])
-  const [petitions, setPetitions] = useState([])
-  const [images, setImages] = useState([])
+  const [actions, setActions] = useState([])
 
-  const [editingProtest, setEditingProtest] = useState(null)
-  const [editingPetition, setEditingPetition] = useState(null)
+  const [editingAction, setEditingAction] = useState(null)
 
   const [form, setForm] = useState({
     title: "",
+    subtitle: "",
     description: "",
+    type: "",
     date: "",
     link: "",
     image: "",
     location: "",
   })
 
-  const [imageForm, setImageForm] = useState({
-    url: "",
-  })
+  const [selectedActionSignups, setSelectedActionSignups] = useState([])
+  const [viewingActionId, setViewingActionId] = useState(null)
+
+  const loadSignups = async (actionId) => {
+    const data = await getActionSignups(actionId)
+    setSelectedActionSignups(data)
+    setViewingActionId(actionId)
+  }
 
   const load = async () => {
-    setProtests(await getProtests())
-    setPetitions(await getPetitions())
-    setImages(await getImages())
+    setActions(await getActions())
   }
 
   useEffect(() => {
@@ -60,15 +55,26 @@ export default function Admin() {
   const resetForm = () => {
     setForm({
       title: "",
+      subtitle: "",
       description: "",
+      type: "",
       date: "",
       link: "",
       image: "",
       location: "",
     })
-    setEditingProtest(null)
-    setEditingPetition(null)
+
+    setEditingAction(null)
   }
+
+  // ---------------- FILTERS ----------------
+
+  const filteredActions = actions.filter((a) => {
+    if (tab === "protests") return a.type === "protest"
+    if (tab === "petitions") return a.type === "petition"
+    if (tab === "actions") return a.type === "cta"
+    return true
+  })
 
   return (
     <div className="admin-wrapper">
@@ -79,7 +85,7 @@ export default function Admin() {
 
         <button onClick={() => setTab("protests")}>Protests</button>
         <button onClick={() => setTab("petitions")}>Petitions</button>
-        <button onClick={() => setTab("images")}>Images</button>
+        <button onClick={() => setTab("actions")}>CTA Actions</button>
       </div>
 
       {/* CONTENT */}
@@ -87,225 +93,135 @@ export default function Admin() {
 
         <h1>CMS Dashboard</h1>
 
-        {/* ---------------- PROTESTS ---------------- */}
-        {tab === "protests" && (
-          <>
-            <h2>Protests</h2>
+        {/* ---------------- FORM ---------------- */}
+        <div className="admin-form">
 
-            <div className="admin-form">
+          <input
+            placeholder="Title"
+            value={form.title}
+            onChange={(e) =>
+              setForm({ ...form, title: e.target.value })
+            }
+          />
 
-              <input
-                placeholder="Title"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-              />
+          <input
+            placeholder="Subtitle"
+            value={form.subtitle}
+            onChange={(e) =>
+              setForm({ ...form, subtitle: e.target.value })
+            }
+          />
 
-              <textarea
-                placeholder="Description"
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
+          <textarea
+            placeholder="Description"
+            value={form.description}
+            onChange={(e) =>
+              setForm({ ...form, description: e.target.value })
+            }
+          />
 
-              <div className="admin-row">
-                <input
-                  placeholder="YYYY-MM-DD"
-                  value={form.date}
-                  onChange={(e) =>
-                    setForm({ ...form, date: e.target.value })
-                  }
-                />
+          {/* TYPE DROPDOWN */}
+          <select
+            value={form.type}
+            onChange={(e) =>
+              setForm({ ...form, type: e.target.value })
+            }
+          >
+            <option value="">Select Type</option>
+            <option value="cta">CTA</option>
+            <option value="petition">Petition</option>
+            <option value="protest">Protest</option>
+            <option value="email">Email</option>
+            <option value="rally">Rally</option>
+            <option value="townhall">Townhall</option>
+          </select>
 
-                <input
-                  placeholder="City"
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm({ ...form, location: e.target.value })
-                  }
-                />
-              </div>
+          <input
+            placeholder="Location"
+            value={form.location}
+            onChange={(e) =>
+              setForm({ ...form, location: e.target.value })
+            }
+          />
 
-              <input
-                placeholder="Image URL"
-                value={form.image}
-                onChange={(e) =>
-                  setForm({ ...form, image: e.target.value })
-                }
-              />
+          <input
+            placeholder="Image URL"
+            value={form.image}
+            onChange={(e) =>
+              setForm({ ...form, image: e.target.value })
+            }
+          />
 
-              <button
-                onClick={async () => {
-                  if (editingProtest) {
-                    await updateProtest(editingProtest.id, form)
-                  } else {
-                    await createProtest(form)
-                  }
-                  resetForm()
-                  load()
-                }}
-              >
-                {editingProtest ? "Update Protest" : "Create Protest"}
-              </button>
+          <button
+            onClick={async () => {
+              if (editingAction) {
+                await updateAction(editingAction.id, form)
+              } else {
+                await createAction(form)
+              }
 
-            </div>
+              resetForm()
+              load()
+            }}
+          >
+            {editingAction ? "Update" : "Create"}
+          </button>
 
-            {protests.map((p) => (
-              <div key={p.id} className="admin-card">
+        </div>
 
-                {p.image && <img src={p.image} width={120} />}
+        {/* ---------------- LIST ---------------- */}
+        {filteredActions.map((a) => (
+          <div key={a.id} className="admin-card">
 
-                <h3>{p.title}</h3>
-                <p>{p.location}</p>
+            <h3>{a.title}</h3>
+            {a.subtitle && <p>{a.subtitle}</p>}
+            <p>Type: {a.type}</p>
 
-                <button onClick={() => {
-                  setEditingProtest(p)
-                  setForm(p)
-                }}>
-                  Edit
-                </button>
+            <button onClick={() => loadSignups(a.id)}>
+              View Signups
+            </button>
 
-                <button onClick={() => deleteProtest(p.id)}>Delete</button>
+            <button
+              onClick={() => {
+                setEditingAction(a)
+                setForm(a)
+              }}
+            >
+              Edit
+            </button>
 
-                <button onClick={() => toggleProtestFeatured(p.id, p.featured)}>
-                  {p.featured ? "Unfeature" : "Feature"}
-                </button>
+            <button onClick={() => deleteAction(a.id)}>
+              Delete
+            </button>
 
-              </div>
-            ))}
-          </>
-        )}
+            <button onClick={() =>
+              toggleActionFeatured(a.id, a.featured)
+            }>
+              {a.featured ? "Unfeature" : "Feature"}
+            </button>
 
-        {/* ---------------- PETITIONS ---------------- */}
-        {tab === "petitions" && (
-          <>
-            <h2>Petitions</h2>
+            <button onClick={() => exportActionSignupsCSV(a.id)}>
+              Export Signups
+            </button>
 
-            <div className="admin-form">
+          </div>
+        ))}
 
-              <input
-                placeholder="Title"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-              />
+        {/* ---------------- SIGNUPS ---------------- */}
+        {viewingActionId && (
+          <div className="admin-signups-panel">
 
-              <textarea
-                placeholder="Description"
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
+            <h2>Signups</h2>
+            <p>Total: {selectedActionSignups.length}</p>
 
-              <div className="admin-row">
-                <input
-                  placeholder="YYYY-MM-DD"
-                  value={form.date}
-                  onChange={(e) =>
-                    setForm({ ...form, date: e.target.value })
-                  }
-                />
-
-                <input
-                  placeholder="Link"
-                  value={form.link}
-                  onChange={(e) =>
-                    setForm({ ...form, link: e.target.value })
-                  }
-                />
-              </div>
-
-              <input
-                placeholder="Image URL"
-                value={form.image}
-                onChange={(e) =>
-                  setForm({ ...form, image: e.target.value })
-                }
-              />
-
-              <button
-                onClick={async () => {
-                  if (editingPetition) {
-                    await updatePetition(editingPetition.id, form)
-                  } else {
-                    await createPetition(form)
-                  }
-                  resetForm()
-                  load()
-                }}
-              >
-                {editingPetition ? "Update Petition" : "Create Petition"}
-              </button>
-
-            </div>
-
-            {petitions.map((p) => (
-              <div key={p.id} className="admin-card">
-
-                <h3>{p.title}</h3>
-
-                <button onClick={() => {
-                  setEditingPetition(p)
-                  setForm(p)
-                }}>
-                  Edit
-                </button>
-
-                <button onClick={() => deletePetition(p.id)}>Delete</button>
-
-                <button onClick={() => togglePetitionFeatured(p.id, p.featured)}>
-                  {p.featured ? "Unfeature" : "Feature"}
-                </button>
-
+            {selectedActionSignups.map((s) => (
+              <div key={s.id} className="admin-signup-card">
+                <p><strong>{s.firstName} {s.lastName}</strong></p>
+                <p>{s.email}</p>
               </div>
             ))}
-          </>
-        )}
 
-        {/* ---------------- IMAGES ---------------- */}
-        {tab === "images" && (
-          <>
-            <h2>Images</h2>
-
-            <div className="admin-form">
-
-              <input
-                placeholder="Image URL"
-                value={imageForm.url}
-                onChange={(e) =>
-                  setImageForm({ ...imageForm, url: e.target.value })
-                }
-              />
-
-              <button
-                onClick={async () => {
-                  await createImage({
-                    url: imageForm.url,
-                    featured: false,
-                  })
-                  setImageForm({ url: "" })
-                  load()
-                }}
-              >
-                Add Image
-              </button>
-
-            </div>
-
-            <div className="image-grid">
-              {images.map((img) => (
-                <div key={img.id} className="admin-card">
-                  <img src={img.url} width={120} />
-
-                  <button onClick={() => deleteImage(img.id)}>Delete</button>
-
-                  <button onClick={() => toggleImageFeatured(img.id, img.featured)}>
-                    {img.featured ? "Unfeature" : "Feature"}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
+          </div>
         )}
 
       </div>

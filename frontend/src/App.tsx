@@ -10,6 +10,8 @@ import { useAuth } from "./firebase/useAuth";
 import "./App.css";
 import Nav from "./components/Navbar.jsx"
 import Footer from "./components/Footer.jsx"
+import Action from "./pages/Action"
+import ActionRouter from "./pages/ActionRouter"
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -23,6 +25,8 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/events" element={<Events />} />
         <Route path="/actions" element={<Actions />} />
+        <Route path="/action/:id" element={<Action />} />
+        <Route path="/actions/:id" element={<ActionRouter />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

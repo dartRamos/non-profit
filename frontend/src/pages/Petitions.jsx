@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getFeaturedPetitions } from "../firebase/protests"
+import { getFeaturedPetitions } from "../firebase/actions"
 
 export default function Petitions() {
   const [petitions, setPetitions] = useState([])

@@ -4,6 +4,7 @@ import {
   getFeaturedPetitions,
   getFeaturedImages,
 } from "../firebase/protests"
+import { getActionsByType } from "../firebase/actions"
 
 import headerImage from "../assets/image1.png"
 import rectangle54 from "../assets/rectangle54.png"
@@ -19,20 +20,23 @@ import "./Home.css"
 
 import FeaturedProtests from "../components/FeaturedProtests.jsx"
 import FeaturedPetitions from "../components/FeaturedPetitions.jsx"
+import FeaturedCTA from "../components/FeaturedCTA.jsx"
 import FeaturedImages from "../components/FeaturedImages.jsx"
 
 export default function Home() {
   const [protests, setProtests] = useState([])
   const [petitions, setPetitions] = useState([])
   const [images, setImages] = useState([])
+  const [ctas, setCtas] = useState([])
 
   useEffect(() => {
     const load = async () => {
       setProtests(await getFeaturedProtests())
-      setPetitions(await getFeaturedPetitions())
+      setPetitions(await getActionsByType("petition"))
       setImages(await getFeaturedImages())
+      setCtas(await getActionsByType("cta"))
     }
-
+  
     load()
   }, [])
 
@@ -62,8 +66,12 @@ export default function Home() {
 
         <div className="featured-events-container">
 
+          {/* CTA SECTION */}
+          <h2 className="section-title">Stay Informed</h2>
+          <FeaturedCTA actions={ctas} />
+
           {/* PETITIONS */}
-          <h2 className="section-title">Add Your Name</h2>
+          <h2 className="section-title">Make Your Voice Heard</h2>
           <FeaturedPetitions petitions={petitions} />
 
           {/* PROTESTS */}

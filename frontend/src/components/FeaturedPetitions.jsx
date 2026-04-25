@@ -3,9 +3,14 @@ import rectangle62 from "../assets/rectangle62.png"
 import { Link } from "react-router-dom"
 
 export default function FeaturedPetitions({ petitions }) {
+
+  const featured = (petitions || [])
+    .filter(p => p.type === "petition" && p.featured)
+    .slice(0, 3)
+
   return (
     <div className="featured-petitions-container">
-      
+
       <img src={rectangle62} className="rectangle-62" alt="background" />
 
       <div className="petitions-overlay">
@@ -13,29 +18,34 @@ export default function FeaturedPetitions({ petitions }) {
         <div className="content-wrapper">
 
           <div className="petitions-list">
-            {petitions.slice(0, 3).map((p) => (
+
+            {featured.map((p) => (
               <div key={p.id} className="petition-card">
 
                 <div className="petition-info">
                   <h3>{p.title}</h3>
-                  <p>{p.description}</p>
+
+                  <p>
+                    {(p.description || "").length > 140
+                      ? p.description.slice(0, 140) + "..."
+                      : p.description}
+                  </p>
                 </div>
 
-                <a
-                  href={p.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to={`/actions/${p.id}`}
                   className="petition-btn"
                 >
-                  Act Now
-                </a>
+                  Add Your Name
+                </Link>
 
               </div>
             ))}
+
           </div>
 
           <div className="see-all-container">
-            <Link to="/protests" className="see-all-btn-2">
+            <Link to="/actions" className="see-all-btn-2">
               See All Petitions
             </Link>
           </div>
