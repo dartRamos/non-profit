@@ -16,9 +16,7 @@ export default function Admin() {
   const { user, loading } = useAuth()
 
   const [tab, setTab] = useState("emails")
-
   const [actions, setActions] = useState([])
-
   const [editingAction, setEditingAction] = useState(null)
 
   const [form, setForm] = useState({
@@ -30,6 +28,11 @@ export default function Admin() {
     link: "",
     image: "",
     location: "",
+
+    recipientName: "",
+    recipientPosition: "",
+
+    emailTemplate: "",
   })
 
   const [selectedActionSignups, setSelectedActionSignups] = useState([])
@@ -52,6 +55,8 @@ export default function Admin() {
   if (loading) return <div>Loading...</div>
   if (!user) return <div>Not authorized</div>
 
+  // ---------------- RESET ----------------
+
   const resetForm = () => {
     setForm({
       title: "",
@@ -62,12 +67,17 @@ export default function Admin() {
       link: "",
       image: "",
       location: "",
+
+      recipientName: "",
+      recipientPosition: "",
+
+      emailTemplate: "",
     })
 
     setEditingAction(null)
   }
 
-  // ---------------- FILTERS ----------------
+  // ---------------- FILTER ----------------
 
   const filteredActions = actions.filter((a) => {
     if (tab === "protests") return a.type === "protest"
@@ -106,7 +116,7 @@ export default function Admin() {
           />
 
           <input
-            placeholder="Subtitle"
+            placeholder="Subtitle (Subject Line)"
             value={form.subtitle}
             onChange={(e) =>
               setForm({ ...form, subtitle: e.target.value })
@@ -114,14 +124,13 @@ export default function Admin() {
           />
 
           <textarea
-            placeholder="Description"
+            placeholder="Description (Shown on page)"
             value={form.description}
             onChange={(e) =>
               setForm({ ...form, description: e.target.value })
             }
           />
 
-          {/* TYPE DROPDOWN */}
           <select
             value={form.type}
             onChange={(e) =>
@@ -153,6 +162,52 @@ export default function Admin() {
             }
           />
 
+          {/* ---------------- RECIPIENT FIELDS ---------------- */}
+          <input
+            placeholder="Recipient Name (e.g. Olivia Chow)"
+            value={form.recipientName}
+            onChange={(e) =>
+              setForm({ ...form, recipientName: e.target.value })
+            }
+          />
+
+          <input
+            placeholder="Recipient Position (e.g. Mayor)"
+            value={form.recipientPosition}
+            onChange={(e) =>
+              setForm({ ...form, recipientPosition: e.target.value })
+            }
+          />
+
+          {/* ---------------- EMAIL TEMPLATE ---------------- */}
+          {form.type === "email" && (
+            <textarea
+              placeholder={`Email Template:
+
+Use placeholders:
+__recipient_name__
+__recipient_position__
+__firstName__
+__lastName__
+__email__
+__postalCode__
+
+Example:
+
+Dear __recipient_position__ __recipient_name__,
+
+My name is __firstName__ __lastName__ and I am writing to you...
+
+Sincerely,
+__firstName__ __lastName__`}
+              value={form.emailTemplate}
+              onChange={(e) =>
+                setForm({ ...form, emailTemplate: e.target.value })
+              }
+              style={{ minHeight: "220px" }}
+            />
+          )}
+
           <button
             onClick={async () => {
               if (editingAction) {
@@ -167,13 +222,6 @@ export default function Admin() {
           >
             {editingAction ? "Update" : "Create"}
           </button>
-
-          {/* EMAIL HINT */}
-          {form.type === "email" && (
-            <p style={{ color: "#ffc745", fontSize: "12px" }}>
-              Email campaigns will open in the user's email client (mailto link).
-            </p>
-          )}
 
         </div>
 
@@ -199,7 +247,12 @@ export default function Admin() {
             <button
               onClick={() => {
                 setEditingAction(a)
-                setForm(a)
+                setForm({
+                  ...a,
+                  emailTemplate: a.emailTemplate || "",
+                  recipientName: a.recipientName || "",
+                  recipientPosition: a.recipientPosition || "",
+                })
               }}
             >
               Edit
