@@ -6,7 +6,6 @@ import { sendEmail } from "../api/email"
 import headerImage from "../assets/event5.png"
 import rectangle54 from "../assets/rectangle54.png"
 import rectangle from "../assets/rectangle91.png"
-
 import "./EmailDetail.css"
 
 export default function EmailDetail() {
@@ -14,6 +13,9 @@ export default function EmailDetail() {
 
   const [email, setEmail] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  // NEW: preview tab state
+  const [activePreviewIndex, setActivePreviewIndex] = useState(0)
 
   const [form, setForm] = useState({
     firstName: "",
@@ -30,7 +32,6 @@ export default function EmailDetail() {
       setEmail(found)
       setLoading(false)
     }
-
     load()
   }, [id])
 
@@ -38,32 +39,34 @@ export default function EmailDetail() {
   if (!email) return <p>Email campaign not found</p>
 
   const handleSubmit = async () => {
-    if (!form.firstName || !form.lastName || !form.email) {
-      alert("Please fill in required fields")
+    const { firstName, lastName, email: userEmail, postalCode } = form
+
+    if (!firstName || !lastName || !userEmail || !postalCode) {
+      alert("Please fill in all required fields")
       return
     }
 
     try {
       await signupForAction(id, form)
-    
+
+      const templates = Array.isArray(email.emailTemplates)
+        ? email.emailTemplates
+        : email.emailTemplate
+          ? [email.emailTemplate]
+          : [email.description]
+
       await sendEmail({
         recipientName: email.recipientName,
         recipientPosition: email.recipientPosition,
-    
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        postalCode: form.postalCode,
-    
-        message: renderTemplate(
-          email.emailTemplate || email.description,
-          form,
-          email
-        ),
+        firstName,
+        lastName,
+        email: userEmail,
+        postalCode,
+        messages: templates,
       })
-    
+
       setSubmitted(true)
-    
+
       setEmail((prev) => ({
         ...prev,
         stats: {
@@ -76,15 +79,10 @@ export default function EmailDetail() {
     }
   }
 
-  // ---------------- TEMPLATE ENGINE ----------------
-
   function renderTemplate(template = "", form, email) {
     return template
-      // recipient fields (ADMIN CONTROLLED)
       .replace(/__recipient_name__/g, email?.recipientName || "recipient full name will go here")
       .replace(/__recipient_position__/g, email?.recipientPosition || "recipient position will go here")
-
-      // user fields (USER INPUT)
       .replace(/__firstName__/g, form.firstName || "first name will go here")
       .replace(/__lastName__/g, form.lastName || "last name will go here")
       .replace(/__email__/g, form.email || "email will go here")
@@ -123,6 +121,12 @@ export default function EmailDetail() {
     })
   }
 
+  const templates = Array.isArray(email.emailTemplates)
+    ? email.emailTemplates
+    : email.emailTemplate
+      ? [email.emailTemplate]
+      : [email.description]
+
   const signups = email?.stats?.signups || 0
   const goalStep = 100
   const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep
@@ -130,7 +134,6 @@ export default function EmailDetail() {
 
   return (
     <div>
-
       {/* HERO */}
       <div className="header-image-container">
         <img src={headerImage} className="email-header-image" alt="header" />
@@ -146,7 +149,6 @@ export default function EmailDetail() {
 
       {/* MAIN */}
       <div className="container">
-
         <div className="action-section">
           <img src={rectangle} className="action-bg" alt="background" />
 
@@ -155,7 +157,6 @@ export default function EmailDetail() {
 
               {/* LEFT */}
               <div className="action-left">
-
                 <h1 className="action-title">{email.title}</h1>
 
                 <div className="action-meta-row">
@@ -168,12 +169,10 @@ export default function EmailDetail() {
                     <p key={i}>{line}</p>
                   ))}
                 </div>
-
               </div>
 
               {/* RIGHT */}
               <div className="action-right">
-
                 <div className="signup-panel">
 
                   <div className="signup-stats">
@@ -195,12 +194,29 @@ export default function EmailDetail() {
 
                       {/* PREVIEW */}
                       <div className="email-preview">
-                        <h3>Preview</h3>
+                        <h3>Email Preview</h3>
+
+                        {/* PREVIEW TABS */}
+                        {templates.length > 1 && (
+                          <div className="email-tabs">
+                            {templates.map((_, i) => (
+                              <button
+                                key={i}
+                                onClick={() => setActivePreviewIndex(i)}
+                                className={activePreviewIndex === i ? "active-tab" : ""}
+                              >
+                                Email {i + 1}
+                              </button>
+                            ))}
+                          </div>
+                        )}
 
                         <div className="preview-box">
                           {renderPreview(
                             renderTemplate(
-                              email?.emailTemplate || email?.description || "",
+                              typeof templates[activePreviewIndex] === "string"
+                                ? templates[activePreviewIndex]
+                                : templates[activePreviewIndex]?.body || "",
                               form,
                               email
                             )
@@ -210,7 +226,6 @@ export default function EmailDetail() {
 
                       {/* FORM */}
                       <div className="signup-box">
-
                         <input
                           placeholder="First Name"
                           value={form.firstName}
@@ -243,10 +258,7 @@ export default function EmailDetail() {
                           }
                         />
 
-                        <button onClick={handleSubmit}>
-                          Submit
-                        </button>
-
+                        <button onClick={handleSubmit}>Submit</button>
                       </div>
                     </>
                   ) : (
@@ -257,7 +269,6 @@ export default function EmailDetail() {
                   )}
 
                 </div>
-
               </div>
 
             </div>

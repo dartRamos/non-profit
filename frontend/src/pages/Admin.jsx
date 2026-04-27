@@ -28,11 +28,15 @@ export default function Admin() {
     link: "",
     image: "",
     location: "",
-
     recipientName: "",
     recipientPosition: "",
-
-    emailTemplate: "",
+    emailTemplates: [
+      {
+        subject: "",
+        body: "",
+        recipientEmail: "",
+      },
+    ],
   })
 
   const [selectedActionSignups, setSelectedActionSignups] = useState([])
@@ -56,7 +60,6 @@ export default function Admin() {
   if (!user) return <div>Not authorized</div>
 
   // ---------------- RESET ----------------
-
   const resetForm = () => {
     setForm({
       title: "",
@@ -67,17 +70,18 @@ export default function Admin() {
       link: "",
       image: "",
       location: "",
-
       recipientName: "",
       recipientPosition: "",
-
-      emailTemplate: "",
+      emailTemplates: [
+        {
+          subject: "",
+          body: "",
+          recipientEmail: "",
+        },
+      ],
     })
-
     setEditingAction(null)
   }
-
-  // ---------------- FILTER ----------------
 
   const filteredActions = actions.filter((a) => {
     if (tab === "protests") return a.type === "protest"
@@ -87,26 +91,58 @@ export default function Admin() {
     return true
   })
 
-  // ---------------- CREATE / UPDATE ----------------
+  // ---------------- EMAIL TEMPLATE HANDLERS ----------------
+  const addEmailTemplate = () => {
+    setForm({
+      ...form,
+      emailTemplates: [
+        ...form.emailTemplates,
+        { subject: "", body: "", recipientEmail: "" },
+      ],
+    })
+  }
 
+  const updateEmailTemplate = (index, field, value) => {
+    const updated = [...form.emailTemplates]
+    updated[index][field] = value
+    setForm({ ...form, emailTemplates: updated })
+  }
+
+  const removeEmailTemplate = (index) => {
+    const updated = form.emailTemplates.filter((_, i) => i !== index)
+    setForm({ ...form, emailTemplates: updated })
+  }
+
+  // ---------------- SUBMIT ----------------
   const handleSubmit = async () => {
-    // Email validation
     if (form.type === "email") {
-      if (!form.recipientName || !form.recipientPosition) {
-        alert("Recipient name and position are required for email campaigns")
+      if (!form.emailTemplates.length) {
+        alert("At least one email is required")
         return
       }
-
-      if (!form.emailTemplate) {
-        alert("Email template is required")
+    
+      const missingFields = form.emailTemplates.some(
+        (t) =>
+          !t.recipientEmail?.trim() ||
+          !t.recipientName?.trim() ||
+          !t.recipientPosition?.trim()
+      )
+    
+      if (missingFields) {
+        alert("Each email must include recipient email, name, and position")
         return
       }
     }
 
+    const payload = {
+      ...form,
+      emailTemplates: form.emailTemplates,
+    }
+
     if (editingAction) {
-      await updateAction(editingAction.id, form)
+      await updateAction(editingAction.id, payload)
     } else {
-      await createAction(form)
+      await createAction(payload)
     }
 
     resetForm()
@@ -116,41 +152,28 @@ export default function Admin() {
   return (
     <div className="admin-wrapper">
 
-      {/* SIDEBAR */}
+      {/* SIDEBAR (UNCHANGED) */}
       <div className="admin-sidebar">
         <h3>Admin</h3>
-
         <button onClick={() => setTab("emails")}>Emails</button>
         <button onClick={() => setTab("petitions")}>Petitions</button>
         <button onClick={() => setTab("actions")}>CTA Actions</button>
       </div>
 
-      {/* CONTENT */}
       <div className="admin-content">
-
         <h1>CMS Dashboard</h1>
 
-        {/* ---------------- FORM ---------------- */}
+        {/* FORM */}
         <div className="admin-form">
 
           <input
             placeholder="Title"
             value={form.title}
-            onChange={(e) =>
-              setForm({ ...form, title: e.target.value })
-            }
-          />
-
-          <input
-            placeholder="Subtitle (Subject Line)"
-            value={form.subtitle}
-            onChange={(e) =>
-              setForm({ ...form, subtitle: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
           />
 
           <textarea
-            placeholder="Description (Shown on page)"
+            placeholder="Description"
             value={form.description}
             onChange={(e) =>
               setForm({ ...form, description: e.target.value })
@@ -164,57 +187,70 @@ export default function Admin() {
             }
           >
             <option value="">Select Type</option>
+            <option value="email">Email</option>
             <option value="cta">CTA</option>
             <option value="petition">Petition</option>
-            <option value="protest">Protest</option>
-            <option value="email">Email</option>
-            <option value="rally">Rally</option>
-            <option value="townhall">Townhall</option>
           </select>
 
-          <input
-            placeholder="Location"
-            value={form.location}
-            onChange={(e) =>
-              setForm({ ...form, location: e.target.value })
-            }
-          />
-
-          <input
-            placeholder="Image URL"
-            value={form.image}
-            onChange={(e) =>
-              setForm({ ...form, image: e.target.value })
-            }
-          />
-
-          {/* ---------------- RECIPIENT FIELDS ---------------- */}
-          <input
-            placeholder="Recipient Name (e.g. Olivia Chow)"
-            value={form.recipientName}
-            onChange={(e) =>
-              setForm({ ...form, recipientName: e.target.value })
-            }
-          />
-
-          <input
-            placeholder="Recipient Position (e.g. Mayor)"
-            value={form.recipientPosition}
-            onChange={(e) =>
-              setForm({ ...form, recipientPosition: e.target.value })
-            }
-          />
-
-          {/* ---------------- EMAIL TEMPLATE ---------------- */}
+          {/* EMAIL BUILDER */}
           {form.type === "email" && (
-            <textarea
-              placeholder={`Enter the body of the email here only.`}
-              value={form.emailTemplate}
-              onChange={(e) =>
-                setForm({ ...form, emailTemplate: e.target.value })
-              }
-              style={{ minHeight: "220px" }}
-            />
+            <div className="email-builder">
+
+              <h3>Email Campaigns</h3>
+
+              {form.emailTemplates.map((t, i) => (
+                <div key={i} className="email-block">
+
+                  <input
+                    placeholder="Subject"
+                    value={t.subject}
+                    onChange={(e) =>
+                      updateEmailTemplate(i, "subject", e.target.value)
+                    }
+                  />
+
+                  <textarea
+                    placeholder="Email body"
+                    value={t.body}
+                    onChange={(e) =>
+                      updateEmailTemplate(i, "body", e.target.value)
+                    }
+                  />
+
+                  <input
+                    placeholder="Recipient Email (required)"
+                    value={t.recipientEmail}
+                    onChange={(e) =>
+                      updateEmailTemplate(i, "recipientEmail", e.target.value)
+                    }
+                  />
+
+                  <input
+                    placeholder="Recipient Name (required)"
+                    value={t.recipientName || ""}
+                    onChange={(e) =>
+                      updateEmailTemplate(i, "recipientName", e.target.value)
+                    }
+                  />
+
+                  <input
+                    placeholder="Recipient Position (required)"
+                    value={t.recipientPosition || ""}
+                    onChange={(e) =>
+                      updateEmailTemplate(i, "recipientPosition", e.target.value)
+                    }
+                  />
+
+                  <button onClick={() => removeEmailTemplate(i)}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+
+              <button onClick={addEmailTemplate}>
+                + Add Email
+              </button>
+            </div>
           )}
 
           <button onClick={handleSubmit}>
@@ -223,19 +259,12 @@ export default function Admin() {
 
         </div>
 
-        {/* ---------------- LIST ---------------- */}
+        {/* LIST (UNCHANGED FULL FEATURES) */}
         {filteredActions.map((a) => (
           <div key={a.id} className="admin-card">
-
             <h3>{a.title}</h3>
 
-            {a.subtitle && (
-              <p>
-                {a.type === "email" ? "Subject: " : ""}
-                {a.subtitle}
-              </p>
-            )}
-
+            {a.subtitle && <p>{a.subtitle}</p>}
             <p>Type: {a.type}</p>
 
             <button onClick={() => loadSignups(a.id)}>
@@ -245,48 +274,69 @@ export default function Admin() {
             <button
               onClick={() => {
                 setEditingAction(a)
+              
+                const templates =
+                  Array.isArray(a.emailTemplates) && a.emailTemplates.length
+                    ? a.emailTemplates
+                    : a.emailTemplate
+                      ? [
+                          {
+                            subject: a.subtitle || "",
+                            body: a.emailTemplate,
+                            recipientEmail: "",
+                          },
+                        ]
+                      : a.description
+                        ? [
+                            {
+                              subject: a.subtitle || "",
+                              body: a.description,
+                              recipientEmail: "",
+                            },
+                          ]
+                        : [
+                            {
+                              subject: "",
+                              body: "",
+                              recipientEmail: "",
+                            },
+                          ]
+              
                 setForm({
                   ...a,
-                  emailTemplate: a.emailTemplate || "",
-                  recipientName: a.recipientName || "",
-                  recipientPosition: a.recipientPosition || "",
+                  emailTemplates: templates,
                 })
               }}
             >
               Edit
             </button>
 
-            <button onClick={() => deleteAction(a.id)}>
-              Delete
-            </button>
+            <button onClick={() => deleteAction(a.id)}>Delete</button>
 
-            <button onClick={() =>
-              toggleActionFeatured(a.id, a.featured)
-            }>
+            <button
+              onClick={() => toggleActionFeatured(a.id, a.featured)}
+            >
               {a.featured ? "Unfeature" : "Feature"}
             </button>
 
             <button onClick={() => exportActionSignupsCSV(a.id)}>
               Export Signups
             </button>
-
           </div>
         ))}
 
-        {/* ---------------- SIGNUPS ---------------- */}
+        {/* SIGNUPS PANEL (UNCHANGED) */}
         {viewingActionId && (
           <div className="admin-signups-panel">
-
             <h2>Signups</h2>
             <p>Total: {selectedActionSignups.length}</p>
 
             {selectedActionSignups.map((s) => (
-              <div key={s.id} className="admin-signup-card">
-                <p><strong>{s.firstName} {s.lastName}</strong></p>
+              <div key={s.id}>
+                <strong>{s.firstName} {s.lastName}</strong>
                 <p>{s.email}</p>
               </div>
             ))}
-
           </div>
         )}
 

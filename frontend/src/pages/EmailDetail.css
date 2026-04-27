@@ -34,3 +34,24 @@
   opacity: 0.6;
   color: #ffc745;
 }
+
+.email-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.email-tabs button {
+  padding: 6px 10px;
+  background: #222;
+  border: 1px solid #444;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.email-tabs button.active-tab {
+  background: #ffc745;
+  color: #000;
+  font-weight: bold;
+}
