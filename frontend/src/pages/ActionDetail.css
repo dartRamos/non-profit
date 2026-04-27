@@ -1,10 +1,10 @@
-/* SECTION WRAPPER (like events-section) */
+/* SECTION WRAPPER*/
 .action-section {
   position: relative;
   width: 100%;
 }
 
-/* BACKGROUND IMAGE (NORMAL FLOW) */
+/* BACKGROUND IMAGE */
 .action-bg {
   width: 100%;
   display: block;
@@ -12,7 +12,7 @@
   z-index: 1;
 }
 
-/* OVERLAY (same as events-overlay) */
+/* OVERLAY */
 .action-overlay {
   position: absolute;
   inset: 0;
@@ -94,7 +94,7 @@
   color: #aaa;
 }
 
-/* ---------------- PROGRESS BAR ---------------- */
+/* PROGRESS BAR */
 
 .signup-bar {
   height: 8px;
@@ -108,7 +108,7 @@
   transition: width 0.3s ease;
 }
 
-/* ---------------- FORM ---------------- */
+/*FORM */
 
 .signup-box {
   display: flex;
@@ -141,7 +141,7 @@
   opacity: 0.9;
 }
 
-/* ---------------- RESPONSIVE ---------------- */
+/* RESPONSIVE*/
 
 @media (max-width: 900px) {
   .action-layout {

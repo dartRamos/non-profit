@@ -3,9 +3,9 @@
 }
 
 .preview-box {
-  max-height: 300px;        /* controls visible height */
-  overflow-y: auto;         /* enables vertical scroll */
-  background: #111;         /* keeps same dark theme */
+  max-height: 300px;
+  overflow-y: auto;
+  background: #111;
   border: 1px solid #333;
   padding: 15px;
 
@@ -14,7 +14,6 @@
   color: #ddd;
 }
 
-/* optional: nicer scrollbar */
 .preview-box::-webkit-scrollbar {
   width: 6px;
 }

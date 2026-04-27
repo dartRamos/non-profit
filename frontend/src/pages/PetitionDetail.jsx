@@ -47,7 +47,7 @@ export default function PetitionDetail({ action }) {
   return (
     <div>
 
-      {/* HERO (EXACTLY SAME AS ACTIONDETAIL) */}
+      {/* HERO */}
       <div className="header-image-container">
         <img src={heroImage} className="header-image" alt="header" />
         <img src={rectangle} className="rectangle-54" alt="overlay" />
@@ -59,7 +59,7 @@ export default function PetitionDetail({ action }) {
         </div>
       </div>
 
-      {/* MAIN CONTENT (COPY OF ACTIONDETAIL STRUCTURE) */}
+      {/* MAIN CONTENT*/}
       <div className="container">
 
         <div className="action-section">

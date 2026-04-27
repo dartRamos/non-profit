@@ -59,7 +59,6 @@ export default function Admin() {
   if (loading) return <div>Loading...</div>
   if (!user) return <div>Not authorized</div>
 
-  // ---------------- RESET ----------------
   const resetForm = () => {
     setForm({
       title: "",
@@ -91,7 +90,6 @@ export default function Admin() {
     return true
   })
 
-  // ---------------- EMAIL TEMPLATE HANDLERS ----------------
   const addEmailTemplate = () => {
     setForm({
       ...form,
@@ -113,7 +111,6 @@ export default function Admin() {
     setForm({ ...form, emailTemplates: updated })
   }
 
-  // ---------------- SUBMIT ----------------
   const handleSubmit = async () => {
     if (form.type === "email") {
       if (!form.emailTemplates.length) {
@@ -152,7 +149,7 @@ export default function Admin() {
   return (
     <div className="admin-wrapper">
 
-      {/* SIDEBAR (UNCHANGED) */}
+      {/* SIDEBAR */}
       <div className="admin-sidebar">
         <h3>Admin</h3>
         <button onClick={() => setTab("emails")}>Emails</button>
@@ -259,7 +256,7 @@ export default function Admin() {
 
         </div>
 
-        {/* LIST (UNCHANGED FULL FEATURES) */}
+        {/* LIST */}
         {filteredActions.map((a) => (
           <div key={a.id} className="admin-card">
             <h3>{a.title}</h3>
@@ -325,7 +322,7 @@ export default function Admin() {
           </div>
         ))}
 
-        {/* SIGNUPS PANEL (UNCHANGED) */}
+        {/* SIGNUPS PANEL*/}
         {viewingActionId && (
           <div className="admin-signups-panel">
             <h2>Signups</h2>

@@ -14,7 +14,6 @@ export default function EmailDetail() {
   const [email, setEmail] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // NEW: preview tab state
   const [activePreviewIndex, setActivePreviewIndex] = useState(0)
 
   const [form, setForm] = useState({
