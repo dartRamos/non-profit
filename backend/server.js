@@ -1,5 +1,4 @@
 require("dotenv").config()
-
 const express = require("express")
 const cors = require("cors")
 const formData = require("form-data")
@@ -34,32 +33,82 @@ app.post("/send-email", async (req, res) => {
       email,
       postalCode,
       message,
+      messages,
     } = req.body
 
+    console.log("RAW EMAIL REQUEST:", JSON.stringify(req.body, null, 2))
     const fullName = `${firstName} ${lastName}`
 
-    const emailBody = `
-Dear ${recipientPosition} ${recipientName},
+    const emailMessages =
+      Array.isArray(messages) && messages.length
+        ? messages
+        : [message]
 
-${message}
+        const sendOne = async (item, index) => {
 
-Sincerely,
-${fullName}
-${email}
-${postalCode}
-`
+          // 🔥 ADD THIS RIGHT HERE (FIRST THING)
+          if (typeof item !== "string") {
+            if (
+              !item.recipientEmail ||
+              !item.recipientName ||
+              !item.recipientPosition
+            ) {
+              throw new Error(
+                `Missing recipient fields in template at index ${index}`
+              )
+            }
+          }
+        
+          const msg = typeof item === "string" ? item : item.body
+        
+          const to =
+            typeof item === "string"
+              ? "alessandro.ramos.it@gmail.com"
+              : item.recipientEmail
+        
+          const subject =
+            typeof item === "string"
+              ? `Campaign Message ${index + 1}`
+              : item.subject || `Campaign Message ${index + 1}`
+        
+              const emailBody = `
+                Dear ${item.recipientPosition} ${item.recipientName},
+                
+                ${msg}
+                
+                Sincerely,
+                ${fullName}
+                ${email}
+                ${postalCode}
+                `
+        
+          return mg.messages.create(process.env.MAILGUN_DOMAIN, {
+            from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
+            to,
+            subject,
+            text: emailBody,
+          })
+        }
 
-    const response = await mg.messages.create(process.env.MAILGUN_DOMAIN, {
-      from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
-      to: "alessandro.ramos.it@gmail.com",
-      subject: "Campaign Message",
-      text: emailBody,
+    // SEND IN PARALLEL
+    const responses = await Promise.allSettled(
+      emailMessages.map((item, i) => sendOne(item, i))
+    )
+
+    const failed = responses.filter((r) => r.status === "rejected")
+
+    res.json({
+      success: true,
+      sent: responses.length - failed.length,
+      failed: failed.length,
+      results: responses,
     })
-
-    res.json({ success: true, response })
   } catch (err) {
     console.error(err)
-    res.status(500).json({ success: false, error: err.message })
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    })
   }
 })
 
