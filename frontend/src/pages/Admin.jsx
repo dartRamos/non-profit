@@ -87,6 +87,32 @@ export default function Admin() {
     return true
   })
 
+  // ---------------- CREATE / UPDATE ----------------
+
+  const handleSubmit = async () => {
+    // Email validation
+    if (form.type === "email") {
+      if (!form.recipientName || !form.recipientPosition) {
+        alert("Recipient name and position are required for email campaigns")
+        return
+      }
+
+      if (!form.emailTemplate) {
+        alert("Email template is required")
+        return
+      }
+    }
+
+    if (editingAction) {
+      await updateAction(editingAction.id, form)
+    } else {
+      await createAction(form)
+    }
+
+    resetForm()
+    load()
+  }
+
   return (
     <div className="admin-wrapper">
 
@@ -182,24 +208,7 @@ export default function Admin() {
           {/* ---------------- EMAIL TEMPLATE ---------------- */}
           {form.type === "email" && (
             <textarea
-              placeholder={`Email Template:
-
-Use placeholders:
-__recipient_name__
-__recipient_position__
-__firstName__
-__lastName__
-__email__
-__postalCode__
-
-Example:
-
-Dear __recipient_position__ __recipient_name__,
-
-My name is __firstName__ __lastName__ and I am writing to you...
-
-Sincerely,
-__firstName__ __lastName__`}
+              placeholder={`Enter the body of the email here only.`}
               value={form.emailTemplate}
               onChange={(e) =>
                 setForm({ ...form, emailTemplate: e.target.value })
@@ -208,18 +217,7 @@ __firstName__ __lastName__`}
             />
           )}
 
-          <button
-            onClick={async () => {
-              if (editingAction) {
-                await updateAction(editingAction.id, form)
-              } else {
-                await createAction(form)
-              }
-
-              resetForm()
-              load()
-            }}
-          >
+          <button onClick={handleSubmit}>
             {editingAction ? "Update" : "Create"}
           </button>
 

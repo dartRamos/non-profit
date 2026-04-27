@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getActionById, signupForAction } from "../firebase/actions"
+import { sendEmail } from "../api/email"
 
 import headerImage from "../assets/event5.png"
 import rectangle54 from "../assets/rectangle54.png"
@@ -44,9 +45,25 @@ export default function EmailDetail() {
 
     try {
       await signupForAction(id, form)
-
+    
+      await sendEmail({
+        recipientName: email.recipientName,
+        recipientPosition: email.recipientPosition,
+    
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        postalCode: form.postalCode,
+    
+        message: renderTemplate(
+          email.emailTemplate || email.description,
+          form,
+          email
+        ),
+      })
+    
       setSubmitted(true)
-
+    
       setEmail((prev) => ({
         ...prev,
         stats: {
