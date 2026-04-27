@@ -33,6 +33,7 @@ export const createAction = async (action: {
   await addDoc(actionsRef, {
     ...action,
     featured: false,
+    featuredOrder: 999, // 👈 default ordering (pushes to bottom)
     stats: {
       signups: 0,
     },
@@ -83,25 +84,27 @@ export const updateAction = async (id: string, data: any) => {
 export const toggleActionFeatured = async (id: string, current: boolean) => {
   await updateDoc(doc(db, "actions", id), {
     featured: !current,
+    // 👇 optional smart default ordering
+    featuredOrder: !current ? Date.now() : 999,
   })
 }
 
 // ---------------- FILTER HELPERS ----------------
 
-export const getFeaturedActions = async () => {
-  const snapshot = await getDocs(actionsRef)
+export const getFeaturedActionsByTypes = async (types: string[]) => {
+  const q = query(
+    actionsRef,
+    where("featured", "==", true),
+    where("type", "in", types),
+    orderBy("featuredOrder", "asc") // 👈 ORDERING APPLIED HERE
+  )
 
-  return snapshot.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .filter((a: any) => a.featured)
-}
+  const snapshot = await getDocs(q)
 
-export const getActionsByType = async (type: string) => {
-  const snapshot = await getDocs(actionsRef)
-
-  return snapshot.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .filter((a: any) => a.type === type)
+  return snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  }))
 }
 
 // ---------------- SIGNUP ----------------
@@ -183,6 +186,7 @@ export const seedCTAData = async () => {
     await addDoc(actionsRef, {
       ...item,
       featured: true,
+      featuredOrder: Date.now(), // 👈 ensures proper ordering
       stats: { signups: Math.floor(Math.random() * 5000) },
       createdAt: Date.now(),
     })

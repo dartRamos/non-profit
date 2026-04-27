@@ -1,5 +1,5 @@
 import "./FeaturedActions.css"
-import rectangleCTA from "../assets/rectangle62.png"
+import rectangleCTA from "../assets/rectangle79.png"
 import { Link } from "react-router-dom"
 
 function truncate(text = "", maxLength = 140) {
@@ -18,9 +18,7 @@ export default function FeaturedActions({
   rightText = "Real action creates real change",
 }) {
 
-  const filtered = (actions || [])
-    .filter(a => a.type === type)
-    .slice(0, 3)
+  const filtered = (actions || []).slice(0, 6)
 
   const getLink = (a) => {
     return `/actions/${a.id}`

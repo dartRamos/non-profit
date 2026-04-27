@@ -1,48 +1,56 @@
-import { useEffect, useState } from "react"
-import { getActionsByType } from "../firebase/actions"
-import { getFeaturedImages } from "../firebase/protests"
+import { useEffect, useState } from "react";
+import { getFeaturedActionsByTypes } from "../firebase/actions"
+import { getFeaturedImages } from "../firebase/protests";
 
-import headerImage from "../assets/image1.png"
-import rectangle54 from "../assets/rectangle54.png"
-import bluesky from "../assets/Bluesky.png"
-import discord from "../assets/Discord.png"
-import facebook from "../assets/Facebook.png"
-import instagram from "../assets/Instagram.png"
-import reddit from "../assets/Reddit.png"
-import substack from "../assets/Substack.png"
-import tiktok from "../assets/Tiktok.png"
-import twitter from "../assets/Twitter.png"
-import "./Home.css"
+import headerImage from "../assets/image1.png";
+import rectangle54 from "../assets/rectangle54.png";
+import bluesky from "../assets/Bluesky.png";
+import discord from "../assets/Discord.png";
+import facebook from "../assets/Facebook.png";
+import instagram from "../assets/Instagram.png";
+import reddit from "../assets/Reddit.png";
+import substack from "../assets/Substack.png";
+import tiktok from "../assets/Tiktok.png";
+import twitter from "../assets/Twitter.png";
+import "./Home.css";
 
-import FeaturedActions from "../components/FeaturedActions.jsx"
-import FeaturedImages from "../components/FeaturedImages.jsx"
+import FeaturedActions from "../components/FeaturedActions.jsx";
+import FeaturedImages from "../components/FeaturedImages.jsx";
 
 export default function Home() {
-
-  const [ctas, setCtas] = useState([])
-  const [petitions, setPetitions] = useState([])
-  const [emails, setEmails] = useState([])
-  const [images, setImages] = useState([])
+  const [civicActions, setCivicActions] = useState([])
+  const [events, setEvents] = useState([])
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     const load = async () => {
-      const ctaData = await getActionsByType("cta")
-      const petitionData = await getActionsByType("petition")
-      const emailData = await getActionsByType("email")
-      const imageData = await getFeaturedImages()
+      const civic = await getFeaturedActionsByTypes([
+        "cta",
+        "petition",
+        "email",
+      ])
+  
+      const eventData = await getFeaturedActionsByTypes([
+        "protest",
+        "rally",
+        "townhall",
+      ])
+  
+      console.log("civic:", civic)
+      console.log("events:", eventData)
 
-      setCtas(ctaData)
-      setPetitions(petitionData)
-      setEmails(emailData)
+      const imageData = await getFeaturedImages()
+  
+      setCivicActions(civic.slice(0, 6))
+      setEvents(eventData.slice(0, 6))
       setImages(imageData)
     }
-
+  
     load()
   }, [])
 
   return (
     <div>
-
       {/* HERO SECTION */}
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
@@ -59,44 +67,32 @@ export default function Home() {
 
       {/* MAIN CONTENT */}
       <div className="container">
-
         <div className="text-lines">
-          <p className="left">Connecting people and sharing real ways to get involved</p>
+          <p className="left">
+            Connecting people and sharing real ways to get involved
+          </p>
           <p className="right">Making change the best way we can: together</p>
           <p className="left2">Stay informed; stay united; stay strong</p>
         </div>
 
         <div className="featured-events-container">
-
           {/* CTA */}
           <FeaturedActions
-            actions={ctas}
-            type="cta"
-            title="Stay Informed"
-            buttonText="Take Action"
+            actions={civicActions}
+            title="Take Action"
+            buttonText="Get Involved"
             seeAllLink="/actions"
+            leftText="Your voice matters"
+            rightText="Collective action drives change"
           />
 
-          {/* PETITIONS */}
           <FeaturedActions
-            actions={petitions}
-            type="petition"
-            title="Make Yourself Heard"
-            buttonText="Add Your Name"
+            actions={events}
+            title="Join Events"
+            buttonText="View Details"
             seeAllLink="/actions"
-            leftText="Together, we can make a change"
-            rightText="We must fight for what is right"
-          />
-
-          {/* EMAILS */}
-          <FeaturedActions
-            actions={emails}
-            type="email"
-            title="Combine Our Voices"
-            buttonText="Send Email"
-            seeAllLink="/actions"
-            leftText="Make your voice heard"
-            rightText="Direct action creates change"
+            leftText="Show up. Speak out."
+            rightText="Real change happens together"
           />
 
           {/* IMAGES */}
@@ -113,44 +109,73 @@ export default function Home() {
             </p>
 
             <div className="social-media-links">
-
-              <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://discord.gg/QX2zY867"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={discord} alt="Discord" />
               </a>
 
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.instagram.com/ontariansagainstcorruption/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={instagram} alt="Instagram" />
               </a>
 
-              <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.tiktok.com/@ontarians.against"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={tiktok} alt="TikTok" />
               </a>
 
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={facebook} alt="Facebook" />
               </a>
 
-              <a href="https://reddit.com" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.reddit.com/user/OntariansAgainst/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={reddit} alt="Reddit" />
               </a>
 
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://x.com/OntariansAC"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={twitter} alt="Twitter" />
               </a>
 
-              <a href="https://bsky.app" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://bsky.app/profile/ontariansagainst.bsky.social"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={bluesky} alt="Bluesky" />
               </a>
 
-              <a href="https://substack.com" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://substack.com/@ontariansagainstcorruption?utm_source=global-search"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={substack} alt="Substack" />
               </a>
-
             </div>
           </div>
-
         </div>
       </div>
     </div>
-  )
+  );
 }

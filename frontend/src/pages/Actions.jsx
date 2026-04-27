@@ -11,6 +11,8 @@ import img7 from "../assets/event7.png"
 
 import rectangle from "../assets/rectangle91.png"
 
+import Petitions from "../components/Petitions"
+
 
 const baseImages = [img1, img2, img3, img4, img5, img6, img7]
 
@@ -71,16 +73,14 @@ export default function Actions() {
 
         </div>
 
-        {/* SECTION */}
-        <div className="actions-section">
+        {/* RECTANGLE SECTION */}
+        <div className="events-section">
 
-          <img src={rectangle} className="actions-bg" alt="background" />
+          <img src={rectangle} className="events-bg" alt="background" />
 
-          <div className="actions-overlay">
+          <div className="events-overlay">
 
-            {tab === "cta" }
-            {tab === "email" }
-            {tab === "petitions"}
+            {tab === "petitions" && <Petitions />}
 
           </div>
 
