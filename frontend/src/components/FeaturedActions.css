@@ -36,8 +36,8 @@
   margin-top: -30px;
 }
 
-/* list */
-.featured-actions-list {
+/* list civic actions*/
+.featured-actions-list.grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -45,7 +45,16 @@
   margin-right: 40px;
 }
 
-/* CARD (old behavior preserved) */
+/* list event actions */
+.featured-actions-list.row {
+  display: flex;
+  gap: 20px;
+  margin-left: 40px;
+  margin-right: 40px;
+  justify-content: space-between;
+}
+
+/* CARD */
 .featured-actions-card {
   display: flex;
   flex-direction: column;

@@ -10,15 +10,16 @@ function truncate(text = "", maxLength = 140) {
 
 export default function FeaturedActions({
   actions = [],
-  type,
+  maxItems = 6,
   title,
   buttonText = "Take Action",
   seeAllLink = "/actions",
   leftText = "Your voice matters",
   rightText = "Real action creates real change",
+  variant = "grid",
 }) {
 
-  const filtered = (actions || []).slice(0, 6)
+  const filtered = (actions || []).slice(0, maxItems)
 
   const getLink = (a) => {
     return `/actions/${a.id}`
@@ -35,7 +36,7 @@ export default function FeaturedActions({
 
           <h2 className="featured-actions-title">{title}</h2>
 
-          <div className="featured-actions-list">
+          <div className={`featured-actions-list ${variant}`}>
 
             {filtered.map((a) => (
               <div key={a.id} className="featured-actions-card">

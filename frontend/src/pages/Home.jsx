@@ -80,6 +80,7 @@ export default function Home() {
           <FeaturedActions
             actions={civicActions}
             title="Take Action"
+            maxItems={6}
             buttonText="Get Involved"
             seeAllLink="/actions"
             leftText="Your voice matters"
@@ -89,6 +90,8 @@ export default function Home() {
           <FeaturedActions
             actions={events}
             title="Join Events"
+            maxItems={3}
+            variant="row"
             buttonText="View Details"
             seeAllLink="/actions"
             leftText="Show up. Speak out."
