@@ -35,7 +35,7 @@ export default function FeaturedEvents({
   maxItems = 3,
   title = "Join Events",
   buttonText = "View Details",
-  seeAllLink = "/actions",
+  seeAllLink = "/events",
   leftText = "Show up. Speak out.",
   rightText = "Real change happens together",
 }) {
@@ -44,9 +44,7 @@ export default function FeaturedEvents({
   .filter((e) => EVENT_TYPES.includes(e.type))
   .slice(0, maxItems)
 
-console.log("FEATURED EVENTS:", filtered)
-
-  const getLink = (e) => `/actions/${e.id}`
+  const getLink = (e) => `/events/${e.id}`
 
   return (
     <div className="featured-actions-container">

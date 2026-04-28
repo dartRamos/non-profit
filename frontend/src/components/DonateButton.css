@@ -1,0 +1,14 @@
+.donate-button {
+  background-color: rgba(0, 0, 0, 0.8); 
+  color: #C1121F;
+  border: 2px #C1121F solid;
+  padding: 10px 18px;
+  font-size: 36px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+.donate-button:active {
+  transform: scale(0.97);
+}

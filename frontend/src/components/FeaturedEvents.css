@@ -10,7 +10,6 @@
   display: flex;
   height: 260px;
   overflow: hidden;
-  background-color: #FFC745;
 }
 
 /* LEFT IMAGE */
@@ -45,12 +44,12 @@
 
 .featured-event-title {
   font-size: 38px;
-  color: black;
+  color: white;
   margin: 0;
 }
 
 .featured-event-description {
-  color: black;
+  color: white;
   font-size: 20px;
   line-height: 1.4;
 
@@ -63,7 +62,7 @@
 }
 
 .event-meta {
-  color: black;
+  color: #FFC745;
   font-size: 16px;
   margin: 0;
 }

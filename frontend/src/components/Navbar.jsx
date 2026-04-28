@@ -22,8 +22,8 @@ export default function Nav({ user }) {
 
       <div className={`navbar-links ${open ? "open" : ""}`}>
         <Link to="/About" onClick={() => setOpen(false)}>About</Link>
-        <Link to="/Events" onClick={() => setOpen(false)}>Events</Link>
         <Link to="/Actions" onClick={() => setOpen(false)}>Actions</Link>
+        <Link to="/Events" onClick={() => setOpen(false)}>Events</Link>
         <Link to="/StayInformed" onClick={() => setOpen(false)}>Stay Informed</Link>
 
         {user && (

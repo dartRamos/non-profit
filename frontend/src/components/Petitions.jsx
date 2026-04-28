@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getPetitions } from "../firebase/protests"
+import { getActions } from "../firebase/actions"
 import { Link } from "react-router-dom"
 import "./Petitions.css"
 
@@ -13,7 +13,17 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString()
 }
 
-export default function Petitions() {
+function truncateText(text, maxLength = 400) {
+  if (!text) return ""
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength).trim() + "..."
+}
+
+const getLink = (e) => `/events/${e.id}`
+
+export default function Petitions(
+  seeAllLink = "/events",
+) {
   const [petitions, setPetitions] = useState([])
   const [visibleCount, setVisibleCount] = useState(4)
   const [loading, setLoading] = useState(true)
@@ -21,8 +31,14 @@ export default function Petitions() {
   useEffect(() => {
     async function fetchPetitions() {
       setLoading(true)
-      const data = await getPetitions()
-      setPetitions(data)
+
+      const data = await getActions()
+
+      const onlyPetitions = data.filter(
+        (item) => item.type === "petition"
+      )
+
+      setPetitions(onlyPetitions)
       setLoading(false)
     }
 
@@ -62,16 +78,9 @@ export default function Petitions() {
               {petition.description}
             </p>
 
-            {petition.link && (
-              <a
-                href={petition.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="petitions-events-link"
-              >
-                Learn more
-              </a>
-            )}
+            <Link to={getLink(petition)} className="petitions-events-link">
+              Learn More
+            </Link>
 
           </div>
 

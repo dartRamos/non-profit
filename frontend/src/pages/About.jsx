@@ -7,6 +7,7 @@ import rectangle2 from "../assets/rectangle79.png"
 import rectangle3 from "../assets/rectangle23.png"
 import line2 from "../assets/Line2.png"
 import rectangle4 from "../assets/rectangle80.png"
+import DonateButton from "../components/DonateButton.jsx";
 
 export default function About() {
   return (
@@ -20,7 +21,9 @@ export default function About() {
           className="about-hero-image"
           alt="about header"
         />
-
+        
+        <div className="image-fade" />
+        <DonateButton onClick={() => window.location.href = "/donate"} />
         <div className="about-hero-inner">
 
           <div className="about-hero-text">
@@ -57,14 +60,6 @@ export default function About() {
         <div className="plan-section">
           <h2>The Plan</h2>
           <img src={line} className="line-1" alt="divider" />
-
-          <p>
-            Many people across Ontario feel frustrated with the current state of provincial politics.
-            Whether it’s transparency, accountability, or representation, there’s a growing sense that a lot of us feel disconnected from the political process.
-            <br /><br />
-
-            Ontarians Against Corruption is being built to help change that. We are a centralized, accessible hub where people can learn, organize, and take action together on provincial and municipal issues.
-          </p>
 
           {/* PHASES */}
           <div className="plan-details-container">
@@ -197,15 +192,11 @@ export default function About() {
             </div>
           </div>
 
-          <div className="about-section">
+          <div className="goal-section">
 
             <div className="image-stack">
 
               <img src={rectangle2} className="rect-2" alt="rectangle" />
-
-              <div className="rect-3-wrapper">
-                
-                <img src={rectangle3} className="rect-3" alt="rectangle" />
 
                 <div className="overlay-text">
 
@@ -239,11 +230,23 @@ export default function About() {
                     </p>
                   </div>
 
+                  <div className="goal-box">
+                    <h3 className="goal-title">No Confidence Vote</h3>
+                    <p className="goal-description">                   
+                      If we work together, one of the most effective ways to hold Doug Ford accountable is to build momentum toward a vote of no confidence. In practical terms, this means that consistent, coordinated participation in weekly calls to action could generate enough public pressure that members of his cabinet and fellow MPPs begin to question his leadership.
+                      <br /><br />
+                      Such an effort would signal clearly to our elected representatives that their constituents are paying close attention; not only to the issues themselves, but also to how they vote and what policies they choose to support. Achieving this outcome would set a meaningful precedent, reinforcing higher expectations for future premiers.
+                      <br /><br />
+                      It is important to note that this process would not remove the Progressive Conservatives from power; rather, it would require them to select a new leader. Even so, it would send a strong message that public accountability matters and that voters are actively engaged.
+                    </p>
+                  </div>
+
                 </div>
 
-              </div>
             </div>
+          </div>
 
+          <div className="about-foot-section">
             <div className="goal-bottom-wrapper">
               <img src={rectangle4} className="rect-4" alt="rectangle 4" />
 
@@ -264,9 +267,9 @@ export default function About() {
               </div>
             </div>
 
-            </div>
           </div>
+      </div>
 
-        </div>
+    </div>
   )
 }

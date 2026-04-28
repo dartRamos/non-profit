@@ -83,3 +83,10 @@
   padding: 40px;
   color: white;
 }
+
+.events-hero-grid .donate-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 10;
+}

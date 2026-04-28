@@ -30,6 +30,11 @@
   margin-top: 18px;
   margin-right: 91px;
   width: 575px;
+  font-size: 20px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .petitions-events-link{

@@ -12,8 +12,7 @@ import img7 from "../assets/event7.png"
 import rectangle from "../assets/rectangle91.png"
 
 import Protests from "../components/Protests"
-import Petitions from "../components/Petitions"
-import Volunteer from "../components/Volunteer"
+import DonateButton from "../components/DonateButton.jsx";
 
 const baseImages = [img1, img2, img3, img4, img5, img6, img7]
 
@@ -39,6 +38,8 @@ export default function Events() {
           />
         ))}
 
+        <DonateButton onClick={() => window.location.href = "/donate"} />
+
         <div className="hero-center-text">
           GET INVOLVED
         </div>
@@ -58,15 +59,15 @@ export default function Events() {
           </button>
 
           <button
-            className={tab === "petitions" ? "active" : ""}
-            onClick={() => setTab("petitions")}
+            className={tab === "rallies" ? "active" : ""}
+            onClick={() => setTab("rallies")}
           >
             Rallies
           </button>
 
           <button
-            className={tab === "volunteer" ? "active" : ""}
-            onClick={() => setTab("volunteer")}
+            className={tab === "town-hall-meetings" ? "active" : ""}
+            onClick={() => setTab("town-hall-meetings")}
           >
             Town Hall Meetings
           </button>
@@ -80,8 +81,8 @@ export default function Events() {
           <div className="events-overlay">
 
             {tab === "protests" && <Protests />}
-            {tab === "petitions" && <Petitions />}
-            {tab === "volunteer" && <Volunteer />}
+            {tab === "petitions" && <Rallies />}
+            {tab === "volunteer" && <TownHallMeetings />}
 
           </div>
 

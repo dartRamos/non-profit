@@ -17,6 +17,7 @@ import "./Home.css";
 import FeaturedActions from "../components/FeaturedActions.jsx";
 // import FeaturedImages from "../components/FeaturedImages.jsx";
 import FeaturedEvents from "../components/FeaturedEvents.jsx";
+import DonateButton from "../components/DonateButton.jsx";
 
 export default function Home() {
   const [civicActions, setCivicActions] = useState([]);
@@ -72,7 +73,9 @@ export default function Home() {
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
+        
         <div className="image-fade" />
+        <DonateButton onClick={() => window.location.href = "/donate"} />
 
         <div className="header-text">
           <h1 className="line">A GRASSROOTS COMMUNITY</h1>
