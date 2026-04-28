@@ -4,6 +4,7 @@
   height: 146px;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .white-logo {
@@ -12,10 +13,11 @@
   margin-left: 40px;
 }
 
+/* desktop nav */
 .navbar-links {
   display: flex;
-  gap: 123px;
-  margin-right: 42px;
+  gap: 60px;
+  padding: 20px;
 }
 
 .navbar-links a {
@@ -32,4 +34,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* hamburger button (hidden on desktop) */
+.hamburger {
+  display: none;
+  font-size: 40px;
+  color: white;
+  background: none;
+  border: none;
+  margin-right: 40px;
+  cursor: pointer;
+}
+
+/* MOBILE */
+@media (max-width: 1100px) {
+  .hamburger {
+    display: block;
+  }
+
+  .navbar-links {
+    display: none;
+    position: absolute;
+    top: 146px;
+    right: 0;
+    left: 0;
+
+    background-color: #191919;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    z-index: 9999;
+  }
+
+  .navbar-links.open {
+    display: flex !important;
+  }
 }

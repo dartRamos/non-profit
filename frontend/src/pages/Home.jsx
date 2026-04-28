@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getFeaturedActionsByTypes } from "../firebase/actions"
+import { getFeaturedActionsByTypes } from "../firebase/actions";
 import { getFeaturedImages } from "../firebase/protests";
 
 import headerImage from "../assets/image1.png";
@@ -15,11 +15,12 @@ import twitter from "../assets/Twitter.png";
 import "./Home.css";
 
 import FeaturedActions from "../components/FeaturedActions.jsx";
-import FeaturedImages from "../components/FeaturedImages.jsx";
+// import FeaturedImages from "../components/FeaturedImages.jsx";
+import FeaturedEvents from "../components/FeaturedEvents.jsx";
 
 export default function Home() {
-  const [civicActions, setCivicActions] = useState([])
-  const [events, setEvents] = useState([])
+  const [civicActions, setCivicActions] = useState([]);
+  const [events, setEvents] = useState([]);
   const [images, setImages] = useState([]);
 
   useEffect(() => {
@@ -28,34 +29,49 @@ export default function Home() {
         "cta",
         "petition",
         "email",
-      ])
-  
+      ]);
+
       const eventData = await getFeaturedActionsByTypes([
         "protest",
         "rally",
         "townhall",
-      ])
-  
-      console.log("civic:", civic)
-      console.log("events:", eventData)
+      ]);
 
-      const imageData = await getFeaturedImages()
-  
-      setCivicActions(civic.slice(0, 6))
-      setEvents(eventData.slice(0, 6))
-      setImages(imageData)
-    }
-  
-    load()
-  }, [])
+      const imageData = await getFeaturedImages();
+
+      setImages(imageData);
+      setCivicActions(civic.slice(0, 6));
+      setEvents(eventData);
+    };
+
+    load();
+  }, []);
+
+  // const featuredImages = [
+  //   {
+  //     id: 1,
+  //     url: "/images/img1.jpg",
+  //   },
+  //   {
+  //     id: 2,
+  //     url: "/images/img2.jpg",
+  //   },
+  //   {
+  //     id: 3,
+  //     url: "/images/img3.jpg",
+  //   },
+  //   {
+  //     id: 4,
+  //     url: "/images/img4.jpg",
+  //   },
+  // ]
 
   return (
     <div>
-      {/* HERO SECTION */}
+      {/* HERO */}
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
-
         <div className="image-fade" />
 
         <div className="header-text">
@@ -65,18 +81,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* MAIN CONTENT */}
       <div className="container">
         <div className="text-lines">
-          <p className="left">
-            Connecting people and sharing real ways to get involved
-          </p>
+          <p className="left">Connecting people and sharing real ways to get involved</p>
           <p className="right">Making change the best way we can: together</p>
           <p className="left2">Stay informed; stay united; stay strong</p>
         </div>
 
         <div className="featured-events-container">
-          {/* CTA */}
           <FeaturedActions
             actions={civicActions}
             title="Take Action"
@@ -87,23 +99,14 @@ export default function Home() {
             rightText="Collective action drives change"
           />
 
-          <FeaturedActions
-            actions={events}
-            title="Join Events"
-            maxItems={3}
-            variant="row"
-            buttonText="View Details"
-            seeAllLink="/actions"
-            leftText="Show up. Speak out."
-            rightText="Real change happens together"
+          <FeaturedEvents 
+            events={events} 
+            maxItems={3} 
           />
 
-          {/* IMAGES */}
-          <h2 className="section-title">Social Media Updates</h2>
-
-          {images.length === 0 && <p>No featured images yet</p>}
-
-          <FeaturedImages images={images} />
+          {/* <FeaturedImages 
+            images={featuredImages}
+          /> */}
 
           {/* SOCIAL LINKS */}
           <div className="social-media-container">
@@ -112,67 +115,35 @@ export default function Home() {
             </p>
 
             <div className="social-media-links">
-              <a
-                href="https://discord.gg/QX2zY867"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://discord.gg/QX2zY867" target="_blank" rel="noopener noreferrer">
                 <img src={discord} alt="Discord" />
               </a>
 
-              <a
-                href="https://www.instagram.com/ontariansagainstcorruption/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://www.instagram.com/ontariansagainstcorruption/" target="_blank" rel="noopener noreferrer">
                 <img src={instagram} alt="Instagram" />
               </a>
 
-              <a
-                href="https://www.tiktok.com/@ontarians.against"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://www.tiktok.com/@ontarians.against" target="_blank" rel="noopener noreferrer">
                 <img src={tiktok} alt="TikTok" />
               </a>
 
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                 <img src={facebook} alt="Facebook" />
               </a>
 
-              <a
-                href="https://www.reddit.com/user/OntariansAgainst/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://www.reddit.com/user/OntariansAgainst/" target="_blank" rel="noopener noreferrer">
                 <img src={reddit} alt="Reddit" />
               </a>
 
-              <a
-                href="https://x.com/OntariansAC"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://x.com/OntariansAC" target="_blank" rel="noopener noreferrer">
                 <img src={twitter} alt="Twitter" />
               </a>
 
-              <a
-                href="https://bsky.app/profile/ontariansagainst.bsky.social"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://bsky.app/profile/ontariansagainst.bsky.social" target="_blank" rel="noopener noreferrer">
                 <img src={bluesky} alt="Bluesky" />
               </a>
 
-              <a
-                href="https://substack.com/@ontariansagainstcorruption?utm_source=global-search"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://substack.com/@ontariansagainstcorruption?utm_source=global-search" target="_blank" rel="noopener noreferrer">
                 <img src={substack} alt="Substack" />
               </a>
             </div>

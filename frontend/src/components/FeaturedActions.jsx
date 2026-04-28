@@ -8,6 +8,9 @@ function truncate(text = "", maxLength = 140) {
   return text.slice(0, maxLength).trim() + "..."
 }
 
+// 🔒 only allow civic action types
+const ACTION_TYPES = ["cta", "petition", "email"]
+
 export default function FeaturedActions({
   actions = [],
   maxItems = 6,
@@ -19,7 +22,10 @@ export default function FeaturedActions({
   variant = "grid",
 }) {
 
-  const filtered = (actions || []).slice(0, maxItems)
+  // ✅ filter by type + limit
+  const filtered = (actions || [])
+    .filter((a) => ACTION_TYPES.includes(a.type))
+    .slice(0, maxItems)
 
   const getLink = (a) => {
     return `/actions/${a.id}`

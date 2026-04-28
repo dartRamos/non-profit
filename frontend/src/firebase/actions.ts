@@ -33,7 +33,7 @@ export const createAction = async (action: {
   await addDoc(actionsRef, {
     ...action,
     featured: false,
-    featuredOrder: 999, // 👈 default ordering (pushes to bottom)
+    featuredOrder: 999,
     stats: {
       signups: 0,
     },

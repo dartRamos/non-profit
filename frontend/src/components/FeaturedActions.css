@@ -1,30 +1,31 @@
 .featured-actions-container {
   position: relative;
-  height: 922px;
-  margin-bottom: 600px;
+  width: 100%;
+  min-height: 922px;
+  margin-bottom: 5%;
 }
 
 .featured-actions-bg {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
   object-fit: cover;
-  display: block;
+  z-index: 0;
 }
 
 /* overlay */
 .featured-actions-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
   display: flex;
   margin-top: 36px;
 }
 
 .featured-actions-wrapper {
+  position: relative;
+  z-index: 1;
+
   width: 100%;
+  padding-top: 36px;
 }
 
 /* title */
@@ -36,22 +37,16 @@
   margin-top: -30px;
 }
 
-/* list civic actions*/
-.featured-actions-list.grid {
+/* list */
+.featured-actions-list,
+.featured-actions-list.row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin-left: 40px;
-  margin-right: 40px;
-}
 
-/* list event actions */
-.featured-actions-list.row {
-  display: flex;
-  gap: 20px;
-  margin-left: 40px;
-  margin-right: 40px;
-  justify-content: space-between;
+  width: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 /* CARD */
@@ -64,9 +59,8 @@
   padding: 20px;
   background-color: #191919;
 
-  height: 468px;
-  width: 440px;
-
+  height: 100%;
+  min-height: 468px;
   box-sizing: border-box;
 }
 
@@ -91,6 +85,11 @@
   color: white;
   font-size: 20px;
   line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* button */
@@ -121,7 +120,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 96px;
+  margin-top: 46px;
 }
 
 .featured-actions-see-all-btn {
@@ -129,7 +128,8 @@
   background: transparent;
   color: #FFC745;
 
-  width: 670px;
+  width: 80%;
+  max-width: 670px;
   height: 51px;
 
   display: flex;
@@ -152,6 +152,7 @@
   margin-top: 62px;
   font-size: 40px;
   font-style: italic;
+  width: 100%;
 }
 
 .featured-actions-left,
@@ -161,6 +162,8 @@
   height: 58px;
   display: flex;
   align-items: center;
+
+  max-width: 90%;
 }
 
 .featured-actions-left {
@@ -171,5 +174,5 @@
 
 .featured-actions-right {
   align-self: flex-start;
-  margin-left: 200px;
+  margin-left: 10%;
 }

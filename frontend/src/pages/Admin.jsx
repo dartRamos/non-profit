@@ -15,9 +15,13 @@ import {
 export default function Admin() {
   const { user, loading } = useAuth()
 
-  const [tab, setTab] = useState("emails")
+  const [tab, setTab] = useState("actions")
   const [actions, setActions] = useState([])
   const [editingAction, setEditingAction] = useState(null)
+
+  // ✅ separate image system (standalone feature gallery)
+  const [images, setImages] = useState([])
+  const [imageUrl, setImageUrl] = useState("")
 
   const [form, setForm] = useState({
     title: "",
@@ -83,13 +87,33 @@ export default function Admin() {
   }
 
   const filteredActions = actions.filter((a) => {
-    if (tab === "protests") return a.type === "protest"
-    if (tab === "petitions") return a.type === "petition"
-    if (tab === "actions") return a.type === "cta"
-    if (tab === "emails") return a.type === "email"
+    if (tab === "actions") {
+      return ["cta", "email", "petition"].includes(a.type)
+    }
+
+    if (tab === "events") {
+      return ["protest", "rally", "townhall"].includes(a.type)
+    }
+
     return true
   })
 
+  // -----------------------
+  // IMAGE SYSTEM (separate)
+  // -----------------------
+  const addImage = () => {
+    if (!imageUrl.trim()) return
+    setImages([...images, { id: Date.now(), url: imageUrl }])
+    setImageUrl("")
+  }
+
+  const removeImage = (id) => {
+    setImages(images.filter((img) => img.id !== id))
+  }
+
+  // -----------------------
+  // EMAIL SYSTEM
+  // -----------------------
   const addEmailTemplate = () => {
     setForm({
       ...form,
@@ -111,20 +135,18 @@ export default function Admin() {
     setForm({ ...form, emailTemplates: updated })
   }
 
+  // -----------------------
+  // SUBMIT ACTION
+  // -----------------------
   const handleSubmit = async () => {
     if (form.type === "email") {
-      if (!form.emailTemplates.length) {
-        alert("At least one email is required")
-        return
-      }
-    
       const missingFields = form.emailTemplates.some(
         (t) =>
           !t.recipientEmail?.trim() ||
           !t.recipientName?.trim() ||
           !t.recipientPosition?.trim()
       )
-    
+
       if (missingFields) {
         alert("Each email must include recipient email, name, and position")
         return
@@ -132,7 +154,16 @@ export default function Admin() {
     }
 
     const payload = {
-      ...form,
+      title: form.title,
+      subtitle: form.subtitle,
+      description: form.description,
+      type: form.type,
+      date: form.date,
+      link: form.link,
+      image: form.image,
+      location: form.location,
+      recipientName: form.recipientName,
+      recipientPosition: form.recipientPosition,
       emailTemplates: form.emailTemplates,
     }
 
@@ -152,9 +183,9 @@ export default function Admin() {
       {/* SIDEBAR */}
       <div className="admin-sidebar">
         <h3>Admin</h3>
-        <button onClick={() => setTab("emails")}>Emails</button>
-        <button onClick={() => setTab("petitions")}>Petitions</button>
-        <button onClick={() => setTab("actions")}>CTA Actions</button>
+
+        <button onClick={() => setTab("actions")}>Actions</button>
+        <button onClick={() => setTab("events")}>Events</button>
       </div>
 
       <div className="admin-content">
@@ -177,6 +208,15 @@ export default function Admin() {
             }
           />
 
+          {/* ACTION IMAGE FIELD */}
+          <input
+            placeholder="Image URL"
+            value={form.image}
+            onChange={(e) =>
+              setForm({ ...form, image: e.target.value })
+            }
+          />
+
           <select
             value={form.type}
             onChange={(e) =>
@@ -187,7 +227,31 @@ export default function Admin() {
             <option value="email">Email</option>
             <option value="cta">CTA</option>
             <option value="petition">Petition</option>
+            <option value="protest">Protest</option>
+            <option value="rally">Rally</option>
+            <option value="townhall">Townhall</option>
           </select>
+
+          {/* EVENT FIELDS */}
+          {["protest", "rally", "townhall"].includes(form.type) && (
+            <>
+              <input
+                type="date"
+                value={form.date}
+                onChange={(e) =>
+                  setForm({ ...form, date: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="Location"
+                value={form.location}
+                onChange={(e) =>
+                  setForm({ ...form, location: e.target.value })
+                }
+              />
+            </>
+          )}
 
           {/* EMAIL BUILDER */}
           {form.type === "email" && (
@@ -215,7 +279,7 @@ export default function Admin() {
                   />
 
                   <input
-                    placeholder="Recipient Email (required)"
+                    placeholder="Recipient Email"
                     value={t.recipientEmail}
                     onChange={(e) =>
                       updateEmailTemplate(i, "recipientEmail", e.target.value)
@@ -223,7 +287,7 @@ export default function Admin() {
                   />
 
                   <input
-                    placeholder="Recipient Name (required)"
+                    placeholder="Recipient Name"
                     value={t.recipientName || ""}
                     onChange={(e) =>
                       updateEmailTemplate(i, "recipientName", e.target.value)
@@ -231,7 +295,7 @@ export default function Admin() {
                   />
 
                   <input
-                    placeholder="Recipient Position (required)"
+                    placeholder="Recipient Position"
                     value={t.recipientPosition || ""}
                     onChange={(e) =>
                       updateEmailTemplate(i, "recipientPosition", e.target.value)
@@ -253,15 +317,12 @@ export default function Admin() {
           <button onClick={handleSubmit}>
             {editingAction ? "Update" : "Create"}
           </button>
-
         </div>
 
         {/* LIST */}
         {filteredActions.map((a) => (
           <div key={a.id} className="admin-card">
             <h3>{a.title}</h3>
-
-            {a.subtitle && <p>{a.subtitle}</p>}
             <p>Type: {a.type}</p>
 
             <button onClick={() => loadSignups(a.id)}>
@@ -271,37 +332,20 @@ export default function Admin() {
             <button
               onClick={() => {
                 setEditingAction(a)
-              
-                const templates =
-                  Array.isArray(a.emailTemplates) && a.emailTemplates.length
-                    ? a.emailTemplates
-                    : a.emailTemplate
-                      ? [
-                          {
-                            subject: a.subtitle || "",
-                            body: a.emailTemplate,
-                            recipientEmail: "",
-                          },
-                        ]
-                      : a.description
-                        ? [
-                            {
-                              subject: a.subtitle || "",
-                              body: a.description,
-                              recipientEmail: "",
-                            },
-                          ]
-                        : [
-                            {
-                              subject: "",
-                              body: "",
-                              recipientEmail: "",
-                            },
-                          ]
-              
                 setForm({
-                  ...a,
-                  emailTemplates: templates,
+                  title: a.title || "",
+                  subtitle: a.subtitle || "",
+                  description: a.description || "",
+                  type: a.type || "",
+                  date: a.date || "",
+                  link: a.link || "",
+                  image: a.image || "",
+                  location: a.location || "",
+                  recipientName: a.recipientName || "",
+                  recipientPosition: a.recipientPosition || "",
+                  emailTemplates: a.emailTemplates || [
+                    { subject: "", body: "", recipientEmail: "" },
+                  ],
                 })
               }}
             >
@@ -310,9 +354,7 @@ export default function Admin() {
 
             <button onClick={() => deleteAction(a.id)}>Delete</button>
 
-            <button
-              onClick={() => toggleActionFeatured(a.id, a.featured)}
-            >
+            <button onClick={() => toggleActionFeatured(a.id, a.featured)}>
               {a.featured ? "Unfeature" : "Feature"}
             </button>
 
@@ -322,7 +364,30 @@ export default function Admin() {
           </div>
         ))}
 
-        {/* SIGNUPS PANEL*/}
+        {/* IMAGE GALLERY (SEPARATE FEATURE) */}
+        <hr />
+
+        <h2>Featured Images</h2>
+
+        <div className="admin-form">
+          <input
+            placeholder="Image URL"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+          />
+          <button onClick={addImage}>Add Image</button>
+        </div>
+
+        <div className="admin-image-grid">
+          {images.map((img) => (
+            <div key={img.id}>
+              <img src={img.url} alt="" style={{ width: "200px" }} />
+              <button onClick={() => removeImage(img.id)}>Delete</button>
+            </div>
+          ))}
+        </div>
+
+        {/* SIGNUPS */}
         {viewingActionId && (
           <div className="admin-signups-panel">
             <h2>Signups</h2>

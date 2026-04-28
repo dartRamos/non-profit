@@ -1,0 +1,132 @@
+.featured-events-column {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding: 0 40px;
+}
+
+/* CARD */
+.featured-event-card-split {
+  display: flex;
+  height: 260px;
+  overflow: hidden;
+  background-color: #FFC745;
+}
+
+/* LEFT IMAGE */
+.featured-event-image {
+  width: 40%;
+  height: 100%;
+}
+
+.featured-event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* fallback */
+.featured-event-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #333;
+}
+
+/* RIGHT CONTENT */
+.featured-event-content {
+  width: 60%;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.featured-event-title {
+  font-size: 38px;
+  color: black;
+  margin: 0;
+}
+
+.featured-event-description {
+  color: black;
+  font-size: 20px;
+  line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  margin-top: 10px;
+}
+
+.event-meta {
+  color: black;
+  font-size: 16px;
+  margin: 0;
+}
+
+.featured-events-text-lines {
+  display: flex;
+  flex-direction: column;
+  margin-top: 62px;
+  font-size: 40px;
+  font-style: italic;
+}
+
+.featured-events-left,
+.featured-events-right {
+  background-color: #FFC745;
+  padding: 10px 20px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+}
+
+.featured-events-left {
+  align-self: flex-end;
+  margin-right: 40px;
+  margin-bottom: 28px;
+}
+
+.featured-events-right {
+  align-self: flex-end;
+  margin-right: 200px;
+}
+
+.featured-events-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: black;
+  color: white;
+
+  height: 51px;
+  width: 204px;
+
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 24px;
+
+  cursor: pointer;
+}
+
+.featured-event-bottom {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.featured-event-meta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.featured-event-meta-group .event-meta {
+  margin: 0;
+}
