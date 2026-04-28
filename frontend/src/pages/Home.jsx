@@ -98,8 +98,6 @@ export default function Home() {
             maxItems={6}
             buttonText="Get Involved"
             seeAllLink="/actions"
-            leftText="Your voice matters"
-            rightText="Collective action drives change"
           />
 
           <FeaturedEvents 

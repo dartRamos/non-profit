@@ -85,14 +85,13 @@
 }
 
 .featured-events-left {
-  align-self: flex-end;
-  margin-right: 40px;
-  margin-bottom: 28px;
+  align-self: flex-start;
+  margin-left: 40px;
 }
 
 .featured-events-right {
   align-self: flex-end;
-  margin-right: 200px;
+  margin-right: 40px;
 }
 
 .featured-events-btn {

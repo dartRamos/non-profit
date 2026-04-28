@@ -36,8 +36,8 @@ export default function FeaturedEvents({
   title = "Join Events",
   buttonText = "View Details",
   seeAllLink = "/events",
-  leftText = "Show up. Speak out.",
-  rightText = "Real change happens together",
+  leftText = "Together, we can make a change",
+  rightText = "We must fight for what is right",
 }) {
 
   const filtered = (events || [])
@@ -53,8 +53,10 @@ export default function FeaturedEvents({
       <img src={rectangleCTA} className="featured-actions-bg" alt="background" />
 
       <div className="featured-actions-overlay">
-
+        <div className="image-fade-2" />
+        <div className="image-fade" />
         <div className="featured-actions-wrapper">
+          
 
           <h2 className="featured-actions-title">{title}</h2>
 

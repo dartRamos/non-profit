@@ -17,8 +17,6 @@ export default function FeaturedActions({
   title,
   buttonText = "Take Action",
   seeAllLink = "/actions",
-  leftText = "Your voice matters",
-  rightText = "Real action creates real change",
   variant = "grid",
 }) {
 
@@ -36,8 +34,9 @@ export default function FeaturedActions({
 
       <img src={rectangleCTA} className="featured-actions-bg" alt="background" />
 
-      <div className="featured-actions-overlay">
-
+      <div className="featured-actions-overlay">\
+        <div className="image-fade-2" />
+        <div className="image-fade" />
         <div className="featured-actions-wrapper">
 
           <h2 className="featured-actions-title">{title}</h2>
@@ -68,11 +67,6 @@ export default function FeaturedActions({
             <Link to={seeAllLink} className="featured-actions-see-all-btn">
               See All
             </Link>
-          </div>
-
-          <div className="featured-actions-text-lines">
-            <p className="featured-actions-left">{leftText}</p>
-            <p className="featured-actions-right">{rightText}</p>
           </div>
 
         </div>
