@@ -11,6 +11,7 @@ import {
   increment,
   where,
   getDoc,
+  serverTimestamp
 } from "firebase/firestore"
 
 // ---------------- COLLECTIONS ----------------
@@ -23,12 +24,10 @@ const signupsRef = collection(db, "action_signups")
 type CTAAction = {
   type: "email" | "petition"
 
-  // email fields
   recipientEmail?: string
   subject?: string
   body?: string
 
-  // petition fields
   petitionLink?: string
 }
 
@@ -79,7 +78,7 @@ export const createAction = async (action: {
       signups: 0,
     },
   
-    createdAt: Date.now(),
+    createdAt: serverTimestamp(),
   })
 }
 // ---------------- GET ALL ----------------
@@ -152,7 +151,7 @@ export const updateAction = async (id: string, data: any) => {
 export const toggleActionFeatured = async (id: string, current: boolean) => {
   await updateDoc(doc(db, "actions", id), {
     featured: !current,
-    featuredOrder: !current ? Date.now() : 999,
+    featuredOrder: !current ? serverTimestamp() : 999,
   })
 }
 
@@ -195,7 +194,7 @@ export const signupForAction = async (actionId, data) => {
     actionId,
     ...data,
     email,
-    createdAt: Date.now(),
+    createdAt: serverTimestamp(),
   })
 
   await updateDoc(doc(db, "actions", actionId), {
@@ -253,9 +252,8 @@ export const seedCTAData = async () => {
     await addDoc(actionsRef, {
       ...item,
       featured: true,
-      featuredOrder: Date.now(),
       stats: { signups: Math.floor(Math.random() * 5000) },
-      createdAt: Date.now(),
+      createdAt: serverTimestamp(),
     })
   }
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getActionById } from "../firebase/actions"
 
-import ActionDetail from "./ActionDetail"
+import ActionDetail from "./CTADetail"
 import PetitionDetail from "./PetitionDetail"
 import EmailDetail from "./EmailDetail"
 

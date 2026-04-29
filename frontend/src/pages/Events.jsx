@@ -11,7 +11,7 @@ import img7 from "../assets/event7.png"
 
 import rectangle from "../assets/rectangle91.png"
 
-import Protests from "../components/Protests"
+import ActionFeed from "../components/ActionFeed.jsx"
 import DonateButton from "../components/DonateButton.jsx";
 
 const baseImages = [img1, img2, img3, img4, img5, img6, img7]
@@ -80,9 +80,9 @@ export default function Events() {
 
           <div className="events-overlay">
 
-            {tab === "protests" && <Protests />}
-            {tab === "petitions" && <Rallies />}
-            {tab === "volunteer" && <TownHallMeetings />}
+          {tab === "protests" && <ActionFeed type="protest" />}
+          {tab === "rallies" && <ActionFeed type="rally" />}
+          {tab === "town-hall-meetings" && <ActionFeed type="townhall" />}
 
           </div>
 

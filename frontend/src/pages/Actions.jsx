@@ -11,7 +11,7 @@ import img7 from "../assets/event7.png"
 
 import rectangle from "../assets/rectangle91.png"
 
-import Petitions from "../components/Petitions"
+import ActionFeed from "../components/ActionFeed.jsx"
 import DonateButton from "../components/DonateButton.jsx";
 
 
@@ -83,9 +83,9 @@ export default function Actions() {
 
           <div className="events-overlay">
 
-            {/* {tab === "cta" && <CTA />} */}
-            {/* {tab === 'email' && <EmailCampaigns />} */}
-            {tab === "petitions" && <Petitions />}
+          {tab === "cta" && <ActionFeed type="cta" />}
+          {tab === "petitions" && <ActionFeed type="petition" />}
+          {tab === "email" && <ActionFeed type="email" />}
 
           </div>
 

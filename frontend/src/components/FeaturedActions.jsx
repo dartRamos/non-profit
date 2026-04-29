@@ -47,18 +47,20 @@ export default function FeaturedActions({
 
                 <div className="featured-actions-info">
 
-                  {a.priority && (
-                    <div className="featured-actions-priority-badge">
-                      PRIORITY
-                    </div>
-                  )}
-
                   <h3>{a.title}</h3>
 
                   <p>
                     {truncate(a.shortdescription || a.description, 300)}
                   </p>
+
+                  {a.priority && (
+                    <div className="featured-actions-priority-badge">
+                      PRIORITY
+                    </div>
+                  )}
+                  
                 </div>
+                
 
                 <Link to={getLink(a)} className="featured-actions-btn">
                   {buttonText}
