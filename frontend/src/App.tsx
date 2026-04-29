@@ -13,6 +13,7 @@ import Footer from "./components/Footer.jsx"
 import Donate from "./pages/Donate.jsx"
 import ActionRouter from "./pages/ActionRouter"
 import Volunteer from "./pages/Volunteer.jsx"
+import Verify from "./pages/Verify.jsx"
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/actions/:id" element={<ActionRouter />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/volunteer" element={<Volunteer />} />
+        <Route path="/verify" element={<Verify />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

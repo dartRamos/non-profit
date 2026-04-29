@@ -7,6 +7,7 @@ import headerImage from "../assets/event5.png"
 import rectangle54 from "../assets/rectangle54.png"
 import rectangle from "../assets/rectangle91.png"
 import "./EmailDetail.css"
+import DonateButton from "../components/DonateButton.jsx";
 
 export default function EmailDetail() {
   const { id } = useParams()
@@ -138,6 +139,7 @@ export default function EmailDetail() {
       <div className="header-image-container">
         <img src={headerImage} className="email-header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
+        <DonateButton onClick={() => window.location.href = "/donate"} />
         <div className="image-fade" />
 
         <div className="header-text">

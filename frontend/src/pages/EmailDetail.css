@@ -3,15 +3,15 @@
 }
 
 .preview-box {
-  max-height: 300px;
+  height: 222px;
   overflow-y: auto;
-  background: #111;
+  background: white;
   border: 1px solid #333;
   padding: 15px;
 
   font-size: 20px;
   line-height: 1.6;
-  color: #ddd;
+  color: black;
 }
 
 .preview-box::-webkit-scrollbar {

@@ -5,6 +5,7 @@ import {
   getDocs,
   deleteDoc,
   updateDoc,
+  setDoc,
   doc,
   query,
   orderBy,
@@ -57,41 +58,42 @@ export const createAction = async (action: {
 }) => {
 
   if (action.type === "cta") {
-  if (!action.ctaActions || action.ctaActions.length === 0) {
-    throw new Error("CTA must have at least one action")
-  }
-
-  const hasInvalid = action.ctaActions.some((a) => {
-    if (a.type === "email") {
-      return !a.recipientEmail || !a.subject || !a.body
+    if (!action.ctaActions || action.ctaActions.length === 0) {
+      throw new Error("CTA must have at least one action")
     }
-    if (a.type === "petition") {
-      return !a.petitionLink
-    }
-    return true
-  })
 
-  if (hasInvalid) {
-    throw new Error("Invalid CTA actions")
+    const hasInvalid = action.ctaActions.some((a) => {
+      if (a.type === "email") {
+        return !a.recipientEmail || !a.subject || !a.body
+      }
+      if (a.type === "petition") {
+        return !a.petitionLink
+      }
+      return true
+    })
+
+    if (hasInvalid) {
+      throw new Error("Invalid CTA actions")
+    }
   }
-}
 
   await addDoc(actionsRef, {
     ...action,
-  
+
     featured: false,
     featuredOrder: 999,
-  
+
     priority: action.type === "cta",
     ctaActions: action.type === "cta" ? action.ctaActions || [] : [],
-  
+
     stats: {
       signups: 0,
     },
-  
+
     createdAt: serverTimestamp(),
   })
 }
+
 // ---------------- GET ALL ----------------
 
 export const getActions = async () => {
@@ -188,8 +190,7 @@ export const getFeaturedActionsByTypes = async (types: string[]) => {
 
 export const signupForAction = async (
   actionId: string,
-  data: ActionSignup,
-  token: string | null
+  data: ActionSignup
 ) => {
   const actionRef = doc(db, "actions", actionId)
   const actionSnap = await getDoc(actionRef)
@@ -227,11 +228,10 @@ export const signupForAction = async (
     email,
 
     verified: isPetition ? false : true,
-    verificationToken: isPetition ? token : null,
+    verificationToken: isPetition ? uuidv4() : null,
 
     createdAt: serverTimestamp(),
   })
-
 }
 
 // ---------------- ADMIN SIGNUPS ----------------
