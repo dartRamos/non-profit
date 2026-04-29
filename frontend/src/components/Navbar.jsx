@@ -24,7 +24,7 @@ export default function Nav({ user }) {
         <Link to="/About" onClick={() => setOpen(false)}>About</Link>
         <Link to="/Actions" onClick={() => setOpen(false)}>Actions</Link>
         <Link to="/Events" onClick={() => setOpen(false)}>Events</Link>
-        <Link to="/StayInformed" onClick={() => setOpen(false)}>Stay Informed</Link>
+        <Link to="/Volunteer" onClick={() => setOpen(false)}>Volunteer</Link>
 
         {user && (
           <Link to="/admin" onClick={() => setOpen(false)}>

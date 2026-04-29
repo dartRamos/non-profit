@@ -93,17 +93,6 @@ export default function About() {
                   ● Coordinate and participate in actions such as petitions, protests, or community engagement.
                   <br /><br />
 
-                  OAC also manages a public Google Calendar that tracks upcoming opportunities for involvement, including:
-                  <br />
-                  ● Town halls
-                  <br />
-                  ● Political protests or rallies
-                  <br />
-                  ● Community meetings or events
-                  <br />
-                  ● Educational webinars or discussions
-                  <br />
-                  ● Opportunities to engage with elected officials
                 </p>
 
               </div>
@@ -129,11 +118,6 @@ export default function About() {
                 areas of provincial and municipal politics. We want to create engaging content catered to
                 each platform in order to spread awareness and educate the public on current issues and
                 events. 
-                <br /><br />
-                We have come to a realization: our provincial politics are confusing, so we need to
-                get people interested in participating again. Living in a democracy means it is our
-                responsibility to engage, but because we have been apathetic to the system, it has grown
-                out of control.
                 </p>
 
               </div>
@@ -163,8 +147,6 @@ export default function About() {
                 ● Advocating for policy changes, such as the introduction of a Recall Act in Ontario
                 <br />
                 ● Collaborating with other advocacy organizations that share similar goals
-                <br />
-                ● Hosting interviews or discussions with political candidates and opposition parties
                 </p>
 
               </div>

@@ -20,6 +20,18 @@ const signupsRef = collection(db, "action_signups")
 
 // ---------------- CREATE ACTION ----------------
 
+type CTAAction = {
+  type: "email" | "petition"
+
+  // email fields
+  recipientEmail?: string
+  subject?: string
+  body?: string
+
+  // petition fields
+  petitionLink?: string
+}
+
 export const createAction = async (action: {
   type: "protest" | "petition" | "cta" | "email" | "rally" | "townhall"
   title: string
@@ -29,18 +41,47 @@ export const createAction = async (action: {
   location?: string
   image?: string
   link?: string
+
+  priority?: boolean
+  ctaActions?: CTAAction[]
 }) => {
+
+  if (action.type === "cta") {
+  if (!action.ctaActions || action.ctaActions.length === 0) {
+    throw new Error("CTA must have at least one action")
+  }
+
+  const hasInvalid = action.ctaActions.some((a) => {
+    if (a.type === "email") {
+      return !a.recipientEmail || !a.subject || !a.body
+    }
+    if (a.type === "petition") {
+      return !a.petitionLink
+    }
+    return true
+  })
+
+  if (hasInvalid) {
+    throw new Error("Invalid CTA actions")
+  }
+}
+
   await addDoc(actionsRef, {
     ...action,
+  
     featured: false,
     featuredOrder: 999,
+  
+    priority: action.type === "cta",
+    ctaActions: action.type === "cta" ? action.ctaActions || [] : [],
+  
     stats: {
       signups: 0,
     },
+  
     createdAt: Date.now(),
   })
 }
-
 // ---------------- GET ALL ----------------
 
 export const getActions = async () => {
@@ -76,7 +117,34 @@ export const deleteAction = async (id: string) => {
 // ---------------- UPDATE ----------------
 
 export const updateAction = async (id: string, data: any) => {
-  await updateDoc(doc(db, "actions", id), data)
+
+  if (data.type === "cta") {
+    const hasInvalid = (data.ctaActions || []).some((a) => {
+      if (a.type === "email") {
+        return (
+          !a.recipientEmail ||
+          !a.recipientName ||
+          !a.recipientPosition ||
+          !a.subject ||
+          !a.body
+        )
+      }
+      if (a.type === "petition") {
+        return !a.petitionLink
+      }
+      return true
+    })
+
+    if (hasInvalid) {
+      throw new Error("Invalid CTA actions")
+    }
+  }
+
+  await updateDoc(doc(db, "actions", id), {
+    ...data,
+    priority: data.type === "cta",
+    ctaActions: data.type === "cta" ? data.ctaActions || [] : [],
+  })
 }
 
 // ---------------- FEATURE TOGGLE ----------------
@@ -84,7 +152,6 @@ export const updateAction = async (id: string, data: any) => {
 export const toggleActionFeatured = async (id: string, current: boolean) => {
   await updateDoc(doc(db, "actions", id), {
     featured: !current,
-    // 👇 optional smart default ordering
     featuredOrder: !current ? Date.now() : 999,
   })
 }
@@ -96,7 +163,7 @@ export const getFeaturedActionsByTypes = async (types: string[]) => {
     actionsRef,
     where("featured", "==", true),
     where("type", "in", types),
-    orderBy("featuredOrder", "asc") // 👈 ORDERING APPLIED HERE
+    orderBy("featuredOrder", "asc")
   )
 
   const snapshot = await getDocs(q)
@@ -186,7 +253,7 @@ export const seedCTAData = async () => {
     await addDoc(actionsRef, {
       ...item,
       featured: true,
-      featuredOrder: Date.now(), // 👈 ensures proper ordering
+      featuredOrder: Date.now(),
       stats: { signups: Math.floor(Math.random() * 5000) },
       createdAt: Date.now(),
     })

@@ -176,3 +176,16 @@
   align-self: flex-start;
   margin-left: 10%;
 }
+
+.featured-actions-priority-badge {
+  background: #ff3b3b;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  margin-bottom: 10px;
+  display: inline-block;
+}

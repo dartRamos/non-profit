@@ -19,10 +19,9 @@ function truncateText(text, maxLength = 400) {
   return text.slice(0, maxLength).trim() + "..."
 }
 
-const getLink = (e) => `/events/${e.id}`
+const getLink = (e) => `/actions/${e.id}`
 
 export default function Petitions(
-  seeAllLink = "/events",
 ) {
   const [petitions, setPetitions] = useState([])
   const [visibleCount, setVisibleCount] = useState(4)

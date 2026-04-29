@@ -8,7 +8,6 @@ function truncate(text = "", maxLength = 140) {
   return text.slice(0, maxLength).trim() + "..."
 }
 
-// 🔒 only allow civic action types
 const ACTION_TYPES = ["cta", "petition", "email"]
 
 export default function FeaturedActions({
@@ -20,10 +19,10 @@ export default function FeaturedActions({
   variant = "grid",
 }) {
 
-  // ✅ filter by type + limit
   const filtered = (actions || [])
-    .filter((a) => ACTION_TYPES.includes(a.type))
-    .slice(0, maxItems)
+  .filter((a) => ACTION_TYPES.includes(a.type))
+  .sort((a, b) => (b.priority === true) - (a.priority === true))
+  .slice(0, maxItems)
 
   const getLink = (a) => {
     return `/actions/${a.id}`
@@ -34,7 +33,7 @@ export default function FeaturedActions({
 
       <img src={rectangleCTA} className="featured-actions-bg" alt="background" />
 
-      <div className="featured-actions-overlay">\
+      <div className="featured-actions-overlay">
         <div className="image-fade-2" />
         <div className="image-fade" />
         <div className="featured-actions-wrapper">
@@ -47,6 +46,13 @@ export default function FeaturedActions({
               <div key={a.id} className="featured-actions-card">
 
                 <div className="featured-actions-info">
+
+                  {a.priority && (
+                    <div className="featured-actions-priority-badge">
+                      PRIORITY
+                    </div>
+                  )}
+
                   <h3>{a.title}</h3>
 
                   <p>

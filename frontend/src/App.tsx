@@ -10,8 +10,9 @@ import { useAuth } from "./firebase/useAuth";
 import "./App.css";
 import Nav from "./components/Navbar.jsx"
 import Footer from "./components/Footer.jsx"
-import Action from "./pages/Action"
+import Donate from "./pages/Donate.jsx"
 import ActionRouter from "./pages/ActionRouter"
+import Volunteer from "./pages/Volunteer.jsx"
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -26,6 +27,8 @@ export default function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/actions" element={<Actions />} />
         <Route path="/actions/:id" element={<ActionRouter />} />
+        <Route path="/donate" element={<Donate />} />
+        <Route path="/volunteer" element={<Volunteer />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

@@ -19,7 +19,6 @@ export default function Admin() {
   const [actions, setActions] = useState([])
   const [editingAction, setEditingAction] = useState(null)
 
-  // ✅ separate image system (standalone feature gallery)
   const [images, setImages] = useState([])
   const [imageUrl, setImageUrl] = useState("")
 
@@ -41,6 +40,7 @@ export default function Admin() {
         recipientEmail: "",
       },
     ],
+    ctaActions: [],
   })
 
   const [selectedActionSignups, setSelectedActionSignups] = useState([])
@@ -82,6 +82,8 @@ export default function Admin() {
           recipientEmail: "",
         },
       ],
+      priority: false,
+      ctaActions: [],
     })
     setEditingAction(null)
   }
@@ -98,9 +100,6 @@ export default function Admin() {
     return true
   })
 
-  // -----------------------
-  // IMAGE SYSTEM (separate)
-  // -----------------------
   const addImage = () => {
     if (!imageUrl.trim()) return
     setImages([...images, { id: Date.now(), url: imageUrl }])
@@ -111,9 +110,6 @@ export default function Admin() {
     setImages(images.filter((img) => img.id !== id))
   }
 
-  // -----------------------
-  // EMAIL SYSTEM
-  // -----------------------
   const addEmailTemplate = () => {
     setForm({
       ...form,
@@ -135,9 +131,6 @@ export default function Admin() {
     setForm({ ...form, emailTemplates: updated })
   }
 
-  // -----------------------
-  // SUBMIT ACTION
-  // -----------------------
   const handleSubmit = async () => {
     if (form.type === "email") {
       const missingFields = form.emailTemplates.some(
@@ -146,9 +139,34 @@ export default function Admin() {
           !t.recipientName?.trim() ||
           !t.recipientPosition?.trim()
       )
-
+  
       if (missingFields) {
         alert("Each email must include recipient email, name, and position")
+        return
+      }
+    }
+  
+    if (form.type === "cta") {
+      const invalid = form.ctaActions.some((a) => {
+        if (a.type === "email") {
+          return (
+            !a.recipientEmail?.trim() ||
+            !a.recipientName?.trim() ||
+            !a.recipientPosition?.trim() ||
+            !a.subject?.trim() ||
+            !a.body?.trim()
+          )
+        }
+  
+        if (a.type === "petition") {
+          return !a.petitionLink?.trim()
+        }
+  
+        return true
+      })
+  
+      if (invalid) {
+        alert("All CTA actions must be fully completed")
         return
       }
     }
@@ -165,6 +183,7 @@ export default function Admin() {
       recipientName: form.recipientName,
       recipientPosition: form.recipientPosition,
       emailTemplates: form.emailTemplates,
+      ctaActions: form.ctaActions,
     }
 
     if (editingAction) {
@@ -180,7 +199,6 @@ export default function Admin() {
   return (
     <div className="admin-wrapper">
 
-      {/* SIDEBAR */}
       <div className="admin-sidebar">
         <h3>Admin</h3>
 
@@ -191,7 +209,6 @@ export default function Admin() {
       <div className="admin-content">
         <h1>CMS Dashboard</h1>
 
-        {/* FORM */}
         <div className="admin-form">
 
           <input
@@ -208,7 +225,6 @@ export default function Admin() {
             }
           />
 
-          {/* ACTION IMAGE FIELD */}
           <input
             placeholder="Image URL"
             value={form.image}
@@ -232,7 +248,6 @@ export default function Admin() {
             <option value="townhall">Townhall</option>
           </select>
 
-          {/* EVENT FIELDS */}
           {["protest", "rally", "townhall"].includes(form.type) && (
             <>
               <input
@@ -253,7 +268,6 @@ export default function Admin() {
             </>
           )}
 
-          {/* EMAIL BUILDER */}
           {form.type === "email" && (
             <div className="email-builder">
 
@@ -314,12 +328,122 @@ export default function Admin() {
             </div>
           )}
 
+          {form.type === "cta" && (
+            <div className="email-builder">
+
+              <h3>CTA Actions</h3>
+
+              {form.ctaActions.map((a, i) => (
+                <div key={i} className="email-block">
+
+                  <select
+                    value={a.type}
+                    onChange={(e) => {
+                      const updated = [...form.ctaActions]
+                      updated[i].type = e.target.value
+                      setForm({ ...form, ctaActions: updated })
+                    }}
+                  >
+                    <option value="">Select Type</option>
+                    <option value="email">Email</option>
+                    <option value="petition">Petition</option>
+                  </select>
+
+                  {a.type === "email" && (
+                  <>
+                    <input
+                      placeholder="Recipient Email"
+                      value={a.recipientEmail || ""}
+                      onChange={(e) => {
+                        const updated = [...form.ctaActions]
+                        updated[i].recipientEmail = e.target.value
+                        setForm({ ...form, ctaActions: updated })
+                      }}
+                    />
+
+                    <input
+                      placeholder="Recipient Name"
+                      value={a.recipientName || ""}
+                      onChange={(e) => {
+                        const updated = [...form.ctaActions]
+                        updated[i].recipientName = e.target.value
+                        setForm({ ...form, ctaActions: updated })
+                      }}
+                    />
+
+                    <input
+                      placeholder="Recipient Position"
+                      value={a.recipientPosition || ""}
+                      onChange={(e) => {
+                        const updated = [...form.ctaActions]
+                        updated[i].recipientPosition = e.target.value
+                        setForm({ ...form, ctaActions: updated })
+                      }}
+                    />
+
+                    <input
+                      placeholder="Subject"
+                      value={a.subject || ""}
+                      onChange={(e) => {
+                        const updated = [...form.ctaActions]
+                        updated[i].subject = e.target.value
+                        setForm({ ...form, ctaActions: updated })
+                      }}
+                    />
+
+                    <textarea
+                      placeholder="Body"
+                      value={a.body || ""}
+                      onChange={(e) => {
+                        const updated = [...form.ctaActions]
+                        updated[i].body = e.target.value
+                        setForm({ ...form, ctaActions: updated })
+                      }}
+                    />
+                  </>
+                )}
+
+                {a.type === "petition" && (
+                  <input
+                    placeholder="Petition Link"
+                    value={a.petitionLink || ""}
+                    onChange={(e) => {
+                      const updated = [...form.ctaActions]
+                      updated[i].petitionLink = e.target.value
+                      setForm({ ...form, ctaActions: updated })
+                    }}
+                  />
+                )}
+
+                <button
+                  onClick={() => {
+                    const updated = form.ctaActions.filter((_, idx) => idx !== i)
+                    setForm({ ...form, ctaActions: updated })
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+              ))}
+
+              <button
+                onClick={() =>
+                  setForm({
+                    ...form,
+                    ctaActions: [...form.ctaActions, { type: "email" }],
+                  })
+                }
+              >
+                + Add CTA Action
+              </button>
+            </div>
+          )}
+
           <button onClick={handleSubmit}>
             {editingAction ? "Update" : "Create"}
           </button>
         </div>
 
-        {/* LIST */}
         {filteredActions.map((a) => (
           <div key={a.id} className="admin-card">
             <h3>{a.title}</h3>
@@ -346,6 +470,8 @@ export default function Admin() {
                   emailTemplates: a.emailTemplates || [
                     { subject: "", body: "", recipientEmail: "" },
                   ],
+                  priority: a.priority || false,
+                  ctaActions: a.ctaActions || [],
                 })
               }}
             >
@@ -364,7 +490,6 @@ export default function Admin() {
           </div>
         ))}
 
-        {/* IMAGE GALLERY (SEPARATE FEATURE) */}
         <hr />
 
         <h2>Featured Images</h2>
@@ -387,7 +512,6 @@ export default function Admin() {
           ))}
         </div>
 
-        {/* SIGNUPS */}
         {viewingActionId && (
           <div className="admin-signups-panel">
             <h2>Signups</h2>
