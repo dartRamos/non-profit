@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getFeaturedActionsByTypes } from "../firebase/actions";
-import { getFeaturedImages } from "../firebase/protests";
 
 import headerImage from "../assets/image1.png";
 import rectangle54 from "../assets/rectangle54.png";
@@ -22,7 +21,6 @@ import DonateButton from "../components/DonateButton.jsx";
 export default function Home() {
   const [civicActions, setCivicActions] = useState([]);
   const [events, setEvents] = useState([]);
-  const [images, setImages] = useState([]);
 
   useEffect(() => {
     const load = async () => {
@@ -38,9 +36,6 @@ export default function Home() {
         "townhall",
       ]);
 
-      const imageData = await getFeaturedImages();
-
-      setImages(imageData);
       setCivicActions(civic.slice(0, 6));
       setEvents(eventData);
     };

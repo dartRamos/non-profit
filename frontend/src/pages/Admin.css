@@ -171,3 +171,30 @@
   margin: 2px 0;
   font-size: 14px;
 }
+
+.admin-layout {
+  display: flex;
+  gap: 20px;
+}
+
+/* LEFT SIDE (main content) */
+.admin-main {
+  flex: 2;
+  min-width: 0;
+}
+
+/* RIGHT SIDE (signups panel) */
+.admin-right {
+  flex: 3;
+  top: 20px;
+}
+
+/* make panel stand out */
+.admin-signups-panel {
+  margin-top: 0;
+  background: #111;
+  border: 1px solid #333;
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
