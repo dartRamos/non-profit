@@ -4,6 +4,17 @@ const cors = require("cors")
 const formData = require("form-data")
 const Mailgun = require("mailgun.js")
 
+// ---------------- FIREBASE ADMIN ----------------
+const admin = require("firebase-admin")
+const serviceAccount = require("./serviceAccountKey.json")
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+})
+
+const db = admin.firestore()
+
+// ---------------- APP SETUP ----------------
 const app = express()
 
 app.use(cors())
@@ -36,61 +47,55 @@ app.post("/send-email", async (req, res) => {
       messages,
     } = req.body
 
-    console.log("RAW EMAIL REQUEST:", JSON.stringify(req.body, null, 2))
     const fullName = `${firstName} ${lastName}`
 
     const emailMessages =
-      Array.isArray(messages) && messages.length
-        ? messages
-        : [message]
+      Array.isArray(messages) && messages.length ? messages : [message]
 
-        const sendOne = async (item, index) => {
-
-          // 🔥 ADD THIS RIGHT HERE (FIRST THING)
-          if (typeof item !== "string") {
-            if (
-              !item.recipientEmail ||
-              !item.recipientName ||
-              !item.recipientPosition
-            ) {
-              throw new Error(
-                `Missing recipient fields in template at index ${index}`
-              )
-            }
-          }
-        
-          const msg = typeof item === "string" ? item : item.body
-        
-          const to =
-            typeof item === "string"
-              ? "alessandro.ramos.it@gmail.com"
-              : item.recipientEmail
-        
-          const subject =
-            typeof item === "string"
-              ? `Campaign Message ${index + 1}`
-              : item.subject || `Campaign Message ${index + 1}`
-        
-              const emailBody = `
-                Dear ${item.recipientPosition} ${item.recipientName},
-                
-                ${msg}
-                
-                Sincerely,
-                ${fullName}
-                ${email}
-                ${postalCode}
-                `
-        
-          return mg.messages.create(process.env.MAILGUN_DOMAIN, {
-            from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
-            to,
-            subject,
-            text: emailBody,
-          })
+    const sendOne = async (item, index) => {
+      if (typeof item !== "string") {
+        if (
+          !item.recipientEmail ||
+          !item.recipientName ||
+          !item.recipientPosition
+        ) {
+          throw new Error(
+            `Missing recipient fields in template at index ${index}`
+          )
         }
+      }
 
-    // SEND IN PARALLEL
+      const msg = typeof item === "string" ? item : item.body
+
+      const to =
+        typeof item === "string"
+          ? "alessandro.ramos.it@gmail.com"
+          : item.recipientEmail
+
+      const subject =
+        typeof item === "string"
+          ? `Campaign Message ${index + 1}`
+          : item.subject || `Campaign Message ${index + 1}`
+
+      const emailBody = `
+        Dear ${item.recipientPosition} ${item.recipientName},
+
+        ${msg}
+
+        Sincerely,
+        ${fullName}
+        ${email}
+        ${postalCode}
+      `
+
+      return mg.messages.create(process.env.MAILGUN_DOMAIN, {
+        from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
+        to,
+        subject,
+        text: emailBody,
+      })
+    }
+
     const responses = await Promise.allSettled(
       emailMessages.map((item, i) => sendOne(item, i))
     )
@@ -112,6 +117,108 @@ app.post("/send-email", async (req, res) => {
   }
 })
 
+// ---------------- SEND VERIFICATION EMAIL ----------------
+app.post("/send-verification", async (req, res) => {
+  try {
+    const { email, firstName, actionId } = req.body
+
+    const snapshot = await db
+      .collection("action_signups")
+      .where("email", "==", email)
+      .where("actionId", "==", actionId)
+      .where("verified", "==", false)
+      .limit(1)
+      .get()
+
+    if (snapshot.empty) {
+      return res.status(400).json({ error: "Pending signup not found" })
+    }
+
+    const doc = snapshot.docs[0]
+    const signup = doc.data()
+    const token = signup.verificationToken
+
+    if (!token) {
+      return res.status(400).json({ error: "Missing verification token" })
+    }
+
+    const verifyLink = `http://localhost:5173/verify?token=${token}&actionId=${actionId}`
+
+    const message = `
+Hello ${firstName},
+
+Please confirm your signature by clicking the link below:
+
+${verifyLink}
+
+If you did not sign this petition, you can ignore this email.
+`
+
+    await mg.messages.create(process.env.MAILGUN_DOMAIN, {
+      from: `Verify <mail@${process.env.MAILGUN_DOMAIN}>`,
+      to: email,
+      subject: "Confirm your signature",
+      text: message,
+    })
+
+    res.json({ success: true })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ success: false, error: err.message })
+  }
+})
+
+// ---------------- VERIFY SIGNUP ----------------
+app.post("/verify-signup", async (req, res) => {
+  try {
+    const { token, actionId } = req.body
+
+    const snapshot = await db
+      .collection("action_signups")
+      .where("verificationToken", "==", token)
+      .where("actionId", "==", actionId)
+      .limit(1)
+      .get()
+
+    if (snapshot.empty) {
+      return res.status(400).json({ error: "Invalid token" })
+    }
+
+    const docRef = snapshot.docs[0].ref
+
+    await db.runTransaction(async (tx) => {
+      const docSnap = await tx.get(docRef)
+
+      if (!docSnap.exists) throw new Error("Signup not found")
+
+      const data = docSnap.data()
+
+      if (data.verified) return
+
+      if (data.verificationToken !== token) {
+        throw new Error("Token mismatch")
+      }
+
+      tx.update(docRef, {
+        verified: true,
+        verifiedAt: admin.firestore.FieldValue.serverTimestamp(),
+      })
+
+      const actionRef = db.collection("actions").doc(actionId)
+
+      tx.update(actionRef, {
+        "stats.signups": admin.firestore.FieldValue.increment(1),
+      })
+    })
+
+    res.json({ success: true })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ success: false, error: err.message })
+  }
+})
+
+// ---------------- START SERVER ----------------
 const PORT = 5000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)

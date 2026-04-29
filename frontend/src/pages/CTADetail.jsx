@@ -23,6 +23,8 @@ export default function ActionDetail() {
     lastName: "",
     email: "",
     postalCode: "",
+    consent: false,
+    comment: "",
   })
 
   useEffect(() => {
@@ -235,6 +237,15 @@ export default function ActionDetail() {
                           onChange={(e) =>
                             setForm({ ...form, postalCode: e.target.value })
                           }
+                        />
+
+                        <input
+                          placeholder="Why does this matter to you? (optional)"
+                          value={form.comment}
+                          onChange={(e) =>
+                            setForm({ ...form, comment: e.target.value })
+                          }
+                          className="comment-box"
                         />
 
                         <button onClick={handleSubmit}>

@@ -21,8 +21,9 @@ export default function EmailDetail() {
     lastName: "",
     email: "",
     postalCode: "",
+    consent: false,
+    comment: "",
   })
-
   const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
@@ -255,6 +256,15 @@ export default function EmailDetail() {
                           onChange={(e) =>
                             setForm({ ...form, postalCode: e.target.value })
                           }
+                        />
+
+                        <input
+                          placeholder="Why does this matter to you? (optional)"
+                          value={form.comment}
+                          onChange={(e) =>
+                            setForm({ ...form, comment: e.target.value })
+                          }
+                          className="comment-box"
                         />
 
                         <button onClick={handleSubmit}>Submit</button>

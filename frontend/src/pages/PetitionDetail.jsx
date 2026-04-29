@@ -21,19 +21,37 @@ export default function PetitionDetail({ action }) {
       alert("Please fill in required fields")
       return
     }
-
+  
     try {
+  
       await signupForAction(action.id, form)
+  
+      const res = await fetch("http://localhost:5000/send-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: form.email,
+          firstName: form.firstName,
+          actionId: action.id,
+        }),
+      })
 
-      alert("Signature added")
+      const data = await res.json()
 
+      if (!data.success) {
+        throw new Error(data.error || "Failed to send verification email")
+      }
+  
+      alert("Check your email to confirm your signature")
+  
       setForm({
         firstName: "",
         lastName: "",
         email: "",
         postalCode: "",
       })
-
     } catch (err) {
       alert(err.message)
     }

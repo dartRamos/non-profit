@@ -14,6 +14,17 @@ import {
   serverTimestamp
 } from "firebase/firestore"
 
+import { v4 as uuidv4 } from "uuid"
+
+type ActionSignup = {
+  firstName: string
+  lastName: string
+  email: string
+  postalCode: string
+  consent: true
+  comment?: string
+}
+
 // ---------------- COLLECTIONS ----------------
 
 const actionsRef = collection(db, "actions")
@@ -175,8 +186,26 @@ export const getFeaturedActionsByTypes = async (types: string[]) => {
 
 // ---------------- SIGNUP ----------------
 
-export const signupForAction = async (actionId, data) => {
+export const signupForAction = async (
+  actionId: string,
+  data: ActionSignup,
+  token: string | null
+) => {
+  const actionRef = doc(db, "actions", actionId)
+  const actionSnap = await getDoc(actionRef)
+
+  if (!actionSnap.exists()) {
+    throw new Error("Action not found")
+  }
+
+  const action = actionSnap.data()
+  const isPetition = action.type === "petition"
+
   const email = data.email.trim().toLowerCase()
+
+  if (!data.consent) {
+    throw new Error("User must provide consent")
+  }
 
   const q = query(
     signupsRef,
@@ -190,16 +219,19 @@ export const signupForAction = async (actionId, data) => {
     throw new Error("Already signed up")
   }
 
-  await addDoc(signupsRef, {
+  const signupId = `${actionId}_${email}`
+
+  await setDoc(doc(db, "action_signups", signupId), {
     actionId,
     ...data,
     email,
+
+    verified: isPetition ? false : true,
+    verificationToken: isPetition ? token : null,
+
     createdAt: serverTimestamp(),
   })
 
-  await updateDoc(doc(db, "actions", actionId), {
-    "stats.signups": increment(1),
-  })
 }
 
 // ---------------- ADMIN SIGNUPS ----------------
