@@ -128,7 +128,7 @@ export default function Home() {
                 <img src={tiktok} alt="TikTok" />
               </a>
 
-              <a href="https://www.facebook.com/people/Ontarians-Against-Corruption-OAC/61574271323531/" target="_blank" rel="noopener noreferrer">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                 <img src={facebook} alt="Facebook" />
               </a>
 

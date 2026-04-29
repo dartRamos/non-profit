@@ -36,7 +36,7 @@
 }
 
 .action-title {
-  font-size: 38px;
+  font-size: 58px;
   margin-bottom: 10px;
 }
 
@@ -58,8 +58,7 @@
   margin-bottom: 14px;
   line-height: 1.3;
   color: #ddd;
-  max-width: 670px;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 /* ---------------- RIGHT PANEL ---------------- */
@@ -74,7 +73,7 @@
   background: #1a1a1a;
   padding: 20px;
   border: 1px solid #333;
-  width: 670px;
+  width: 550px;
 }
 
 /* ---------------- STATS ---------------- */

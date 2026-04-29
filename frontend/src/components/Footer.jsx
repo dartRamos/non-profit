@@ -85,17 +85,18 @@ export default function Footer() {
               <div className="footer-social-column">
 
                 <div className="social-grid">
-                  <a href="https://discord.gg/QX2zY867"><img src={discord} /></a>
-                  <a href="https://www.instagram.com/ontariansagainstcorruption/" ><img src={instagram} /></a>
-                  <a href="https://x.com/OntariansAC"><img src={twitter} /></a>
-                  <a href="https://www.tiktok.com/@ontarians.against" ><img src={tiktok} /></a>
+                  <a href="#"><img src={discord} /></a>
+                  <a href="#"><img src={instagram} /></a>
+                  <a href="#"><img src={twitter} /></a>
+                  <a href="#"><img src={tiktok} /></a>
 
-                  <a href="https://www.facebook.com/people/Ontarians-Against-Corruption-OAC/61574271323531/"><img src={facebook} /></a>
-                  <a href="https://www.reddit.com/user/OntariansAgainst/" ><img src={reddit} /></a>
-                  <a href="https://bsky.app/profile/ontariansagainst.bsky.social"><img src={bluesky} /></a>
-                  <a href="https://substack.com/@ontariansagainstcorruption?utm_source=global-search"><img src={substack} /></a>
+                  <a href="#"><img src={facebook} /></a>
+                  <a href="#"><img src={reddit} /></a>
+                  <a href="#"><img src={bluesky} /></a>
+                  <a href="#"><img src={substack} /></a>
                 </div>
 
+                {/* privacy UNDER socials */}
                 <p className="privacy-text">
                   Privacy Policy
                 </p>

@@ -2,7 +2,6 @@ import { useState } from "react"
 import image from "../assets/event3.png"
 import rectangle from "../assets/rectangle91.png"
 import { signupForAction } from "../firebase/actions"
-import DonateButton from "../components/DonateButton.jsx";
 
 import "./PetitionDetail.css"
 
@@ -13,7 +12,6 @@ export default function PetitionDetail({ action }) {
     lastName: "",
     email: "",
     postalCode: "",
-    consent: false,
   })
 
   const heroImage = action?.image || image
@@ -24,41 +22,18 @@ export default function PetitionDetail({ action }) {
       return
     }
 
-    if (!form.consent) {
-      alert("You must agree to receive emails to sign")
-      return
-    }
-
     try {
       await signupForAction(action.id, form)
 
-      const res = await fetch("http://localhost:5000/send-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: form.email,
-          firstName: form.firstName,
-          actionId: action.id,
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!data.success) {
-        throw new Error(data.error || "Failed to send verification email")
-      }
-
-      alert("Check your email to confirm your signature")
+      alert("Signature added")
 
       setForm({
         firstName: "",
         lastName: "",
         email: "",
         postalCode: "",
-        consent: false,
       })
+
     } catch (err) {
       alert(err.message)
     }
@@ -76,7 +51,6 @@ export default function PetitionDetail({ action }) {
       <div className="header-image-container">
         <img src={heroImage} className="header-image" alt="header" />
         <img src={rectangle} className="rectangle-54" alt="overlay" />
-        <DonateButton onClick={() => window.location.href = "/donate"} />
         <div className="image-fade" />
         <div className="header-text">
           <h1 className="line">SIGN THE PETITION</h1>
@@ -90,12 +64,15 @@ export default function PetitionDetail({ action }) {
 
         <div className="action-section">
 
+          {/* BACKGROUND */}
           <img src={rectangle} className="action-bg" alt="background" />
 
+          {/* OVERLAY */}
           <div className="action-overlay">
 
             <div className="action-layout">
 
+              {/* LEFT SIDE */}
               <div className="action-left">
 
                 <h1 className="action-title">{action.title}</h1>
@@ -117,6 +94,7 @@ export default function PetitionDetail({ action }) {
 
               </div>
 
+              {/* RIGHT SIDE */}
               <div className="action-right">
 
                 <div className="signup-panel">
@@ -172,18 +150,6 @@ export default function PetitionDetail({ action }) {
                         setForm({ ...form, postalCode: e.target.value })
                       }
                     />
-
-                    {/* CONSENT CHECKBOX */}
-                    <label className="consent-box">
-                      <input
-                        type="checkbox"
-                        checked={form.consent}
-                        onChange={(e) =>
-                          setForm({ ...form, consent: e.target.checked })
-                        }
-                      />
-                      I agree to receive updates about this campaign
-                    </label>
 
                     <button onClick={handleSignup}>
                       Sign Petition

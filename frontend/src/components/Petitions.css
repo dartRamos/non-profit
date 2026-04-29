@@ -1,0 +1,54 @@
+.petitions-events-grid{
+  margin-top: 36px;
+}
+
+.petitions-events-rect {
+  background: #ffc745;
+  color: black;
+
+  width: 1353px;
+  height: 201px;
+
+  margin-bottom: 47px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.petitions-events-title{
+  width: 1200px;
+  height: 147px;
+  margin-left: 16px;
+  margin-top: 11px;
+  margin-right: 135px;
+  font-size: 38px;
+  font-weight: 5 00;
+}
+
+.petitions-events-desc{
+  margin-top: 18px;
+  margin-right: 91px;
+  width: 575px;
+  font-size: 20px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.petitions-events-link{
+  background-color: black;
+  color: white;
+  text-decoration: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  width: 241px;
+  height: 51px;
+
+  font-size: 24px;
+  
+}

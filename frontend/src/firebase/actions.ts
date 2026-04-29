@@ -5,7 +5,6 @@ import {
   getDocs,
   deleteDoc,
   updateDoc,
-  setDoc,
   doc,
   query,
   orderBy,
@@ -14,17 +13,6 @@ import {
   getDoc,
   serverTimestamp
 } from "firebase/firestore"
-
-import { v4 as uuidv4 } from "uuid"
-
-type ActionSignup = {
-  firstName: string
-  lastName: string
-  email: string
-  postalCode: string
-  consent: true
-  comment?: string
-}
 
 // ---------------- COLLECTIONS ----------------
 
@@ -58,42 +46,41 @@ export const createAction = async (action: {
 }) => {
 
   if (action.type === "cta") {
-    if (!action.ctaActions || action.ctaActions.length === 0) {
-      throw new Error("CTA must have at least one action")
-    }
-
-    const hasInvalid = action.ctaActions.some((a) => {
-      if (a.type === "email") {
-        return !a.recipientEmail || !a.subject || !a.body
-      }
-      if (a.type === "petition") {
-        return !a.petitionLink
-      }
-      return true
-    })
-
-    if (hasInvalid) {
-      throw new Error("Invalid CTA actions")
-    }
+  if (!action.ctaActions || action.ctaActions.length === 0) {
+    throw new Error("CTA must have at least one action")
   }
+
+  const hasInvalid = action.ctaActions.some((a) => {
+    if (a.type === "email") {
+      return !a.recipientEmail || !a.subject || !a.body
+    }
+    if (a.type === "petition") {
+      return !a.petitionLink
+    }
+    return true
+  })
+
+  if (hasInvalid) {
+    throw new Error("Invalid CTA actions")
+  }
+}
 
   await addDoc(actionsRef, {
     ...action,
-
+  
     featured: false,
     featuredOrder: 999,
-
+  
     priority: action.type === "cta",
     ctaActions: action.type === "cta" ? action.ctaActions || [] : [],
-
+  
     stats: {
       signups: 0,
     },
-
+  
     createdAt: serverTimestamp(),
   })
 }
-
 // ---------------- GET ALL ----------------
 
 export const getActions = async () => {
@@ -188,25 +175,8 @@ export const getFeaturedActionsByTypes = async (types: string[]) => {
 
 // ---------------- SIGNUP ----------------
 
-export const signupForAction = async (
-  actionId: string,
-  data: ActionSignup
-) => {
-  const actionRef = doc(db, "actions", actionId)
-  const actionSnap = await getDoc(actionRef)
-
-  if (!actionSnap.exists()) {
-    throw new Error("Action not found")
-  }
-
-  const action = actionSnap.data()
-  const isPetition = action.type === "petition"
-
+export const signupForAction = async (actionId, data) => {
   const email = data.email.trim().toLowerCase()
-
-  if (!data.consent) {
-    throw new Error("User must provide consent")
-  }
 
   const q = query(
     signupsRef,
@@ -220,17 +190,15 @@ export const signupForAction = async (
     throw new Error("Already signed up")
   }
 
-  const signupId = `${actionId}_${email}`
-
-  await setDoc(doc(db, "action_signups", signupId), {
+  await addDoc(signupsRef, {
     actionId,
     ...data,
     email,
-
-    verified: isPetition ? false : true,
-    verificationToken: isPetition ? uuidv4() : null,
-
     createdAt: serverTimestamp(),
+  })
+
+  await updateDoc(doc(db, "actions", actionId), {
+    "stats.signups": increment(1),
   })
 }
 
