@@ -1,5 +1,5 @@
 body {
-  font-family: "Fira Sans", sans-serif !important;
+  font-family: "Fira Sans", sans-serif;
 }
 
 html, body {
@@ -10,7 +10,21 @@ html, body {
 }
 
 .container {
+  width: 100%;
   max-width: 1440px;
   margin: 0 auto;
   padding: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    padding: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 0;
+  }
 }
