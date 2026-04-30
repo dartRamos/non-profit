@@ -22,27 +22,30 @@
 .volunteer-section {
   position: relative;
   width: 100%;
-  margin-top: 20px;
+  min-height: 900px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .featured-volunteer-bg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  display: block;
-  position: relative; /* or just remove position entirely */
-  margin-top: 20px;   /* optional spacing */
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .volunteer-form-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  z-index: 2;
 
   background: #FFC745;
-  padding: 40px;
+  padding: clamp(24px, 4vw, 67px) clamp(20px, 6vw, 115px);
 
-  width: 90%;
-  padding: 67px 115px;
+  width: min(1130px, 90%);
+  margin: 80px auto;
 }
 
 .volunteer-form-overlay h2 {

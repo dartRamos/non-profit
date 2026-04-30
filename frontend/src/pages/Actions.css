@@ -28,6 +28,8 @@
   font-weight: 800;
   background: #191919;
   padding: 8.5px 20px;
+  display: flex;
+  text-align: center;
 }
 
 .actions-tabs {
