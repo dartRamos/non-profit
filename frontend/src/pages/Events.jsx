@@ -77,9 +77,8 @@ export default function Events() {
         <div className="events-section">
 
           <img src={rectangle} className="events-bg" alt="background" />
-
           <div className="events-overlay">
-
+          <div className="image-fade-2" />
           {tab === "protests" && <ActionFeed type="protest" />}
           {tab === "rallies" && <ActionFeed type="rally" />}
           {tab === "town-hall-meetings" && <ActionFeed type="townhall" />}
