@@ -4,7 +4,9 @@
 
 .events-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));
+
   gap: 38px;
   margin-top: 36px;
 }
@@ -12,13 +14,16 @@
 /* CARD */
 .event-card {
   background: #191919;
-  padding-left: 15px;
   color: white;
-  width: 428px;
-  height: 331px;
-  margin: 0;
+
+  width: 100%;
+  min-height: 331px;
+
   display: flex;
   flex-direction: column;
+
+  padding: 15px;
+  box-sizing: border-box;
 }
 
 /* TITLE */

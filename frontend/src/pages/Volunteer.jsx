@@ -65,7 +65,7 @@ export default function Volunteer() {
               We also help spread awareness about protests, rallies, and town hall meetings happening across the province. While much of our work takes place online through Discord and social media, we also come together in person for demonstrations and community action.
             </p>
 
-            {/* INPUT ROW (like footer) */}
+            {/* INPUT ROW */}
             <div className="volunteer-input-row">
               <input
                 className="volunteer-input"

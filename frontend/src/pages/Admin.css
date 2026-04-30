@@ -177,19 +177,18 @@
   gap: 20px;
 }
 
-/* LEFT SIDE (main content) */
+/* LEFT SIDE */
 .admin-main {
   flex: 2;
   min-width: 0;
 }
 
-/* RIGHT SIDE (signups panel) */
+/* RIGHT SIDE  */
 .admin-right {
   flex: 3;
   top: 20px;
 }
 
-/* make panel stand out */
 .admin-signups-panel {
   margin-top: 0;
   background: #111;

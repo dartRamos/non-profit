@@ -15,40 +15,46 @@ export default function ActionGrid({
   emptyMessage = "No items found",
 }) {
   return (
-    <div className="grid-wrapper">
+    <div className="grid-section">
 
-      <div className="events-grid">
+      <div className="grid-wrapper">
 
-        {items.length === 0 && <p>{emptyMessage}</p>}
+        <div className="events-grid">
 
-        {items.map((item) => (
-          <div key={item.id} className="event-card">
+          {items.length === 0 && <p>{emptyMessage}</p>}
 
-            <div className="event-content">
-              <h2 className="event-title">{item.title}</h2>
+          {items.map((item) => (
+            <div key={item.id} className="event-card">
 
-              <div className="event-meta">
-                {formatDate(item.date)}
+              <div className="event-content">
+                <h2 className="event-title">{item.title}</h2>
 
-                {item.type !== "cta" && item.type !== "email" && item.type !== "petition" && (
-                  <>
-                    <br />
-                    {item.location}
-                  </>
-                )}
+                <div className="event-meta">
+                  {formatDate(item.date)}
+
+                  {item.type !== "cta" &&
+                    item.type !== "email" &&
+                    item.type !== "petition" && (
+                      <>
+                        <br />
+                        {item.location}
+                      </>
+                    )}
+                </div>
+
+                <div className="event-desc">
+                  {item.description}
+                </div>
               </div>
 
-              <div className="event-desc">
-                {item.description}
-              </div>
+              <Link to={`${baseLink}/${item.id}`} className="event-btn">
+                Learn More
+              </Link>
+
             </div>
+          ))}
 
-            <Link to={`${baseLink}/${item.id}`} className="event-btn">
-              Learn More
-            </Link>
-
-          </div>
-        ))}
+        </div>
 
       </div>
 

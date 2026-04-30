@@ -13,13 +13,12 @@
   z-index: 1;
 }
 
-/* OVERLAY (IMPORTANT: not absolute) */
 .petition-overlay {
   position: relative;
   width: 100%;
   z-index: 2;
 
-  /* pulls content over image like your working section */
+
   margin-top: -100%;
   padding-top: 40px;
 
@@ -86,7 +85,6 @@
   max-width: 670px;
 }
 
-/* RESPONSIVE STACK */
 @media (max-width: 900px) {
   .petition-layout {
     flex-direction: column;
@@ -97,7 +95,6 @@
   }
 }
 
-/* IMPORTANT FIX: prevents footer overlap when content grows */
 .petition-section {
   display: flex;
   flex-direction: column;

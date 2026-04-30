@@ -57,23 +57,6 @@
   font-style: normal;
 }
 
-.actions-section {
-  position: relative;
-  width: 100%;
-}
-
-.actions-bg {
-  width: 100%;
-  display: block;
-}
-
-.actions-overlay {
-  position: absolute;
-  inset: 0;
-  padding: 40px;
-  color: white;
-}
-
 .actions-hero-grid .donate-button {
   position: absolute;
   top: 0px;

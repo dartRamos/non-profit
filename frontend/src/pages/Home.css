@@ -96,7 +96,6 @@
   font-style: italic;
 }
 
-/* shared line styles */
 .left,
 .right,
 .left2 {
@@ -134,12 +133,10 @@
   margin-left: 5%;
 }
 
-/* featured events spacing */
 .featured-events-container {
   margin-top: 95px;
 }
 
-/* social section */
 .social-media-container {
   margin-top: 38px;
   margin-left: 5%;
