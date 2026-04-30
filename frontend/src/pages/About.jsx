@@ -23,7 +23,7 @@ export default function About() {
         />
         
         <div className="image-fade" />
-        <DonateButton onClick={() => window.location.href = "/donate"} />
+        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="about-hero-inner">
 
           <div className="about-hero-text">

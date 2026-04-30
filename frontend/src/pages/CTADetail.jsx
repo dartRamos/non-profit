@@ -115,7 +115,7 @@ export default function ActionDetail() {
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
-        <DonateButton onClick={() => window.location.href = "/donate"} />
+        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="image-fade" />
 
         <div className="header-text">

@@ -76,7 +76,7 @@ export default function PetitionDetail({ action }) {
       <div className="header-image-container">
         <img src={heroImage} className="header-image" alt="header" />
         <img src={rectangle} className="rectangle-54" alt="overlay" />
-        <DonateButton onClick={() => window.location.href = "/donate"} />
+        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="image-fade" />
         <div className="header-text">
           <h1 className="line">SIGN THE PETITION</h1>

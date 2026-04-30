@@ -13,12 +13,6 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString()
 }
 
-function truncateText(text, maxLength = 400) {
-  if (!text) return ""
-  if (text.length <= maxLength) return text
-  return text.slice(0, maxLength).trim() + "..."
-}
-
 const getLink = (e) => `/actions/${e.id}`
 
 export default function Petitions(

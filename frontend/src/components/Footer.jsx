@@ -106,9 +106,9 @@ export default function Footer() {
 
               <div className="footer-links-column">
                 <a href="/about">About</a>
+                <a href="/actions">Actions</a>
                 <a href="/events">Events</a>
                 <a href="/stay-connected">Stay Connected</a>
-                <a href="/gallery">Photo Gallery</a>
 
                 <p className="footer-links-text">
                   © 2026 Ontarians Against Corruption

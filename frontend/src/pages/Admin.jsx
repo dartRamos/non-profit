@@ -13,6 +13,7 @@ import {
 } from "../firebase/actions"
 
 import { getSubscribers } from "../firebase/subscribers"
+import { getVolunteers } from "../firebase/volunteers"
 
 export default function Admin() {
   const { user, loading } = useAuth()
@@ -22,6 +23,7 @@ export default function Admin() {
   const [editingAction, setEditingAction] = useState(null)
   const [subscribers, setSubscribers] = useState([])
   const [actionFilter, setActionFilter] = useState("all")
+  const [volunteers, setVolunteers] = useState([])
 
   const [form, setForm] = useState({
     title: "",
@@ -52,6 +54,7 @@ export default function Admin() {
   const load = async () => {
     setActions(await getActions())
     setSubscribers(await getSubscribers())
+    setVolunteers(await getVolunteers())
   }
 
   useEffect(() => {
@@ -120,6 +123,7 @@ export default function Admin() {
         <button onClick={() => setTab("actions")}>Actions</button>
         <button onClick={() => setTab("events")}>Events</button>
         <button onClick={() => setTab("subscribers")}>Subscribers</button>
+        <button onClick={() => setTab("volunteers")}>Volunteers</button>
       </div>
 
       <div className="admin-content">
@@ -204,6 +208,12 @@ export default function Admin() {
                     Edit
                   </button>
 
+                  <button
+                    onClick={() => toggleActionFeatured(a.id, a.featured)}
+                  >
+                    {a.featured ? "Unfeature" : "Feature"}
+                  </button>
+
                   <button onClick={() => deleteAction(a.id)}>Delete</button>
                 </div>
               ))}
@@ -253,6 +263,21 @@ export default function Admin() {
                 <strong>{s.name}</strong>
                 <p>{s.email}</p>
                 <p>------------------------------------</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {tab === "volunteers" && (
+          <div className="admin-signups-panel">
+            <h2>Volunteers</h2>
+            <p>Total: {volunteers.length}</p>
+
+            {volunteers.map((v) => (
+              <div key={v.id}>
+                <strong>{v.name}</strong>
+                <p>{v.email}</p>
+                <p>----------------------</p>
               </div>
             ))}
           </div>

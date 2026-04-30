@@ -1,0 +1,117 @@
+.header-image-container {
+  height: 80vh;
+  min-height: 500px;
+  max-height: 361px;
+  position: relative;
+}
+
+.volunteer-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+}
+
+.rectangle-54 {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.volunteer-section {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.featured-volunteer-bg {
+  width: 100%;
+  display: block;
+  position: relative; /* or just remove position entirely */
+  margin-top: 20px;   /* optional spacing */
+}
+
+.volunteer-form-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: #FFC745;
+  padding: 40px;
+
+  width: 90%;
+  padding: 67px 115px;
+}
+
+.volunteer-form-overlay h2 {
+  font-size: 38px;
+}
+
+.volunteer-form-overlay h3 {
+  font-size: 38px;
+  margin-top: 40px;
+}
+
+.volunteer-form-overlay p {
+  font-size: 20px;
+}
+
+.volunteer-input-row {
+  display: flex;
+  gap: 40px;
+
+  justify-content: center;
+  width: 100%;
+  margin: 30px auto 0 auto;
+}
+
+.volunteer-input {
+  width: 232px;
+  height: 72px;
+
+  padding: 10px 14px;
+
+  background: transparent;
+  color: black;
+
+  border: 4px solid black;
+
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.volunteer-button {
+  width: 504px;
+  height: 72px;
+
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+
+  display: block;
+
+  background: transparent;
+  color: black;
+
+  border: 4px solid black;
+
+  font-size: 24px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.discord-icon {
+  display: block;
+  margin: 20px auto 0 auto;
+  height: auto;
+}
+
+@media (min-width: 1440px) {
+  .volunteer-form-overlay {
+    width: 1130px;
+    height: 1125px;
+  }
+}

@@ -70,7 +70,7 @@ export default function Home() {
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
         
         <div className="image-fade" />
-        <DonateButton onClick={() => window.location.href = "/donate"} />
+        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
 
         <div className="header-text">
           <h1 className="line">A GRASSROOTS COMMUNITY</h1>
