@@ -88,28 +88,28 @@ export default function PetitionDetail({ action }) {
       {/* MAIN CONTENT*/}
       <div className="container">
 
-        <div className="action-section">
+        <div className="petition-section">
 
-          <img src={rectangle} className="action-bg" alt="background" />
+          <img src={rectangle} className="petition-action-bg" alt="background" />
 
-          <div className="action-overlay">
+          <div className="petition-overlay">
 
-            <div className="action-layout">
+            <div className="petition-layout">
 
-              <div className="action-left">
+              <div className="petition-left">
 
-                <h1 className="action-title">{action.title}</h1>
+                <h1 className="petition-title">{action.title}</h1>
 
                 {action.subtitle && (
-                  <p className="action-subtitle">{action.subtitle}</p>
+                  <p className="petition-subtitle">{action.subtitle}</p>
                 )}
 
-                <div className="action-meta-row">
+                <div className="petition-meta-row">
                   {action.location && <span>📍 {action.location}</span>}
                   {action.date && <span>📅 {action.date}</span>}
                 </div>
 
-                <div className="action-description">
+                <div className="petition-description">
                   {action.description?.split("\n").map((line, i) => (
                     <p key={i}>{line}</p>
                   ))}
@@ -117,9 +117,9 @@ export default function PetitionDetail({ action }) {
 
               </div>
 
-              <div className="action-right">
+              <div className="petition-right">
 
-                <div className="signup-panel">
+                <div className="petition-panel">
 
                   <div className="signup-stats">
                     <div className="signup-number">{signups}</div>

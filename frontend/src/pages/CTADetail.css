@@ -14,25 +14,37 @@
 
 /* OVERLAY */
 .action-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
+  position: relative;
+  width: 100%;
 
+  display: flex;
+  flex-direction: column;
+  
   color: white;
 }
 
 /* LAYOUT INSIDE OVERLAY */
 .action-layout {
   display: flex;
+  z-index: 2;
   margin: 40px;
   gap: 20px;
   position: relative;
 }
 
+.action-overlay {
+  position: relative;
+  z-index: 2;
+
+  margin-top: -100%;
+  padding-top: 40px;
+}
+
 /* ---------------- LEFT ---------------- */
 
 .action-left {
-  flex: 2;
+  flex: 1;
+  min-width: 300px;
 }
 
 .action-title {
@@ -66,15 +78,19 @@
 
 .action-right {
   flex: 1;
+  min-width: 280px;
 }
 
 .signup-panel {
   position: sticky;
   top: 40px;
+
   background: #1a1a1a;
   padding: 20px;
   border: 1px solid #333;
-  width: 670px;
+
+  width: 100%;
+  max-width: 670px;
 }
 
 /* ---------------- STATS ---------------- */
