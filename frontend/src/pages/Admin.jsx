@@ -37,7 +37,13 @@ export default function Admin() {
     recipientName: "",
     recipientPosition: "",
     emailTemplates: [
-      { subject: "", body: "", recipientEmail: "" },
+      {
+        subject: "",
+        body: "",
+        recipientEmail: "",
+        recipientName: "",
+        recipientPosition: "",
+      },
     ],
     ctaActions: [],
   })
@@ -77,7 +83,13 @@ export default function Admin() {
       recipientName: "",
       recipientPosition: "",
       emailTemplates: [
-        { subject: "", body: "", recipientEmail: "" },
+        {
+          subject: "",
+          body: "",
+          recipientEmail: "",
+          recipientName: "",
+          recipientPosition: "",
+        },
       ],
       ctaActions: [],
     })
@@ -100,9 +112,7 @@ export default function Admin() {
   })
 
   const handleSubmit = async () => {
-    const payload = {
-      ...form,
-    }
+    const payload = { ...form }
 
     if (editingAction) {
       await updateAction(editingAction.id, payload)
@@ -117,7 +127,6 @@ export default function Admin() {
   return (
     <div className="admin-wrapper">
 
-      {/* SIDEBAR */}
       <div className="admin-sidebar">
         <h3>Admin</h3>
         <button onClick={() => setTab("actions")}>Actions</button>
@@ -131,7 +140,6 @@ export default function Admin() {
         {(tab === "actions" || tab === "events") && (
           <div className="admin-layout">
 
-            {/* LEFT SIDE */}
             <div className="admin-main">
               <h1>CMS Dashboard</h1>
 
@@ -145,6 +153,7 @@ export default function Admin() {
               )}
 
               <div className="admin-form">
+
                 <input
                   placeholder="Title"
                   value={form.title}
@@ -182,6 +191,197 @@ export default function Admin() {
                   <option value="townhall">Townhall</option>
                 </select>
 
+                {/* EMAIL BUILDER */}
+                {form.type === "email" && (
+                  <div className="email-builder">
+                    <h3>Email Campaigns</h3>
+
+                    {form.emailTemplates.map((t, i) => (
+                      <div key={i} className="email-block">
+
+                        <input
+                          placeholder="Subject"
+                          value={t.subject}
+                          onChange={(e) => {
+                            const updated = [...form.emailTemplates]
+                            updated[i].subject = e.target.value
+                            setForm({ ...form, emailTemplates: updated })
+                          }}
+                        />
+
+                        <textarea
+                          placeholder="Body"
+                          value={t.body}
+                          onChange={(e) => {
+                            const updated = [...form.emailTemplates]
+                            updated[i].body = e.target.value
+                            setForm({ ...form, emailTemplates: updated })
+                          }}
+                        />
+
+                        <input
+                          placeholder="Recipient Email"
+                          value={t.recipientEmail}
+                          onChange={(e) => {
+                            const updated = [...form.emailTemplates]
+                            updated[i].recipientEmail = e.target.value
+                            setForm({ ...form, emailTemplates: updated })
+                          }}
+                        />
+
+                        <input
+                          placeholder="Recipient Name"
+                          value={t.recipientName}
+                          onChange={(e) => {
+                            const updated = [...form.emailTemplates]
+                            updated[i].recipientName = e.target.value
+                            setForm({ ...form, emailTemplates: updated })
+                          }}
+                        />
+
+                        <input
+                          placeholder="Recipient Position"
+                          value={t.recipientPosition}
+                          onChange={(e) => {
+                            const updated = [...form.emailTemplates]
+                            updated[i].recipientPosition = e.target.value
+                            setForm({ ...form, emailTemplates: updated })
+                          }}
+                        />
+
+                        <button onClick={() => {
+                          const updated = form.emailTemplates.filter((_, idx) => idx !== i)
+                          setForm({ ...form, emailTemplates: updated })
+                        }}>
+                          Remove
+                        </button>
+
+                      </div>
+                    ))}
+
+                    <button onClick={() =>
+                      setForm({
+                        ...form,
+                        emailTemplates: [
+                          ...form.emailTemplates,
+                          {
+                            subject: "",
+                            body: "",
+                            recipientEmail: "",
+                            recipientName: "",
+                            recipientPosition: "",
+                          },
+                        ],
+                      })
+                    }>
+                      + Add Email
+                    </button>
+                  </div>
+                )}
+
+                {/* CTA BUILDER */}
+                {form.type === "cta" && (
+                  <div className="email-builder">
+                    <h3>CTA Actions</h3>
+
+                    {form.ctaActions.map((a, i) => (
+                      <div key={i} className="email-block">
+
+                        <select
+                          value={a.type}
+                          onChange={(e) => {
+                            const updated = [...form.ctaActions]
+                            updated[i].type = e.target.value
+                            setForm({ ...form, ctaActions: updated })
+                          }}
+                        >
+                          <option value="">Select Type</option>
+                          <option value="email">Email</option>
+                          <option value="petition">Petition</option>
+                        </select>
+
+                        {a.type === "email" && (
+                          <>
+                            <input placeholder="Recipient Email"
+                              value={a.recipientEmail || ""}
+                              onChange={(e) => {
+                                const updated = [...form.ctaActions]
+                                updated[i].recipientEmail = e.target.value
+                                setForm({ ...form, ctaActions: updated })
+                              }}
+                            />
+
+                            <input placeholder="Recipient Name"
+                              value={a.recipientName || ""}
+                              onChange={(e) => {
+                                const updated = [...form.ctaActions]
+                                updated[i].recipientName = e.target.value
+                                setForm({ ...form, ctaActions: updated })
+                              }}
+                            />
+
+                            <input placeholder="Recipient Position"
+                              value={a.recipientPosition || ""}
+                              onChange={(e) => {
+                                const updated = [...form.ctaActions]
+                                updated[i].recipientPosition = e.target.value
+                                setForm({ ...form, ctaActions: updated })
+                              }}
+                            />
+
+                            <input placeholder="Subject"
+                              value={a.subject || ""}
+                              onChange={(e) => {
+                                const updated = [...form.ctaActions]
+                                updated[i].subject = e.target.value
+                                setForm({ ...form, ctaActions: updated })
+                              }}
+                            />
+
+                            <textarea placeholder="Body"
+                              value={a.body || ""}
+                              onChange={(e) => {
+                                const updated = [...form.ctaActions]
+                                updated[i].body = e.target.value
+                                setForm({ ...form, ctaActions: updated })
+                              }}
+                            />
+                          </>
+                        )}
+
+                        {a.type === "petition" && (
+                          <input
+                            placeholder="Petition Link"
+                            value={a.petitionLink || ""}
+                            onChange={(e) => {
+                              const updated = [...form.ctaActions]
+                              updated[i].petitionLink = e.target.value
+                              setForm({ ...form, ctaActions: updated })
+                            }}
+                          />
+                        )}
+
+                        <button onClick={() => {
+                          const updated = form.ctaActions.filter((_, idx) => idx !== i)
+                          setForm({ ...form, ctaActions: updated })
+                        }}>
+                          Remove
+                        </button>
+
+                      </div>
+                    ))}
+
+                    <button onClick={() =>
+                      setForm({
+                        ...form,
+                        ctaActions: [...form.ctaActions, { type: "email" }],
+                      })
+                    }>
+                      + Add CTA Action
+                    </button>
+                  </div>
+                )}
+
                 <button onClick={handleSubmit}>
                   {editingAction ? "Update" : "Create"}
                 </button>
@@ -196,18 +396,24 @@ export default function Admin() {
                     View Signups
                   </button>
 
-                  <button
-                    onClick={() => {
-                      setEditingAction(a)
-                      setForm({ ...a })
-                    }}
-                  >
+                  <button onClick={() => {
+                    setEditingAction(a)
+                    setForm({
+                      ...a,
+                      emailTemplates: a.emailTemplates || [{
+                        subject: "",
+                        body: "",
+                        recipientEmail: "",
+                        recipientName: "",
+                        recipientPosition: "",
+                      }],
+                      ctaActions: a.ctaActions || [],
+                    })
+                  }}>
                     Edit
                   </button>
 
-                  <button
-                    onClick={() => toggleActionFeatured(a.id, a.featured)}
-                  >
+                  <button onClick={() => toggleActionFeatured(a.id, a.featured)}>
                     {a.featured ? "Unfeature" : "Feature"}
                   </button>
 
@@ -216,7 +422,6 @@ export default function Admin() {
               ))}
             </div>
 
-            {/* RIGHT SIDE */}
             <div className="admin-right">
               {viewingActionId && (
                 <div className="admin-signups-panel">
