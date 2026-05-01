@@ -128,9 +128,6 @@ export default function Admin() {
 
       <div className="admin-content">
 
-        {/* ========================= */}
-        {/* ACTIONS / EVENTS LAYOUT */}
-        {/* ========================= */}
         {(tab === "actions" || tab === "events") && (
           <div className="admin-layout">
 
@@ -234,7 +231,6 @@ export default function Admin() {
                         <strong>{s.firstName} {s.lastName}</strong>
                         <p>{s.email}</p>
 
-                        {/* ONLY show for petitions */}
                         {actionType === "petition" && (
                           <p>Postal Code: {s.postalCode || "N/A"}</p>
                         )}
@@ -250,9 +246,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* ========================= */}
-        {/* SUBSCRIBERS FULL WIDTH */}
-        {/* ========================= */}
         {tab === "subscribers" && (
           <div className="admin-signups-panel">
             <h2>Subscribers</h2>

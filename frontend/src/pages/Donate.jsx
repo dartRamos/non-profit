@@ -53,7 +53,7 @@ export default function Donate() {
 
             <div className="action-layout">
 
-              {/* LEFT SIDE (STATIC TEXT) */}
+              {/* LEFT SIDE */}
               <div className="action-left">
 
                 <h1 className="action-title">Donate to Ontarians Against Corruption</h1>
@@ -72,7 +72,7 @@ export default function Donate() {
 
               </div>
 
-              {/* RIGHT SIDE (DONATION BOX) */}
+              {/* RIGHT SIDE */}
               <div className="action-right">
 
                 <div className="signup-panel">
@@ -100,7 +100,7 @@ export default function Donate() {
                       </button>
                     ))}
 
-                    {/* CUSTOM INPUT (NOT A BUTTON) */}
+                    {/* CUSTOM INPUT */}
                     <input
                       className="donation-box custom-input"
                       placeholder="Custom"
@@ -108,7 +108,6 @@ export default function Donate() {
                       onChange={(e) => {
                         const value = e.target.value
 
-                        // numbers only
                         if (/^\d*$/.test(value)) {
                           setCustomAmount(value)
                           setSelectedAmount(null)
