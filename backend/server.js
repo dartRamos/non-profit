@@ -46,6 +46,11 @@ app.post("/send-email", async (req, res) => {
       postalCode,
       message,
       messages,
+
+      // NEW
+      mppName,
+      mppEmail,
+      mppRiding,
     } = req.body
 
     const fullName = `${firstName} ${lastName}`
@@ -68,10 +73,15 @@ app.post("/send-email", async (req, res) => {
 
       const msg = typeof item === "string" ? item : item.body
 
-      const to =
+      const baseTo =
         typeof item === "string"
           ? "alessandro.ramos.it@gmail.com"
           : item.recipientEmail
+
+      // ---------------- MPP LOGIC FIX ----------------
+      const isMPPFlow = !!mppEmail
+
+      const to = isMPPFlow ? mppEmail : baseTo
 
       const subject =
         typeof item === "string"
@@ -79,15 +89,21 @@ app.post("/send-email", async (req, res) => {
           : item.subject || `Campaign Message ${index + 1}`
 
       const emailBody = `
-        Dear ${item.recipientPosition} ${item.recipientName},
+        Dear ${isMPPFlow ? mppName : item.recipientPosition} ${item.recipientName},
 
         ${msg}
+
+        ${
+          isMPPFlow
+            ? `\nThis message was sent to you as the elected MPP for ${mppRiding}.\n`
+            : ""
+        }
 
         Sincerely,
         ${fullName}
         ${email}
         ${postalCode}
-      `
+        `
 
       try {
         return await mg.messages.create(process.env.MAILGUN_DOMAIN, {

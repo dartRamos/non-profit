@@ -24,6 +24,17 @@ export default function Admin() {
   const [subscribers, setSubscribers] = useState([])
   const [actionFilter, setActionFilter] = useState("all")
   const [volunteers, setVolunteers] = useState([])
+  const [mpps, setMpps] = useState([])
+  const [mppForm, setMppForm] = useState({
+    riding: "",
+    name: "",
+    displayName: "",
+    email: "",
+  })
+
+  const [mppTestPostal, setMppTestPostal] = useState("")
+  const [mppTestResult, setMppTestResult] = useState(null)
+  const [mppTestLoading, setMppTestLoading] = useState(false)
 
   const [form, setForm] = useState({
     title: "",
@@ -61,6 +72,23 @@ export default function Admin() {
     setActions(await getActions())
     setSubscribers(await getSubscribers())
     setVolunteers(await getVolunteers())
+    setMpps(await getAllMpps())
+  }
+
+  const runMppTest = async () => {
+    if (!mppTestPostal || mppTestPostal.length < 5) return
+  
+    setMppTestLoading(true)
+  
+    try {
+      const result = await resolveMPP(mppTestPostal)
+      setMppTestResult(result)
+    } catch (err) {
+      console.error(err)
+      setMppTestResult(null)
+    }
+  
+    setMppTestLoading(false)
   }
 
   useEffect(() => {

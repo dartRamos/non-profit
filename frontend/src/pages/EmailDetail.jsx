@@ -14,6 +14,7 @@ export default function EmailDetail() {
 
   const [email, setEmail] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [mppPreview, setMppPreview] = useState(null)
 
   const [activePreviewIndex, setActivePreviewIndex] = useState(0)
 
@@ -26,6 +27,26 @@ export default function EmailDetail() {
     comment: "",
   })
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    const run = async () => {
+      if (!form.postalCode || form.postalCode.length < 5) {
+        setMppPreview(null)
+        return
+      }
+  
+      try {
+        const mpp = await resolveMPP(form.postalCode)
+        console.log("MPP RESULT:", mpp)
+        setMppPreview(mpp)
+      } catch (err) {
+        console.error("MPP lookup failed:", err)
+        setMppPreview(null)
+      }
+    }
+  
+    run()
+  }, [form.postalCode])
 
   useEffect(() => {
     async function load() {
@@ -41,33 +62,47 @@ export default function EmailDetail() {
 
   const handleSubmit = async () => {
     const { firstName, lastName, email: userEmail, postalCode } = form
-
+  
     if (!firstName || !lastName || !userEmail || !postalCode) {
       alert("Please fill in all required fields")
       return
     }
-
+  
     try {
-      await signupForAction(id, form)
-
+      const mpp = await resolveMPP(postalCode)
+  
+      const enrichedForm = {
+        ...form,
+        riding: mpp?.riding || null,
+        mppName: mpp?.name || null,
+        mppEmail: mpp?.email || null,
+      }
+  
+      await signupForAction(id, enrichedForm)
+  
       const templates = Array.isArray(email.emailTemplates)
         ? email.emailTemplates
         : email.emailTemplate
           ? [email.emailTemplate]
           : [email.description]
+  
+          await sendEmail({
+            recipientName: email.recipientName,
+            recipientPosition: email.recipientPosition,
+            firstName,
+            lastName,
+            email: userEmail,
+            postalCode,
+            messages: templates,
+          
 
-      await sendEmail({
-        recipientName: email.recipientName,
-        recipientPosition: email.recipientPosition,
-        firstName,
-        lastName,
-        email: userEmail,
-        postalCode,
-        messages: templates,
-      })
-
+            mppName: mpp?.name || null,
+            mppEmail: mpp?.email || null,
+            mppRiding: mpp?.riding || null,
+          })
+  
       setSubmitted(true)
-
+  
       setEmail((prev) => ({
         ...prev,
         stats: {
@@ -260,6 +295,15 @@ export default function EmailDetail() {
                           }
                         />
 
+                        {mppPreview && (
+                          <div className="mpp-preview">
+                            <p>
+                              Your MPP: <strong>{mppPreview.name}</strong>
+                            </p>
+                            <p>Riding: {mppPreview.riding}</p>
+                          </div>
+                        )}
+
                         <input
                           placeholder="Why does this matter to you? (optional)"
                           value={form.comment}
@@ -275,7 +319,7 @@ export default function EmailDetail() {
                   ) : (
                     <div className="success-message">
                       <h2>Thank you for taking action</h2>
-                      <p>Your message is ready to be sent.</p>
+                      <p>Your message is being sent.</p>
                     </div>
                   )}
 

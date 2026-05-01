@@ -18,6 +18,9 @@ export default function ActionDetail() {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [submitted, setSubmitted] = useState(false)
+  const [mppPreview, setMppPreview] = useState(null)
+
+  const isEvent = ["protest", "rally", "townhall"].includes(action?.type)
 
   const [form, setForm] = useState({
     firstName: "",
@@ -27,6 +30,26 @@ export default function ActionDetail() {
     consent: false,
     comment: "",
   })
+
+  useEffect(() => {
+    const run = async () => {
+      if (!form.postalCode || form.postalCode.length < 5) {
+        setMppPreview(null)
+        return
+      }
+  
+      try {
+        const mpp = await resolveMPP(form.postalCode)
+        console.log("MPP RESULT:", mpp)
+        setMppPreview(mpp)
+      } catch (err) {
+        console.error("MPP lookup failed:", err)
+        setMppPreview(null)
+      }
+    }
+  
+    run()
+  }, [form.postalCode])
 
   useEffect(() => {
     async function load() {
@@ -63,22 +86,32 @@ export default function ActionDetail() {
       alert("Please fill in required fields")
       return
     }
-
+  
     try {
       await signupForAction(id, form)
-
+  
+      const mpp = await resolveMPP(form.postalCode)
+  
       await sendEmail({
         recipientName: action.recipientName,
         recipientPosition: action.recipientPosition,
+  
+        // user info
         firstName: form.firstName,
         lastName: form.lastName,
         email: form.email,
         postalCode: form.postalCode,
+  
+        // 🔥 NEW: MPP info
+        mppName: mpp?.name || null,
+        mppEmail: mpp?.email || null,
+        mppRiding: mpp?.riding || null,
+  
         messages: templates,
       })
-
+  
       setSubmitted(true)
-
+  
       setAction((prev) => ({
         ...prev,
         stats: {
@@ -154,6 +187,7 @@ export default function ActionDetail() {
 
               </div>
 
+              {!isEvent && (
               <div className="action-right">
 
                 <div className="signup-panel">
@@ -241,6 +275,15 @@ export default function ActionDetail() {
                           }
                         />
 
+                        {mppPreview && (
+                          <div className="mpp-preview">
+                            <p>
+                              Your MPP: <strong>{mppPreview.name}</strong>
+                            </p>
+                            <p>Riding: {mppPreview.riding}</p>
+                          </div>
+                        )}
+
                         <input
                           placeholder="Why does this matter to you? (optional)"
                           value={form.comment}
@@ -259,13 +302,14 @@ export default function ActionDetail() {
                   ) : (
                     <div className="success-message">
                       <h2>Thank you for taking action</h2>
-                      <p>Your message is ready.</p>
+                      <p>Your message is being sent.</p>
                     </div>
                   )}
 
                 </div>
 
               </div>
+              )}
 
             </div>
           </div>
