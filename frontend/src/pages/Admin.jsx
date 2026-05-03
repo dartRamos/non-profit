@@ -43,6 +43,7 @@ export default function Admin() {
     type: "",
     date: "",
     link: "",
+    tag: "",
     image: "",
     location: "",
     recipientName: "",
@@ -51,7 +52,7 @@ export default function Admin() {
       {
         subject: "",
         body: "",
-        recipientEmail: "",
+        recipientEmails: [""],
         recipientName: "",
         recipientPosition: "",
       },
@@ -75,22 +76,6 @@ export default function Admin() {
     setMpps(await getAllMpps())
   }
 
-  const runMppTest = async () => {
-    if (!mppTestPostal || mppTestPostal.length < 5) return
-  
-    setMppTestLoading(true)
-  
-    try {
-      const result = await resolveMPP(mppTestPostal)
-      setMppTestResult(result)
-    } catch (err) {
-      console.error(err)
-      setMppTestResult(null)
-    }
-  
-    setMppTestLoading(false)
-  }
-
   useEffect(() => {
     if (user) load()
   }, [user])
@@ -106,6 +91,7 @@ export default function Admin() {
       type: "",
       date: "",
       link: "",
+      tag: "",
       image: "",
       location: "",
       recipientName: "",
@@ -121,6 +107,7 @@ export default function Admin() {
       ],
       ctaActions: [],
     })
+
     setEditingAction(null)
   }
 
@@ -189,7 +176,7 @@ export default function Admin() {
                 />
 
                 <textarea
-                  placeholder="Description"
+                  placeholder="Description (use [text](https://link.com) for links)"
                   value={form.description}
                   onChange={(e) =>
                     setForm({ ...form, description: e.target.value })
@@ -201,6 +188,14 @@ export default function Admin() {
                   value={form.image}
                   onChange={(e) =>
                     setForm({ ...form, image: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="Tag (e.g. health, environment)"
+                  value={form.tag || ""}
+                  onChange={(e) =>
+                    setForm({ ...form, tag: e.target.value })
                   }
                 />
 
@@ -218,6 +213,14 @@ export default function Admin() {
                   <option value="rally">Rally</option>
                   <option value="townhall">Townhall</option>
                 </select>
+
+                <input
+                  placeholder="External Link (optional)"
+                  value={form.link}
+                  onChange={(e) =>
+                    setForm({ ...form, link: e.target.value })
+                  }
+                />
 
                 {/* EMAIL BUILDER */}
                 {form.type === "email" && (
@@ -248,11 +251,22 @@ export default function Admin() {
                         />
 
                         <input
-                          placeholder="Recipient Email"
-                          value={t.recipientEmail}
+                          placeholder="Recipient Emails (comma separated)"
+                          value={t.recipientEmailsRaw ?? (t.recipientEmails?.join(", ") || "")}
                           onChange={(e) => {
                             const updated = [...form.emailTemplates]
-                            updated[i].recipientEmail = e.target.value
+
+                            const raw = e.target.value
+
+                            updated[i] = {
+                              ...updated[i],
+                              recipientEmailsRaw: raw,
+                              recipientEmails: raw
+                                .split(",")
+                                .map(email => email.trim())
+                                .filter(Boolean),
+                            }
+
                             setForm({ ...form, emailTemplates: updated })
                           }}
                         />
@@ -269,7 +283,7 @@ export default function Admin() {
 
                         <input
                           placeholder="Recipient Position"
-                          value={t.recipientPosition}
+                          value={t.recipientPosition || ""}
                           onChange={(e) => {
                             const updated = [...form.emailTemplates]
                             updated[i].recipientPosition = e.target.value
@@ -295,7 +309,7 @@ export default function Admin() {
                           {
                             subject: "",
                             body: "",
-                            recipientEmail: "",
+                            recipientEmails: [""],
                             recipientName: "",
                             recipientPosition: "",
                           },
@@ -330,11 +344,23 @@ export default function Admin() {
 
                         {a.type === "email" && (
                           <>
-                            <input placeholder="Recipient Email"
-                              value={a.recipientEmail || ""}
+                            <input
+                              placeholder="Recipient Emails (comma separated)"
+                              value={a.recipientEmailsRaw ?? (a.recipientEmails?.join(", ") || "")}
                               onChange={(e) => {
                                 const updated = [...form.ctaActions]
-                                updated[i].recipientEmail = e.target.value
+                              
+                                const raw = e.target.value
+                              
+                                updated[i] = {
+                                  ...updated[i],
+                                  recipientEmailsRaw: raw,
+                                  recipientEmails: raw
+                                    .split(",")
+                                    .map(email => email.trim())
+                                    .filter(Boolean),
+                                }
+                              
                                 setForm({ ...form, ctaActions: updated })
                               }}
                             />
@@ -431,7 +457,7 @@ export default function Admin() {
                       emailTemplates: a.emailTemplates || [{
                         subject: "",
                         body: "",
-                        recipientEmail: "",
+                        recipientEmails: [],
                         recipientName: "",
                         recipientPosition: "",
                       }],

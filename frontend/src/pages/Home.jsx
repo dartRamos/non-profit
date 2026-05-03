@@ -87,13 +87,14 @@ export default function Home() {
         </div>
 
         <div className="featured-events-container">
-          <FeaturedActions
-            actions={civicActions}
-            title="Take Action"
-            maxItems={6}
-            buttonText="Get Involved"
-            seeAllLink="/actions"
-          />
+        <FeaturedActions
+          actions={civicActions}
+          title="Take Action"
+          maxItems={6}
+          buttonText="Get Involved"
+          seeAllLink="/actions"
+          baseLink="/actions"
+        />
 
           <FeaturedEvents 
             events={events} 

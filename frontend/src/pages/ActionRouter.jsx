@@ -28,10 +28,10 @@ export default function ActionRouter() {
   if (action.type === "petition") {
     return <PetitionDetail action={action} />
   }
-
+  
   if (action.type === "email") {
     return <EmailDetail action={action} />
   }
-
+  
   return <ActionDetail action={action} />
 }

@@ -6,9 +6,33 @@ import { sendEmail } from "../api/email"
 import headerImage from "../assets/image1.png"
 import rectangle54 from "../assets/rectangle54.png"
 import rectangle from "../assets/rectangle91.png"
-import DonateButton from "../components/DonateButton.jsx";
+import DonateButton from "../components/DonateButton.jsx"
 
 import "./CTADetail.css"
+
+function formatDescription(text = "") {
+  let formatted = text
+
+  formatted = formatted.replace(/\n(?!\n)/g, " ") 
+  // single line breaks → space
+  // double line breaks stay (paragraphs)
+
+  // BOLD
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+
+  // LINKS
+  formatted = formatted.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^\s]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+  )
+
+  // PARAGRAPHS
+  const paragraphs = formatted.split(/\n{2,}/)
+
+  return paragraphs
+    .map(p => `<p>${p.trim()}</p>`)
+    .join("")
+}
 
 export default function ActionDetail() {
   const { id } = useParams()
@@ -18,9 +42,6 @@ export default function ActionDetail() {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [submitted, setSubmitted] = useState(false)
-  const [mppPreview, setMppPreview] = useState(null)
-
-  const isEvent = ["protest", "rally", "townhall"].includes(action?.type)
 
   const [form, setForm] = useState({
     firstName: "",
@@ -31,25 +52,7 @@ export default function ActionDetail() {
     comment: "",
   })
 
-  useEffect(() => {
-    const run = async () => {
-      if (!form.postalCode || form.postalCode.length < 5) {
-        setMppPreview(null)
-        return
-      }
-  
-      try {
-        const mpp = await resolveMPP(form.postalCode)
-        console.log("MPP RESULT:", mpp)
-        setMppPreview(mpp)
-      } catch (err) {
-        console.error("MPP lookup failed:", err)
-        setMppPreview(null)
-      }
-    }
-  
-    run()
-  }, [form.postalCode])
+  const isEvent = ["protest", "rally", "townhall"].includes(action?.type)
 
   useEffect(() => {
     async function load() {
@@ -65,16 +68,13 @@ export default function ActionDetail() {
   if (!action) return <p>Action not found</p>
 
   const ctaActions = Array.isArray(action.ctaActions) ? action.ctaActions : []
-
   const emailActions = ctaActions.filter((a) => a.type === "email")
 
   const templates = emailActions.length
     ? emailActions
-    : action.emailTemplates
+    : Array.isArray(action.emailTemplates)
       ? action.emailTemplates
-      : action.emailTemplate
-        ? [action.emailTemplate]
-        : [action.description]
+      : []
 
   const signups = action?.stats?.signups || 0
   const goalStep = 100
@@ -86,32 +86,24 @@ export default function ActionDetail() {
       alert("Please fill in required fields")
       return
     }
-  
+
     try {
       await signupForAction(id, form)
-  
-      const mpp = await resolveMPP(form.postalCode)
-  
+
       await sendEmail({
         recipientName: action.recipientName,
         recipientPosition: action.recipientPosition,
-  
-        // user info
+
         firstName: form.firstName,
         lastName: form.lastName,
         email: form.email,
         postalCode: form.postalCode,
-  
-        // 🔥 NEW: MPP info
-        mppName: mpp?.name || null,
-        mppEmail: mpp?.email || null,
-        mppRiding: mpp?.riding || null,
-  
+
         messages: templates,
       })
-  
+
       setSubmitted(true)
-  
+
       setAction((prev) => ({
         ...prev,
         stats: {
@@ -125,22 +117,21 @@ export default function ActionDetail() {
   }
 
   function renderTemplate(template = "", form, action) {
-    const text = typeof template === "string" ? template : template.body || ""
+    const text = typeof template === "string"
+      ? template
+      : template.body || ""
 
     return text
-      .replace(/__recipient_name__/g, action?.recipientName || "recipient full name will go here")
-      .replace(/__recipient_position__/g, action?.recipientPosition || "recipient position will go here")
-      .replace(/__firstName__/g, form.firstName || "first name will go here")
-      .replace(/__lastName__/g, form.lastName || "last name will go here")
-      .replace(/__email__/g, form.email || "email will go here")
-      .replace(/__postalCode__/g, form.postalCode || "postal code will go here")
+      .replace(/__recipient_name__/g, action?.recipientName || "")
+      .replace(/__recipient_position__/g, action?.recipientPosition || "")
+      .replace(/__firstName__/g, form.firstName || "")
+      .replace(/__lastName__/g, form.lastName || "")
+      .replace(/__email__/g, form.email || "")
+      .replace(/__postalCode__/g, form.postalCode || "")
   }
 
-  const renderPreview = (text = "") => {
-    return text.split("\n").map((line, i) => (
-      <p key={i}>{line}</p>
-    ))
-  }
+  const renderPreview = (text = "") =>
+    text.split("\n").map((line, i) => <p key={i}>{line}</p>)
 
   return (
     <div>
@@ -148,7 +139,6 @@ export default function ActionDetail() {
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
-        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="image-fade" />
 
         <div className="header-text">
@@ -180,135 +170,135 @@ export default function ActionDetail() {
                 </div>
 
                 <div className="action-description">
-                  {action.description?.split("\n").map((line, i) => (
-                    <p key={i}>{line}</p>
-                  ))}
+                  <div
+                    className="action-description"
+                    dangerouslySetInnerHTML={{
+                      __html: formatDescription(action.description),
+                    }}
+                  />
                 </div>
 
               </div>
 
               {!isEvent && (
-              <div className="action-right">
+                <div className="action-right">
 
-                <div className="signup-panel">
+                  <div className="signup-panel">
 
-                  <div className="signup-stats">
-                    <div className="signup-number">{signups}</div>
-                    <div className="signup-label">people have taken action</div>
-                    <div className="signup-goal">Goal: {currentGoal}</div>
-                  </div>
+                    <div className="signup-stats">
+                      <div className="signup-number">{signups}</div>
+                      <div className="signup-label">
+                        people have taken action
+                      </div>
+                      <div className="signup-goal">
+                        Goal: {currentGoal}
+                      </div>
+                    </div>
 
-                  <div className="signup-bar">
-                    <div
-                      className="signup-bar-fill"
-                      style={{ width: `${Math.min(progress, 100)}%` }}
-                    />
-                  </div>
+                    <div className="signup-bar">
+                      <div
+                        className="signup-bar-fill"
+                        style={{ width: `${Math.min(progress, 100)}%` }}
+                      />
+                    </div>
 
-                  {!submitted ? (
-                    <>
-                      <h2>Take Action</h2>
+                    {!submitted ? (
+                      <>
+                        <h2>Take Action</h2>
 
-                      {emailActions.length > 0 && (
-                        <div className="email-preview">
+                        {emailActions.length > 0 && (
+                          <div className="email-preview">
 
-                          <h3>Email Preview</h3>
+                            <h3>Email Preview</h3>
 
-                          {emailActions.length > 1 && (
-                            <div className="email-tabs">
-                              {emailActions.map((_, i) => (
-                                <button
-                                  key={i}
-                                  onClick={() => setActiveIndex(i)}
-                                  className={activeIndex === i ? "active-tab" : ""}
-                                >
-                                  Email {i + 1}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-
-                          <div className="preview-box">
-                            {renderPreview(
-                              renderTemplate(
-                                emailActions[activeIndex],
-                                form,
-                                action
-                              )
+                            {emailActions.length > 1 && (
+                              <div className="email-tabs">
+                                {emailActions.map((_, i) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => setActiveIndex(i)}
+                                    className={
+                                      activeIndex === i ? "active-tab" : ""
+                                    }
+                                  >
+                                    Email {i + 1}
+                                  </button>
+                                ))}
+                              </div>
                             )}
-                          </div>
 
-                        </div>
-                      )}
+                            <div className="preview-box">
+                              {renderPreview(
+                                renderTemplate(
+                                  emailActions[activeIndex],
+                                  form,
+                                  action
+                                )
+                              )}
+                            </div>
 
-                      <div className="signup-box">
-
-                        <input
-                          placeholder="First Name"
-                          value={form.firstName}
-                          onChange={(e) =>
-                            setForm({ ...form, firstName: e.target.value })
-                          }
-                        />
-
-                        <input
-                          placeholder="Last Name"
-                          value={form.lastName}
-                          onChange={(e) =>
-                            setForm({ ...form, lastName: e.target.value })
-                          }
-                        />
-
-                        <input
-                          placeholder="Email"
-                          value={form.email}
-                          onChange={(e) =>
-                            setForm({ ...form, email: e.target.value })
-                          }
-                        />
-
-                        <input
-                          placeholder="Postal Code"
-                          value={form.postalCode}
-                          onChange={(e) =>
-                            setForm({ ...form, postalCode: e.target.value })
-                          }
-                        />
-
-                        {mppPreview && (
-                          <div className="mpp-preview">
-                            <p>
-                              Your MPP: <strong>{mppPreview.name}</strong>
-                            </p>
-                            <p>Riding: {mppPreview.riding}</p>
                           </div>
                         )}
 
-                        <input
-                          placeholder="Why does this matter to you? (optional)"
-                          value={form.comment}
-                          onChange={(e) =>
-                            setForm({ ...form, comment: e.target.value })
-                          }
-                          className="comment-box"
-                        />
+                        <div className="signup-box">
 
-                        <button onClick={handleSubmit}>
-                          Submit
-                        </button>
+                          <input
+                            placeholder="First Name"
+                            value={form.firstName}
+                            onChange={(e) =>
+                              setForm({
+                                ...form,
+                                firstName: e.target.value,
+                              })
+                            }
+                          />
 
+                          <input
+                            placeholder="Last Name"
+                            value={form.lastName}
+                            onChange={(e) =>
+                              setForm({
+                                ...form,
+                                lastName: e.target.value,
+                              })
+                            }
+                          />
+
+                          <input
+                            placeholder="Email"
+                            value={form.email}
+                            onChange={(e) =>
+                              setForm({ ...form, email: e.target.value })
+                            }
+                          />
+
+                          <input
+                            placeholder="Postal Code"
+                            value={form.postalCode}
+                            onChange={(e) =>
+                              setForm({
+                                ...form,
+                                postalCode: e.target.value,
+                              })
+                            }
+                          />
+
+                          <button onClick={handleSubmit}>
+                            Submit
+                          </button>
+
+                        </div>
+                      </>
+                    ) : (
+                      <div className="success-message">
+                        <h2>Thank you for taking action</h2>
+                        <p>Your message is being sent.</p>
                       </div>
-                    </>
-                  ) : (
-                    <div className="success-message">
-                      <h2>Thank you for taking action</h2>
-                      <p>Your message is being sent.</p>
-                    </div>
-                  )}
+                    )}
+
+                  </div>
 
                 </div>
-
-              </div>
               )}
 
             </div>

@@ -38,16 +38,12 @@ app.get("/", (req, res) => {
 app.post("/send-email", async (req, res) => {
   try {
     const {
-      recipientName,
-      recipientPosition,
       firstName,
       lastName,
       email,
       postalCode,
-      message,
       messages,
 
-      // NEW
       mppName,
       mppEmail,
       mppRiding,
@@ -56,40 +52,41 @@ app.post("/send-email", async (req, res) => {
     const fullName = `${firstName} ${lastName}`
 
     const emailMessages =
-      Array.isArray(messages) && messages.length ? messages : [message]
+      Array.isArray(messages) && messages.length ? messages : []
+
+    if (!emailMessages.length) {
+      throw new Error("No email templates provided")
+    }
 
     const sendOne = async (item, index) => {
-      if (typeof item !== "string") {
-        if (
-          !item.recipientEmail ||
-          !item.recipientName ||
-          !item.recipientPosition
-        ) {
-          throw new Error(
-            `Missing recipient fields in template at index ${index}`
-          )
-        }
+      const msg = item.body || ""
+
+      // ✅ FIXED: ONLY support recipientEmails array
+      const recipients = Array.isArray(item.recipientEmails)
+        ? item.recipientEmails.filter(Boolean)
+        : []
+
+      if (!recipients.length) {
+        throw new Error(
+          `No recipientEmails found in email template at index ${index}`
+        )
       }
 
-      const msg = typeof item === "string" ? item : item.body
+      const subject =
+        item.subject || `Campaign Message ${index + 1}`
 
-      const baseTo =
-        typeof item === "string"
-          ? "alessandro.ramos.it@gmail.com"
-          : item.recipientEmail
-
-      // ---------------- MPP LOGIC FIX ----------------
       const isMPPFlow = !!mppEmail
 
-      const to = isMPPFlow ? mppEmail : baseTo
-
-      const subject =
-        typeof item === "string"
-          ? `Campaign Message ${index + 1}`
-          : item.subject || `Campaign Message ${index + 1}`
+      const toList = isMPPFlow ? [mppEmail] : recipients
 
       const emailBody = `
-        Dear ${isMPPFlow ? mppName : item.recipientPosition} ${item.recipientName},
+        Dear ${
+          isMPPFlow
+            ? mppName
+            : item.recipientPosition
+              ? `${item.recipientPosition} ${item.recipientName || ""}`.trim()
+              : item.recipientName || "Representative"
+        },
 
         ${msg}
 
@@ -105,17 +102,16 @@ app.post("/send-email", async (req, res) => {
         ${postalCode}
         `
 
-      try {
-        return await mg.messages.create(process.env.MAILGUN_DOMAIN, {
-          from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
-          to,
-          subject,
-          text: emailBody,
-        })
-      } catch (err) {
-        console.error("MAILGUN SEND EMAIL FAILED:", err)
-        throw err
-      }
+      return Promise.all(
+        toList.map((to) =>
+          mg.messages.create(process.env.MAILGUN_DOMAIN, {
+            from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
+            to,
+            subject,
+            text: emailBody,
+          })
+        )
+      )
     }
 
     const responses = await Promise.allSettled(
@@ -131,7 +127,7 @@ app.post("/send-email", async (req, res) => {
       results: responses,
     })
   } catch (err) {
-    console.error(err)
+    console.error("SEND EMAIL ERROR:", err)
     res.status(500).json({
       success: false,
       error: err.message,

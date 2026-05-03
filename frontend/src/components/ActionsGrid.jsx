@@ -27,10 +27,16 @@ export default function ActionGrid({
             <div key={item.id} className="event-card">
 
               <div className="event-content">
+
                 <h2 className="event-title">{item.title}</h2>
 
                 <div className="event-meta">
-                  {formatDate(item.date)}
+                  
+                  {item.tag && (
+                    <div className="event-tag">
+                      {item.tag}
+                    </div>
+                  )}
 
                   {item.type !== "cta" &&
                     item.type !== "email" &&
@@ -47,9 +53,20 @@ export default function ActionGrid({
                 </div>
               </div>
 
-              <Link to={`${baseLink}/${item.id}`} className="event-btn">
-                Learn More
-              </Link>
+              {item.link ? (
+                <a
+                  href={item.link}
+                  className="event-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Learn More
+                </a>
+              ) : (
+                <Link to={`${baseLink}/${item.id}`} className="event-btn">
+                  Learn More
+                </Link>
+              )}
 
             </div>
           ))}

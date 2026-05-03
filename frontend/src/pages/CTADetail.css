@@ -46,11 +46,14 @@
 .action-left {
   flex: 1;
   min-width: 300px;
+  background-color: #1a1a1a;
+  padding: 10px;
 }
 
 .action-title {
-  font-size: 38px;
+  font-size: 50px;
   margin-bottom: 10px;
+  color: #ffc745;
 }
 
 .action-subtitle {
@@ -60,7 +63,6 @@
 }
 
 .action-meta-row {
-  display: flex;
   gap: 20px;
   margin-bottom: 20px;
   color: #aaa;

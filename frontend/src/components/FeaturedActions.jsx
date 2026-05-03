@@ -25,7 +25,7 @@ export default function FeaturedActions({
   .slice(0, maxItems)
 
   const getLink = (a) => {
-    return `/actions/${a.id}`
+    return a.link || `/actions/${a.id}`
   }
 
   return (
@@ -49,6 +49,12 @@ export default function FeaturedActions({
 
                   <h3>{a.title}</h3>
 
+                  {a.tag && (
+                    <div className="featured-actions-tag">
+                      {a.tag}
+                    </div>
+                  )}
+                  
                   <p>
                     {truncate(a.shortdescription || a.description, 300)}
                   </p>
@@ -61,10 +67,20 @@ export default function FeaturedActions({
                   
                 </div>
                 
-
-                <Link to={getLink(a)} className="featured-actions-btn">
-                  {buttonText}
-                </Link>
+                {a.link ? (
+                  <a
+                    href={a.link}
+                    className="featured-actions-btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {buttonText}
+                  </a>
+                ) : (
+                  <Link to={`/actions/${a.id}`} className="featured-actions-btn">
+                    {buttonText}
+                  </Link>
+                )}
 
               </div>
             ))}

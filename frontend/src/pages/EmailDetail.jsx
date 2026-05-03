@@ -7,14 +7,13 @@ import headerImage from "../assets/event5.png"
 import rectangle54 from "../assets/rectangle54.png"
 import rectangle from "../assets/rectangle91.png"
 import "./EmailDetail.css"
-import DonateButton from "../components/DonateButton.jsx";
+import DonateButton from "../components/DonateButton.jsx"
 
 export default function EmailDetail() {
   const { id } = useParams()
 
   const [email, setEmail] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [mppPreview, setMppPreview] = useState(null)
 
   const [activePreviewIndex, setActivePreviewIndex] = useState(0)
 
@@ -26,27 +25,8 @@ export default function EmailDetail() {
     consent: false,
     comment: "",
   })
-  const [submitted, setSubmitted] = useState(false)
 
-  useEffect(() => {
-    const run = async () => {
-      if (!form.postalCode || form.postalCode.length < 5) {
-        setMppPreview(null)
-        return
-      }
-  
-      try {
-        const mpp = await resolveMPP(form.postalCode)
-        console.log("MPP RESULT:", mpp)
-        setMppPreview(mpp)
-      } catch (err) {
-        console.error("MPP lookup failed:", err)
-        setMppPreview(null)
-      }
-    }
-  
-    run()
-  }, [form.postalCode])
+  const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -62,47 +42,33 @@ export default function EmailDetail() {
 
   const handleSubmit = async () => {
     const { firstName, lastName, email: userEmail, postalCode } = form
-  
+
     if (!firstName || !lastName || !userEmail || !postalCode) {
       alert("Please fill in all required fields")
       return
     }
-  
+
     try {
-      const mpp = await resolveMPP(postalCode)
-  
-      const enrichedForm = {
-        ...form,
-        riding: mpp?.riding || null,
-        mppName: mpp?.name || null,
-        mppEmail: mpp?.email || null,
-      }
-  
-      await signupForAction(id, enrichedForm)
-  
+      await signupForAction(id, form)
+
       const templates = Array.isArray(email.emailTemplates)
         ? email.emailTemplates
         : email.emailTemplate
           ? [email.emailTemplate]
           : [email.description]
-  
-          await sendEmail({
-            recipientName: email.recipientName,
-            recipientPosition: email.recipientPosition,
-            firstName,
-            lastName,
-            email: userEmail,
-            postalCode,
-            messages: templates,
-          
 
-            mppName: mpp?.name || null,
-            mppEmail: mpp?.email || null,
-            mppRiding: mpp?.riding || null,
-          })
-  
+      await sendEmail({
+        recipientName: email.recipientName,
+        recipientPosition: email.recipientPosition,
+        firstName,
+        lastName,
+        email: userEmail,
+        postalCode,
+        messages: templates,
+      })
+
       setSubmitted(true)
-  
+
       setEmail((prev) => ({
         ...prev,
         stats: {
@@ -117,12 +83,12 @@ export default function EmailDetail() {
 
   function renderTemplate(template = "", form, email) {
     return template
-      .replace(/__recipient_name__/g, email?.recipientName || "recipient full name will go here")
-      .replace(/__recipient_position__/g, email?.recipientPosition || "recipient position will go here")
-      .replace(/__firstName__/g, form.firstName || "first name will go here")
-      .replace(/__lastName__/g, form.lastName || "last name will go here")
-      .replace(/__email__/g, form.email || "email will go here")
-      .replace(/__postalCode__/g, form.postalCode || "postal code will go here")
+      .replace(/__recipient_name__/g, email?.recipientName || "recipient name")
+      .replace(/__recipient_position__/g, email?.recipientPosition || "recipient position")
+      .replace(/__firstName__/g, form.firstName || "first name")
+      .replace(/__lastName__/g, form.lastName || "last name")
+      .replace(/__email__/g, form.email || "email")
+      .replace(/__postalCode__/g, form.postalCode || "postal code")
   }
 
   function renderPreview(text) {
@@ -170,11 +136,10 @@ export default function EmailDetail() {
 
   return (
     <div>
-      {/* HERO */}
+
       <div className="header-image-container">
         <img src={headerImage} className="email-header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
-        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="image-fade" />
 
         <div className="header-text">
@@ -184,7 +149,6 @@ export default function EmailDetail() {
         </div>
       </div>
 
-      {/* MAIN */}
       <div className="container">
         <div className="action-section">
           <img src={rectangle} className="action-bg" alt="background" />
@@ -192,7 +156,6 @@ export default function EmailDetail() {
           <div className="action-overlay">
             <div className="action-layout">
 
-              {/* LEFT */}
               <div className="action-left">
                 <h1 className="action-title">{email.title}</h1>
 
@@ -208,7 +171,6 @@ export default function EmailDetail() {
                 </div>
               </div>
 
-              {/* RIGHT */}
               <div className="action-right">
                 <div className="signup-panel">
 
@@ -229,11 +191,9 @@ export default function EmailDetail() {
                     <>
                       <h2>Take Action</h2>
 
-                      {/* PREVIEW */}
                       <div className="email-preview">
                         <h3>Email Preview</h3>
 
-                        {/* PREVIEW TABS */}
                         {templates.length > 1 && (
                           <div className="email-tabs">
                             {templates.map((_, i) => (
@@ -261,8 +221,8 @@ export default function EmailDetail() {
                         </div>
                       </div>
 
-                      {/* FORM */}
                       <div className="signup-box">
+
                         <input
                           placeholder="First Name"
                           value={form.firstName}
@@ -295,25 +255,8 @@ export default function EmailDetail() {
                           }
                         />
 
-                        {mppPreview && (
-                          <div className="mpp-preview">
-                            <p>
-                              Your MPP: <strong>{mppPreview.name}</strong>
-                            </p>
-                            <p>Riding: {mppPreview.riding}</p>
-                          </div>
-                        )}
-
-                        <input
-                          placeholder="Why does this matter to you? (optional)"
-                          value={form.comment}
-                          onChange={(e) =>
-                            setForm({ ...form, comment: e.target.value })
-                          }
-                          className="comment-box"
-                        />
-
                         <button onClick={handleSubmit}>Submit</button>
+
                       </div>
                     </>
                   ) : (
