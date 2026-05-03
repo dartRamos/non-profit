@@ -68,7 +68,9 @@
 .featured-actions-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
 }
 
 /* title */
@@ -77,6 +79,9 @@
   color: white;
   font-weight: 600;
   margin: 0;
+
+  line-height: 1.2em;
+  height: calc(1.2em * 2);
 
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -198,4 +203,9 @@
   color: #FFC745;
   display: flex;
   align-self: flex-start;
+}
+
+.priority-btn {
+  background-color: #ff3b3b !important;
+  color: white !important;
 }

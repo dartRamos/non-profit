@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getActionById, signupForAction } from "../firebase/actions"
 import { sendEmail } from "../api/email"
+import { normalizeTemplates } from "../utils/normalizeTemplates"
 
 import headerImage from "../assets/event5.png"
 import rectangle54 from "../assets/rectangle54.png"
@@ -40,6 +41,10 @@ export default function EmailDetail() {
   if (loading) return <p>Loading...</p>
   if (!email) return <p>Email campaign not found</p>
 
+  const openMPPFinder = () => {
+    window.open("https://www.ola.org/en/members/current", "_blank", "noopener,noreferrer")
+  }
+
   const handleSubmit = async () => {
     const { firstName, lastName, email: userEmail, postalCode } = form
 
@@ -51,11 +56,7 @@ export default function EmailDetail() {
     try {
       await signupForAction(id, form)
 
-      const templates = Array.isArray(email.emailTemplates)
-        ? email.emailTemplates
-        : email.emailTemplate
-          ? [email.emailTemplate]
-          : [email.description]
+      const templates = normalizeTemplates(email)
 
       await sendEmail({
         recipientName: email.recipientName,
@@ -65,6 +66,9 @@ export default function EmailDetail() {
         email: userEmail,
         postalCode,
         messages: templates,
+
+        mppName: form.mppName,
+        mppEmail: form.mppEmail,
       })
 
       setSubmitted(true)
@@ -82,7 +86,12 @@ export default function EmailDetail() {
   }
 
   function renderTemplate(template = "", form, email) {
-    return template
+    const text =
+      typeof template === "string"
+        ? template
+        : template?.body || template?.subject || ""
+  
+    return text
       .replace(/__recipient_name__/g, email?.recipientName || "recipient name")
       .replace(/__recipient_position__/g, email?.recipientPosition || "recipient position")
       .replace(/__firstName__/g, form.firstName || "first name")
@@ -123,11 +132,9 @@ export default function EmailDetail() {
     })
   }
 
-  const templates = Array.isArray(email.emailTemplates)
-    ? email.emailTemplates
-    : email.emailTemplate
-      ? [email.emailTemplate]
-      : [email.description]
+  const templates = normalizeTemplates(email)
+
+  const requiresMPP = templates.some(t => t.requireMppInfo === true)
 
   const signups = email?.stats?.signups || 0
   const goalStep = 100
@@ -211,9 +218,7 @@ export default function EmailDetail() {
                         <div className="preview-box">
                           {renderPreview(
                             renderTemplate(
-                              typeof templates[activePreviewIndex] === "string"
-                                ? templates[activePreviewIndex]
-                                : templates[activePreviewIndex]?.body || "",
+                              templates[activePreviewIndex],
                               form,
                               email
                             )
@@ -222,6 +227,26 @@ export default function EmailDetail() {
                       </div>
 
                       <div className="signup-box">
+
+                        {requiresMPP && (
+                          <>
+                            <input
+                              placeholder="MPP Name"
+                              value={form.mppName || ""}
+                              onChange={(e) =>
+                                setForm({ ...form, mppName: e.target.value })
+                              }
+                            />
+
+                            <input
+                              placeholder="MPP Email"
+                              value={form.mppEmail || ""}
+                              onChange={(e) =>
+                                setForm({ ...form, mppEmail: e.target.value })
+                              }
+                            />
+                          </>
+                        )}
 
                         <input
                           placeholder="First Name"
@@ -255,7 +280,20 @@ export default function EmailDetail() {
                           }
                         />
 
-                        <button onClick={handleSubmit}>Submit</button>
+                      <div className="submit-row">
+                        <button onClick={handleSubmit}>
+                          Submit
+                        </button>
+
+                        {requiresMPP && (
+                          <button
+                            type="button"
+                            onClick={openMPPFinder}
+                          >
+                            Find Your MPP
+                          </button>
+                        )}
+                      </div>
 
                       </div>
                     </>

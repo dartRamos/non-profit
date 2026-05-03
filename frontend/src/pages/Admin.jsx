@@ -25,12 +25,6 @@ export default function Admin() {
   const [actionFilter, setActionFilter] = useState("all")
   const [volunteers, setVolunteers] = useState([])
   const [mpps, setMpps] = useState([])
-  const [mppForm, setMppForm] = useState({
-    riding: "",
-    name: "",
-    displayName: "",
-    email: "",
-  })
 
   const [mppTestPostal, setMppTestPostal] = useState("")
   const [mppTestResult, setMppTestResult] = useState(null)
@@ -73,7 +67,6 @@ export default function Admin() {
     setActions(await getActions())
     setSubscribers(await getSubscribers())
     setVolunteers(await getVolunteers())
-    setMpps(await getAllMpps())
   }
 
   useEffect(() => {
@@ -127,7 +120,37 @@ export default function Admin() {
   })
 
   const handleSubmit = async () => {
-    const payload = { ...form }
+
+    const cleanedCTA = (form.ctaActions || [])
+      .filter(a => a.type === "email" || a.type === "petition")
+      .map(a => {
+        if (a.type === "email") {
+          return {
+            type: "email",
+            subject: a.subject || "",
+            body: a.body || "",
+            recipientEmails: a.recipientEmails || [],
+            recipientName: a.recipientName || "",
+            recipientPosition: a.recipientPosition || "",
+            requireMppInfo: !!a.requireMppInfo,
+          }
+        }
+
+        if (a.type === "petition") {
+          return {
+            type: "petition",
+            petitionLink: a.petitionLink || "",
+          }
+        }
+
+        return null
+      })
+      .filter(Boolean)
+      
+    const payload = {
+      ...form,
+      ctaActions: cleanedCTA,
+    }
 
     if (editingAction) {
       await updateAction(editingAction.id, payload)
@@ -231,26 +254,6 @@ export default function Admin() {
                       <div key={i} className="email-block">
 
                         <input
-                          placeholder="Subject"
-                          value={t.subject}
-                          onChange={(e) => {
-                            const updated = [...form.emailTemplates]
-                            updated[i].subject = e.target.value
-                            setForm({ ...form, emailTemplates: updated })
-                          }}
-                        />
-
-                        <textarea
-                          placeholder="Body"
-                          value={t.body}
-                          onChange={(e) => {
-                            const updated = [...form.emailTemplates]
-                            updated[i].body = e.target.value
-                            setForm({ ...form, emailTemplates: updated })
-                          }}
-                        />
-
-                        <input
                           placeholder="Recipient Emails (comma separated)"
                           value={t.recipientEmailsRaw ?? (t.recipientEmails?.join(", ") || "")}
                           onChange={(e) => {
@@ -290,6 +293,39 @@ export default function Admin() {
                             setForm({ ...form, emailTemplates: updated })
                           }}
                         />
+
+                        <input
+                          placeholder="Subject"
+                          value={t.subject}
+                          onChange={(e) => {
+                            const updated = [...form.emailTemplates]
+                            updated[i].subject = e.target.value
+                            setForm({ ...form, emailTemplates: updated })
+                          }}
+                        />
+
+                        <textarea
+                          placeholder="Body"
+                          value={t.body}
+                          onChange={(e) => {
+                            const updated = [...form.emailTemplates]
+                            updated[i].body = e.target.value
+                            setForm({ ...form, emailTemplates: updated })
+                          }}
+                        />
+
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={t.requireMppInfo || false}
+                            onChange={(e) => {
+                              const updated = [...form.emailTemplates]
+                              updated[i].requireMppInfo = e.target.checked
+                              setForm({ ...form, emailTemplates: updated })
+                            }}
+                          />
+                          Require MPP Info (user provides email + name)
+                        </label>
 
                         <button onClick={() => {
                           const updated = form.emailTemplates.filter((_, idx) => idx !== i)
@@ -400,6 +436,19 @@ export default function Admin() {
                                 setForm({ ...form, ctaActions: updated })
                               }}
                             />
+
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={a.requireMppInfo || false}
+                                onChange={(e) => {
+                                  const updated = [...form.ctaActions]
+                                  updated[i].requireMppInfo = e.target.checked
+                                  setForm({ ...form, ctaActions: updated })
+                                }}
+                              />
+                              Require MPP Info (user input)
+                            </label>
                           </>
                         )}
 
@@ -425,12 +474,25 @@ export default function Admin() {
                       </div>
                     ))}
 
-                    <button onClick={() =>
-                      setForm({
-                        ...form,
-                        ctaActions: [...form.ctaActions, { type: "email" }],
-                      })
-                    }>
+                    <button
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          ctaActions: [
+                            ...form.ctaActions,
+                            {
+                              type: "email",
+                              subject: "",
+                              body: "",
+                              recipientEmails: [],
+                              recipientName: "",
+                              recipientPosition: "",
+                              requireMppInfo: false,
+                            },
+                          ],
+                        })
+                      }
+                    >
                       + Add CTA Action
                     </button>
                   </div>

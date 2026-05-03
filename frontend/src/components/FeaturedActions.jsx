@@ -58,27 +58,24 @@ export default function FeaturedActions({
                   <p>
                     {truncate(a.shortdescription || a.description, 300)}
                   </p>
-
-                  {a.priority && (
-                    <div className="featured-actions-priority-badge">
-                      PRIORITY
-                    </div>
-                  )}
                   
                 </div>
                 
                 {a.link ? (
                   <a
                     href={a.link}
-                    className="featured-actions-btn"
+                    className={`featured-actions-btn ${a.priority ? "priority-btn" : ""}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {buttonText}
+                    {a.priority ? "PRIORITY" : buttonText}
                   </a>
                 ) : (
-                  <Link to={`/actions/${a.id}`} className="featured-actions-btn">
-                    {buttonText}
+                  <Link
+                    to={`/actions/${a.id}`}
+                    className={`featured-actions-btn ${a.priority ? "priority-btn" : ""}`}
+                  >
+                    {a.priority ? "PRIORITY" : buttonText}
                   </Link>
                 )}
 

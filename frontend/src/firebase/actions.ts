@@ -42,6 +42,9 @@ type CTAAction = {
   body?: string
 
   petitionLink?: string
+
+  requireUserInput?: boolean
+  requireMppInfo?: boolean
 }
 
 // ---------------- CREATE ACTION ----------------
@@ -75,6 +78,13 @@ export const createAction = async (action: {
 
     const hasInvalid = normalized.some((a) => {
       if (a.type === "email") {
+
+        const requiresUserInput = a.requireUserInput || a.requireMppInfo
+      
+        if (requiresUserInput) {
+          return !a.subject || !a.body
+        }
+      
         return (
           !Array.isArray(a.recipientEmails) ||
           a.recipientEmails.length === 0 ||
@@ -159,6 +169,13 @@ export const updateAction = async (id: string, data: any) => {
 
     const hasInvalid = normalized.some((a) => {
       if (a.type === "email") {
+
+        const requiresUserInput = a.requireUserInput || a.requireMppInfo
+      
+        if (requiresUserInput) {
+          return !a.subject || !a.body
+        }
+      
         return (
           !Array.isArray(a.recipientEmails) ||
           a.recipientEmails.length === 0 ||
@@ -258,6 +275,10 @@ export const signupForAction = async (
     verificationToken: isPetition ? uuidv4() : null,
 
     createdAt: serverTimestamp(),
+  })
+
+  await updateDoc(doc(db, "actions", actionId), {
+    "stats.signups": increment(1),
   })
 }
 

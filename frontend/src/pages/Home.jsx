@@ -14,7 +14,6 @@ import twitter from "../assets/Twitter.png";
 import "./Home.css";
 
 import FeaturedActions from "../components/FeaturedActions.jsx";
-// import FeaturedImages from "../components/FeaturedImages.jsx";
 import FeaturedEvents from "../components/FeaturedEvents.jsx";
 import DonateButton from "../components/DonateButton.jsx";
 
@@ -43,34 +42,14 @@ export default function Home() {
     load();
   }, []);
 
-  // const featuredImages = [
-  //   {
-  //     id: 1,
-  //     url: "/images/img1.jpg",
-  //   },
-  //   {
-  //     id: 2,
-  //     url: "/images/img2.jpg",
-  //   },
-  //   {
-  //     id: 3,
-  //     url: "/images/img3.jpg",
-  //   },
-  //   {
-  //     id: 4,
-  //     url: "/images/img4.jpg",
-  //   },
-  // ]
-
   return (
     <div>
       {/* HERO */}
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
-        
+
         <div className="image-fade" />
-        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
 
         <div className="header-text">
           <h1 className="line">A GRASSROOTS COMMUNITY</h1>
@@ -81,29 +60,31 @@ export default function Home() {
 
       <div className="container">
         <div className="text-lines">
-          <p className="left">Connecting people and sharing real ways to get involved</p>
-          <p className="right">Making change the best way we can: together</p>
+          <p className="left">
+            Connecting people and sharing real ways to get involved
+          </p>
+          <p className="right">
+            Making change the best way we can: together
+          </p>
           <p className="left2">Stay informed; stay united; stay strong</p>
         </div>
 
         <div className="featured-events-container">
-        <FeaturedActions
-          actions={civicActions}
-          title="Take Action"
-          maxItems={6}
-          buttonText="Get Involved"
-          seeAllLink="/actions"
-          baseLink="/actions"
-        />
-
-          <FeaturedEvents 
-            events={events} 
-            maxItems={3} 
+          <FeaturedActions
+            actions={civicActions}
+            title="Take Action"
+            maxItems={6}
+            buttonText="Get Involved"
+            seeAllLink="/actions"
+            baseLink="/actions"
           />
 
-          {/* <FeaturedImages 
-            images={featuredImages}
-          /> */}
+          {Array.isArray(events) && events.length > 0 && (
+            <FeaturedEvents 
+              events={events} 
+              maxItems={3} 
+            />
+          )}
 
           {/* SOCIAL LINKS */}
           <div className="social-media-container">
@@ -145,6 +126,7 @@ export default function Home() {
               </a>
             </div>
           </div>
+
         </div>
       </div>
     </div>

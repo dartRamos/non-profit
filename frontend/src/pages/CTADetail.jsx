@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getActionById, signupForAction } from "../firebase/actions"
 import { sendEmail } from "../api/email"
+import { normalizeTemplates } from "../utils/normalizeTemplates"
 
 import headerImage from "../assets/image1.png"
 import rectangle54 from "../assets/rectangle54.png"
@@ -14,8 +15,6 @@ function formatDescription(text = "") {
   let formatted = text
 
   formatted = formatted.replace(/\n(?!\n)/g, " ") 
-  // single line breaks → space
-  // double line breaks stay (paragraphs)
 
   // BOLD
   formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
@@ -69,17 +68,19 @@ export default function ActionDetail() {
 
   const ctaActions = Array.isArray(action.ctaActions) ? action.ctaActions : []
   const emailActions = ctaActions.filter((a) => a.type === "email")
+  
+  const templates = normalizeTemplates(emailActions.length ? emailActions : action)
 
-  const templates = emailActions.length
-    ? emailActions
-    : Array.isArray(action.emailTemplates)
-      ? action.emailTemplates
-      : []
+  const requiresMPP = templates.some(t => t.requireMppInfo)
 
   const signups = action?.stats?.signups || 0
   const goalStep = 100
   const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep
   const progress = (signups / currentGoal) * 100
+
+  const openMPPFinder = () => {
+    window.open("https://www.ola.org/en/members/current", "_blank", "noopener,noreferrer")
+  }
 
   const handleSubmit = async () => {
     if (!form.firstName || !form.lastName || !form.email || !form.postalCode) {
@@ -100,6 +101,9 @@ export default function ActionDetail() {
         postalCode: form.postalCode,
 
         messages: templates,
+
+        mppName: form.mppName,
+        mppEmail: form.mppEmail,
       })
 
       setSubmitted(true)
@@ -116,22 +120,35 @@ export default function ActionDetail() {
     }
   }
 
-  function renderTemplate(template = "", form, action) {
-    const text = typeof template === "string"
-      ? template
-      : template.body || ""
-
+  function renderTemplate(template = "", form, email) {
+    const text =
+      typeof template === "string"
+        ? template
+        : template?.body || template?.subject || ""
+  
     return text
-      .replace(/__recipient_name__/g, action?.recipientName || "")
-      .replace(/__recipient_position__/g, action?.recipientPosition || "")
+      .replace(/\\n/g, "\n") // normalize escaped newlines
+      .replace(/__recipient_name__/g, email?.recipientName || "")
+      .replace(/__recipient_position__/g, email?.recipientPosition || "")
       .replace(/__firstName__/g, form.firstName || "")
       .replace(/__lastName__/g, form.lastName || "")
       .replace(/__email__/g, form.email || "")
       .replace(/__postalCode__/g, form.postalCode || "")
   }
 
-  const renderPreview = (text = "") =>
-    text.split("\n").map((line, i) => <p key={i}>{line}</p>)
+  function renderPreview(text = "") {
+    return String(text)
+      .split(/\n{2,}/)
+      .map((block, i) => {
+        const cleaned = block.trim().replace(/\n/g, " ")
+  
+        return (
+          <p key={i}>
+            {cleaned}
+          </p>
+        )
+      })
+  }
 
   return (
     <div>
@@ -228,19 +245,39 @@ export default function ActionDetail() {
                             )}
 
                             <div className="preview-box">
-                              {renderPreview(
-                                renderTemplate(
-                                  emailActions[activeIndex],
-                                  form,
-                                  action
-                                )
-                              )}
+                            {renderPreview(
+                              renderTemplate(
+                                templates[activeIndex],
+                                form,
+                                action
+                              )
+                            )}
                             </div>
 
                           </div>
                         )}
 
                         <div className="signup-box">
+
+                          {requiresMPP && (
+                            <>
+                              <input
+                                placeholder="MPP Name"
+                                value={form.mppName || ""}
+                                onChange={(e) =>
+                                  setForm({ ...form, mppName: e.target.value })
+                                }
+                              />
+
+                              <input
+                                placeholder="MPP Email"
+                                value={form.mppEmail || ""}
+                                onChange={(e) =>
+                                  setForm({ ...form, mppEmail: e.target.value })
+                                }
+                              />
+                            </>
+                          )}
 
                           <input
                             placeholder="First Name"
@@ -283,9 +320,22 @@ export default function ActionDetail() {
                             }
                           />
 
-                          <button onClick={handleSubmit}>
-                            Submit
-                          </button>
+                          <div className="submit-row">
+                            
+                            <button onClick={handleSubmit}>
+                              Submit
+                            </button>
+
+                            {requiresMPP && (
+                              <button
+                                type="button"
+                                onClick={openMPPFinder}
+                              >
+                                Find Your MPP
+                              </button>
+                            )}
+
+                          </div>
 
                         </div>
                       </>

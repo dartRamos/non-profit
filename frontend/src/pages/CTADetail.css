@@ -71,7 +71,7 @@
 
 .action-description p {
   margin-bottom: 14px;
-  line-height: 1.3;
+  line-height: 1.5;
   color: #ddd;
   max-width: 670px;
   font-size: 20px;
@@ -161,6 +161,31 @@
   opacity: 0.9;
 }
 
+.submit-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.submit-row button {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 20px;
+}
+.submit-row button:first-child {
+  background: #ffc745;
+  color: black;
+}
+
+.submit-row button:last-child:hover {
+  background: #ffc745;
+  color: black;
+}
+
 
 @media (max-width: 900px) {
   .action-layout {
@@ -183,4 +208,14 @@
   font-size: 13px;
   text-align: center;
   margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+  .submit-row {
+    flex-direction: column;
+  }
+
+  .submit-row button {
+    width: 100%;
+  }
 }

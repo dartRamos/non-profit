@@ -59,59 +59,86 @@ app.post("/send-email", async (req, res) => {
     }
 
     const sendOne = async (item, index) => {
-      const msg = item.body || ""
+      console.log("EMAIL TEMPLATE RECEIVED:", JSON.stringify(item, null, 2))
+      const msg = typeof item === "string" ? item : item.body || ""
+      const subject =
+        typeof item === "string"
+          ? `Campaign Message ${index + 1}`
+          : item.subject || `Campaign Message ${index + 1}`
+    
+      const requiresMPP = item.requireMppInfo === true || item.requireMppInfo === "true"
+    
+      // ---------------- NORMAL FLOW ----------------
+      if (!requiresMPP) {
+        const recipients = Array.isArray(item.recipientEmails)
+          ? item.recipientEmails.filter(Boolean)
+          : []
+    
+        if (!recipients.length) {
+          throw new Error(`No recipientEmails found in template ${index}`)
+        }
+    
+        const emailBody = `
+    Dear ${
+          item.recipientPosition
+            ? `${item.recipientPosition} ${item.recipientName || ""}`.trim()
+            : item.recipientName || "Representative"
+        },
+    
+    ${msg}
+    
+    Sincerely,
+    ${fullName}
+    ${email}
+    ${postalCode}
+    `
+    
+        console.log("SENDING TO:", recipients)
+        console.log("SUBJECT:", subject)
+        console.log("FULL TEMPLATE:", item)
 
-      // ✅ FIXED: ONLY support recipientEmails array
-      const recipients = Array.isArray(item.recipientEmails)
-        ? item.recipientEmails.filter(Boolean)
-        : []
-
-      if (!recipients.length) {
-        throw new Error(
-          `No recipientEmails found in email template at index ${index}`
+        return Promise.all(
+          recipients.map((to) =>
+            mg.messages.create(process.env.MAILGUN_DOMAIN, {
+              from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
+              to,
+              subject,
+              text: emailBody,
+            })
+          )
         )
       }
+    
+      // ---------------- MPP FLOW (USER INPUT ONLY) ----------------
+    
+      const mppEmail = (req.body.mppEmail || "").trim()
+      const mppName = (req.body.mppName || "").trim()
 
-      const subject =
-        item.subject || `Campaign Message ${index + 1}`
-
-      const isMPPFlow = !!mppEmail
-
-      const toList = isMPPFlow ? [mppEmail] : recipients
-
+      console.log("MPP FLOW ACTIVE")
+      console.log("MPP NAME:", mppName)
+      console.log("MPP EMAIL:", mppEmail)
+    
+      if (!mppEmail ) {
+        throw new Error(`MPP email missing or empty in request`)
+      }
+    
       const emailBody = `
-        Dear ${
-          isMPPFlow
-            ? mppName
-            : item.recipientPosition
-              ? `${item.recipientPosition} ${item.recipientName || ""}`.trim()
-              : item.recipientName || "Representative"
-        },
-
+        Dear MPP ${mppName || ""},
+        
         ${msg}
-
-        ${
-          isMPPFlow
-            ? `\nThis message was sent to you as the elected MPP for ${mppRiding}.\n`
-            : ""
-        }
-
+        
         Sincerely,
         ${fullName}
         ${email}
         ${postalCode}
         `
-
-      return Promise.all(
-        toList.map((to) =>
-          mg.messages.create(process.env.MAILGUN_DOMAIN, {
-            from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
-            to,
-            subject,
-            text: emailBody,
-          })
-        )
-      )
+    
+      return mg.messages.create(process.env.MAILGUN_DOMAIN, {
+        from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
+        to: mppEmail,
+        subject,
+        text: emailBody,
+      })
     }
 
     const responses = await Promise.allSettled(
