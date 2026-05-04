@@ -65,6 +65,8 @@ export default function ActionDetail() {
 
   if (loading) return <p>Loading...</p>
   if (!action) return <p>Action not found</p>
+ 
+  const isActive = action?.active !== false
 
   const ctaActions = Array.isArray(action.ctaActions) ? action.ctaActions : []
 
@@ -100,6 +102,8 @@ export default function ActionDetail() {
       alert("Please fill in required fields")
       return
     }
+
+    if (!isActive) return
 
     try {
       await signupForAction(id, form)
@@ -234,6 +238,7 @@ export default function ActionDetail() {
 
                     {!submitted ? (
                       <>
+
                         <h2>Take Action</h2>
 
                           {actionTabs.length > 0 && (
@@ -291,87 +296,80 @@ export default function ActionDetail() {
                             </div>
                           )}
 
-                        <div className="signup-box">
+                          {isActive ? (
+                            <div className="signup-box">
 
-                          {requiresMPP && (
-                            <>
+                              {requiresMPP && (
+                                <>
+                                  <input
+                                    placeholder="MPP Name"
+                                    value={form.mppName || ""}
+                                    onChange={(e) =>
+                                      setForm({ ...form, mppName: e.target.value })
+                                    }
+                                  />
+
+                                  <input
+                                    placeholder="MPP Email"
+                                    value={form.mppEmail || ""}
+                                    onChange={(e) =>
+                                      setForm({ ...form, mppEmail: e.target.value })
+                                    }
+                                  />
+                                </>
+                              )}
+
                               <input
-                                placeholder="MPP Name"
-                                value={form.mppName || ""}
+                                placeholder="First Name"
+                                value={form.firstName}
                                 onChange={(e) =>
-                                  setForm({ ...form, mppName: e.target.value })
+                                  setForm({ ...form, firstName: e.target.value })
                                 }
                               />
 
                               <input
-                                placeholder="MPP Email"
-                                value={form.mppEmail || ""}
+                                placeholder="Last Name"
+                                value={form.lastName}
                                 onChange={(e) =>
-                                  setForm({ ...form, mppEmail: e.target.value })
+                                  setForm({ ...form, lastName: e.target.value })
                                 }
                               />
-                            </>
+
+                              <input
+                                placeholder="Email"
+                                value={form.email}
+                                onChange={(e) =>
+                                  setForm({ ...form, email: e.target.value })
+                                }
+                              />
+
+                              <input
+                                placeholder="Postal Code"
+                                value={form.postalCode}
+                                onChange={(e) =>
+                                  setForm({ ...form, postalCode: e.target.value })
+                                }
+                              />
+
+                              <div className="submit-row">
+                                <button onClick={handleSubmit}>
+                                  Submit
+                                </button>
+
+                                {requiresMPP && (
+                                  <button type="button" onClick={openMPPFinder}>
+                                    Find Your MPP
+                                  </button>
+                                )}
+                              </div>
+
+                            </div>
+                          ) : (
+                            <div className="inactive-message">
+                              <h2>This action is inactive</h2>
+                              <p>You can view details, but cannot submit anything.</p>
+                            </div>
                           )}
-
-                          <input
-                            placeholder="First Name"
-                            value={form.firstName}
-                            onChange={(e) =>
-                              setForm({
-                                ...form,
-                                firstName: e.target.value,
-                              })
-                            }
-                          />
-
-                          <input
-                            placeholder="Last Name"
-                            value={form.lastName}
-                            onChange={(e) =>
-                              setForm({
-                                ...form,
-                                lastName: e.target.value,
-                              })
-                            }
-                          />
-
-                          <input
-                            placeholder="Email"
-                            value={form.email}
-                            onChange={(e) =>
-                              setForm({ ...form, email: e.target.value })
-                            }
-                          />
-
-                          <input
-                            placeholder="Postal Code"
-                            value={form.postalCode}
-                            onChange={(e) =>
-                              setForm({
-                                ...form,
-                                postalCode: e.target.value,
-                              })
-                            }
-                          />
-
-                          <div className="submit-row">
-                            
-                            <button onClick={handleSubmit}>
-                              Submit
-                            </button>
-
-                            {requiresMPP && (
-                              <button
-                                type="button"
-                                onClick={openMPPFinder}
-                              >
-                                Find Your MPP
-                              </button>
-                            )}
-
-                          </div>
-
-                        </div>
                       </>
                     ) : (
                       <div className="success-message">
