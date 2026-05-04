@@ -67,11 +67,24 @@ export default function ActionDetail() {
   if (!action) return <p>Action not found</p>
 
   const ctaActions = Array.isArray(action.ctaActions) ? action.ctaActions : []
-  const emailActions = ctaActions.filter((a) => a.type === "email")
-  
-  const templates = normalizeTemplates(emailActions.length ? emailActions : action)
 
-  const requiresMPP = templates.some(t => t.requireMppInfo)
+  const emailActions = ctaActions.filter((a) => a.type === "email")
+  const petitionActions = ctaActions.filter((a) => a.type === "petition")
+
+  const actionTabs = [
+    ...emailActions.map((a, i) => ({
+      type: "email",
+      label: `Email ${i + 1}`,
+      data: a,
+    })),
+    ...petitionActions.map((a, i) => ({
+      type: "petition",
+      label: petitionActions.length > 1 ? `Petition ${i + 1}` : "Petition",
+      data: a,
+    })),
+  ]
+
+  const requiresMPP = actionTabs.some(t => t.data?.requireMppInfo)
 
   const signups = action?.stats?.signups || 0
   const goalStep = 100
@@ -223,39 +236,60 @@ export default function ActionDetail() {
                       <>
                         <h2>Take Action</h2>
 
-                        {emailActions.length > 0 && (
-                          <div className="email-preview">
+                          {actionTabs.length > 0 && (
+                            <div className="email-preview">
 
-                            <h3>Email Preview</h3>
+                              <h3>
+                                {petitionActions.length > 0
+                                  ? "Email Preview and Petition"
+                                  : "Email Preview"}
+                              </h3>
 
-                            {emailActions.length > 1 && (
                               <div className="email-tabs">
-                                {emailActions.map((_, i) => (
+                                {actionTabs.map((tab, i) => (
                                   <button
                                     key={i}
-                                    onClick={() => setActiveIndex(i)}
+                                    onClick={() => {
+                                      if (tab.type === "petition") {
+                                        const link = tab.data?.petitionLink
+                                        if (link) {
+                                          window.open(link, "_blank", "noopener,noreferrer")
+                                        }
+                                        return
+                                      }
+
+                                      setActiveIndex(i)
+                                    }}
                                     className={
-                                      activeIndex === i ? "active-tab" : ""
+                                      activeIndex === i && tab.type === "email"
+                                        ? "active-tab"
+                                        : ""
                                     }
                                   >
-                                    Email {i + 1}
+                                    {tab.type === "email"
+                                      ? `Email ${emailActions.length > 1 ? i + 1 : ""}`
+                                      : petitionActions.length > 1
+                                        ? `Petition ${i - emailActions.length + 1}`
+                                        : "Petition"}
                                   </button>
                                 ))}
                               </div>
-                            )}
 
-                            <div className="preview-box">
-                            {renderPreview(
-                              renderTemplate(
-                                templates[activeIndex],
-                                form,
-                                action
-                              )
-                            )}
+                              {/* EMAIL PREVIEW ONLY */}
+                              {actionTabs[activeIndex]?.type === "email" && (
+                                <div className="preview-box">
+                                  {renderPreview(
+                                    renderTemplate(
+                                      actionTabs[activeIndex]?.data,
+                                      form,
+                                      action
+                                    )
+                                  )}
+                                </div>
+                              )}
+
                             </div>
-
-                          </div>
-                        )}
+                          )}
 
                         <div className="signup-box">
 

@@ -203,6 +203,7 @@
   color: #FFC745;
   display: flex;
   align-self: flex-start;
+  margin-top: 10px;
 }
 
 .priority-btn {
