@@ -9,7 +9,6 @@ import {
   deleteAction,
   toggleActionFeatured,
   getActionSignups,
-  exportActionSignupsCSV,
 } from "../firebase/actions"
 
 import { getSubscribers } from "../firebase/subscribers"
@@ -24,11 +23,6 @@ export default function Admin() {
   const [subscribers, setSubscribers] = useState([])
   const [actionFilter, setActionFilter] = useState("all")
   const [volunteers, setVolunteers] = useState([])
-  const [mpps, setMpps] = useState([])
-
-  const [mppTestPostal, setMppTestPostal] = useState("")
-  const [mppTestResult, setMppTestResult] = useState(null)
-  const [mppTestLoading, setMppTestLoading] = useState(false)
 
   const [form, setForm] = useState({
     title: "",

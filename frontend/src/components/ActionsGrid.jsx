@@ -12,7 +12,7 @@ function formatDate(date) {
 export default function ActionGrid({
   items = [],
   baseLink = "/actions",
-  emptyMessage = "No items found",
+  emptyMessage = "No actions available at the moment. Please check back later!",
 }) {
   return (
     <div className="grid-section">
