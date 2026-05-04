@@ -23,36 +23,63 @@ export default function ActionGrid({
 
           {items.length === 0 && <p>{emptyMessage}</p>}
 
-          {items.map((item) => (
-            <div key={item.id} className="event-card">
+          {items.map((item) => {
 
-              <div className="event-content">
-                <h2 className="event-title">{item.title}</h2>
+            const isActive = item.active !== false
 
-                <div className="event-meta">
-                  {formatDate(item.date)}
+            return (
+              <div key={item.id} className="event-card">
 
-                  {item.type !== "cta" &&
-                    item.type !== "email" &&
-                    item.type !== "petition" && (
-                      <>
-                        <br />
-                        {item.location}
-                      </>
+                <div className="event-content">
+
+                  <h2 className="event-title">{item.title}</h2>
+
+                  <div className="event-meta">
+
+                    {item.tag && (
+                      <div className="event-tag">
+                        {item.tag}
+                      </div>
                     )}
+
+                    {item.type !== "cta" &&
+                      item.type !== "email" &&
+                      item.type !== "petition" && (
+                        <>
+                          <br />
+                          {item.location}
+                        </>
+                      )}
+
+                  </div>
+
+                  <div className="event-desc">
+                    {item.description}
+                  </div>
+
                 </div>
 
-                <div className="event-desc">
-                  {item.description}
-                </div>
+                {item.link ? (
+                  <a
+                    href={item.link}
+                    className={`event-btn ${!isActive ? "inactive" : ""}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {isActive ? "Learn More" : "Inactive"}
+                  </a>
+                ) : (
+                  <Link
+                    to={`${baseLink}/${item.id}`}
+                    className={`event-btn ${!isActive ? "inactive" : ""}`}
+                  >
+                    {isActive ? "Learn More" : "Inactive"}
+                  </Link>
+                )}
+
               </div>
-
-              <Link to={`${baseLink}/${item.id}`} className="event-btn">
-                Learn More
-              </Link>
-
-            </div>
-          ))}
+            )
+            })}
 
         </div>
 
