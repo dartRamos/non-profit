@@ -15,7 +15,8 @@ export default function PetitionDetail({ action }) {
     postalCode: "",
   })
 
-  // ✅ ADD LOCAL SIGNUPS STATE
+  const [submitted, setSubmitted] = useState(false)
+
   const [localSignups, setLocalSignups] = useState(
     action?.stats?.signups || 0
   )
@@ -28,15 +29,14 @@ export default function PetitionDetail({ action }) {
       alert("Please fill in required fields")
       return
     }
-
+  
     try {
       await signupForAction(action.id, form)
-
-      // ✅ INCREMENT GOAL LIVE (optimistic UI update)
+  
       setLocalSignups((prev) => prev + 1)
-
-      alert("Thank you for signing!")
-
+  
+      setSubmitted(true)
+  
       setForm({
         firstName: "",
         lastName: "",
@@ -48,7 +48,6 @@ export default function PetitionDetail({ action }) {
     }
   }
 
-  // ✅ USE LOCAL SIGNUPS INSTEAD OF ACTION STATS
   const signups = localSignups
   const goalStep = 100
   const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep
@@ -121,49 +120,55 @@ export default function PetitionDetail({ action }) {
                   </div>
 
                   {isActive ? (
-                    <>
-                      <h2>Sign the Petition</h2>
-
-                      <div className="signup-box">
-
-                        <input
-                          placeholder="First Name"
-                          value={form.firstName}
-                          onChange={(e) =>
-                            setForm({ ...form, firstName: e.target.value })
-                          }
-                        />
-
-                        <input
-                          placeholder="Last Name"
-                          value={form.lastName}
-                          onChange={(e) =>
-                            setForm({ ...form, lastName: e.target.value })
-                          }
-                        />
-
-                        <input
-                          placeholder="Email"
-                          value={form.email}
-                          onChange={(e) =>
-                            setForm({ ...form, email: e.target.value })
-                          }
-                        />
-
-                        <input
-                          placeholder="Postal Code"
-                          value={form.postalCode}
-                          onChange={(e) =>
-                            setForm({ ...form, postalCode: e.target.value })
-                          }
-                        />
-
-                        <button onClick={handleSignup}>
-                          Sign Petition
-                        </button>
-
+                    submitted ? (
+                      <div className="success-message">
+                        <h2>Thank you for fighting with us</h2>
                       </div>
-                    </>
+                    ) : (
+                      <>
+                        <h2>Sign the Petition</h2>
+
+                        <div className="signup-box">
+
+                          <input
+                            placeholder="First Name"
+                            value={form.firstName}
+                            onChange={(e) =>
+                              setForm({ ...form, firstName: e.target.value })
+                            }
+                          />
+
+                          <input
+                            placeholder="Last Name"
+                            value={form.lastName}
+                            onChange={(e) =>
+                              setForm({ ...form, lastName: e.target.value })
+                            }
+                          />
+
+                          <input
+                            placeholder="Email"
+                            value={form.email}
+                            onChange={(e) =>
+                              setForm({ ...form, email: e.target.value })
+                            }
+                          />
+
+                          <input
+                            placeholder="Postal Code"
+                            value={form.postalCode}
+                            onChange={(e) =>
+                              setForm({ ...form, postalCode: e.target.value })
+                            }
+                          />
+
+                          <button onClick={handleSignup}>
+                            Sign Petition
+                          </button>
+
+                        </div>
+                      </>
+                    )
                   ) : (
                     <div className="inactive-message">
                       <h2>This petition is inactive</h2>
