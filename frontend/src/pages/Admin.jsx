@@ -40,6 +40,7 @@ export default function Admin() {
     tag: "",
     image: "",
     location: "",
+    active: true,
     recipientName: "",
     recipientPosition: "",
     emailTemplates: [
@@ -87,6 +88,7 @@ export default function Admin() {
       tag: "",
       image: "",
       location: "",
+      active: true,
       recipientName: "",
       recipientPosition: "",
       emailTemplates: [
@@ -531,6 +533,18 @@ export default function Admin() {
 
                   <button onClick={() => toggleActionFeatured(a.id, a.featured)}>
                     {a.featured ? "Unfeature" : "Feature"}
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      await updateAction(a.id, {
+                        ...a,
+                        active: a.active === false,
+                      })
+                      load()
+                    }}
+                  >
+                    {a.active === false ? "Activate" : "Deactivate"}
                   </button>
 
                   <button onClick={() => deleteAction(a.id)}>Delete</button>
