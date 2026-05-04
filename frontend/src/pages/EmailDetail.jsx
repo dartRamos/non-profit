@@ -48,6 +48,8 @@ export default function EmailDetail() {
   const handleSubmit = async () => {
     const { firstName, lastName, email: userEmail, postalCode } = form
 
+    if (!isActive) return
+    
     if (!firstName || !lastName || !userEmail || !postalCode) {
       alert("Please fill in all required fields")
       return
@@ -135,6 +137,8 @@ export default function EmailDetail() {
   const templates = normalizeTemplates(email)
 
   const requiresMPP = templates.some(t => t.requireMppInfo === true)
+
+  const isActive = email?.active !== false
 
   const signups = email?.stats?.signups || 0
   const goalStep = 100
@@ -226,76 +230,80 @@ export default function EmailDetail() {
                         </div>
                       </div>
 
-                      <div className="signup-box">
+                      {isActive ? (
+                        <div className="signup-box">
 
-                        {requiresMPP && (
-                          <>
-                            <input
-                              placeholder="MPP Name"
-                              value={form.mppName || ""}
-                              onChange={(e) =>
-                                setForm({ ...form, mppName: e.target.value })
-                              }
-                            />
+                          {requiresMPP && (
+                            <>
+                              <input
+                                placeholder="MPP Name"
+                                value={form.mppName || ""}
+                                onChange={(e) =>
+                                  setForm({ ...form, mppName: e.target.value })
+                                }
+                              />
 
-                            <input
-                              placeholder="MPP Email"
-                              value={form.mppEmail || ""}
-                              onChange={(e) =>
-                                setForm({ ...form, mppEmail: e.target.value })
-                              }
-                            />
-                          </>
-                        )}
+                              <input
+                                placeholder="MPP Email"
+                                value={form.mppEmail || ""}
+                                onChange={(e) =>
+                                  setForm({ ...form, mppEmail: e.target.value })
+                                }
+                              />
+                            </>
+                          )}
 
-                        <input
-                          placeholder="First Name"
-                          value={form.firstName}
-                          onChange={(e) =>
-                            setForm({ ...form, firstName: e.target.value })
-                          }
-                        />
+                          <input
+                            placeholder="First Name"
+                            value={form.firstName}
+                            onChange={(e) =>
+                              setForm({ ...form, firstName: e.target.value })
+                            }
+                          />
 
-                        <input
-                          placeholder="Last Name"
-                          value={form.lastName}
-                          onChange={(e) =>
-                            setForm({ ...form, lastName: e.target.value })
-                          }
-                        />
+                          <input
+                            placeholder="Last Name"
+                            value={form.lastName}
+                            onChange={(e) =>
+                              setForm({ ...form, lastName: e.target.value })
+                            }
+                          />
 
-                        <input
-                          placeholder="Email"
-                          value={form.email}
-                          onChange={(e) =>
-                            setForm({ ...form, email: e.target.value })
-                          }
-                        />
+                          <input
+                            placeholder="Email"
+                            value={form.email}
+                            onChange={(e) =>
+                              setForm({ ...form, email: e.target.value })
+                            }
+                          />
 
-                        <input
-                          placeholder="Postal Code"
-                          value={form.postalCode}
-                          onChange={(e) =>
-                            setForm({ ...form, postalCode: e.target.value })
-                          }
-                        />
+                          <input
+                            placeholder="Postal Code"
+                            value={form.postalCode}
+                            onChange={(e) =>
+                              setForm({ ...form, postalCode: e.target.value })
+                            }
+                          />
 
-                      <div className="submit-row">
-                        <button onClick={handleSubmit}>
-                          Submit
-                        </button>
+                          <div className="submit-row">
+                            <button onClick={handleSubmit}>
+                              Submit
+                            </button>
 
-                        {requiresMPP && (
-                          <button
-                            type="button"
-                            onClick={openMPPFinder}
-                          >
-                            Find Your MPP
-                          </button>
-                        )}
-                      </div>
+                            {requiresMPP && (
+                              <button type="button" onClick={openMPPFinder}>
+                                Find Your MPP
+                              </button>
+                            )}
+                          </div>
 
-                      </div>
+                        </div>
+                      ) : (
+                        <div className="inactive-message">
+                          <h2>This email campaign is inactive</h2>
+                          <p>You can still view details, but submissions are disabled.</p>
+                        </div>
+                      )}
                     </>
                   ) : (
                     <div className="success-message">

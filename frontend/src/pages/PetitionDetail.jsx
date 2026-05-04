@@ -18,6 +18,8 @@ export default function PetitionDetail({ action }) {
 
   const heroImage = action?.image || image
 
+  const isActive = action?.active !== false
+
   const handleSignup = async () => {
     if (!form.firstName || !form.lastName || !form.email) {
       alert("Please fill in required fields")
@@ -137,59 +139,69 @@ export default function PetitionDetail({ action }) {
                     />
                   </div>
 
-                  <h2>Sign the Petition</h2>
 
-                  <div className="signup-box">
+                  {isActive ? (
+                    <>
+                    
+                      <h2>Sign the Petition</h2>
 
-                    <input
-                      placeholder="First Name"
-                      value={form.firstName}
-                      onChange={(e) =>
-                        setForm({ ...form, firstName: e.target.value })
-                      }
-                    />
+                      <div className="signup-box">
 
-                    <input
-                      placeholder="Last Name"
-                      value={form.lastName}
-                      onChange={(e) =>
-                        setForm({ ...form, lastName: e.target.value })
-                      }
-                    />
+                        <input
+                          placeholder="First Name"
+                          value={form.firstName}
+                          onChange={(e) =>
+                            setForm({ ...form, firstName: e.target.value })
+                          }
+                        />
 
-                    <input
-                      placeholder="Email"
-                      value={form.email}
-                      onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                      }
-                    />
+                        <input
+                          placeholder="Last Name"
+                          value={form.lastName}
+                          onChange={(e) =>
+                            setForm({ ...form, lastName: e.target.value })
+                          }
+                        />
 
-                    <input
-                      placeholder="Postal Code"
-                      value={form.postalCode}
-                      onChange={(e) =>
-                        setForm({ ...form, postalCode: e.target.value })
-                      }
-                    />
+                        <input
+                          placeholder="Email"
+                          value={form.email}
+                          onChange={(e) =>
+                            setForm({ ...form, email: e.target.value })
+                          }
+                        />
 
-                    {/* CONSENT CHECKBOX */}
-                    <label className="consent-box">
-                      <input
-                        type="checkbox"
-                        checked={form.consent}
-                        onChange={(e) =>
-                          setForm({ ...form, consent: e.target.checked })
-                        }
-                      />
-                      I agree to receive updates about this campaign
-                    </label>
+                        <input
+                          placeholder="Postal Code"
+                          value={form.postalCode}
+                          onChange={(e) =>
+                            setForm({ ...form, postalCode: e.target.value })
+                          }
+                        />
 
-                    <button onClick={handleSignup}>
-                      Sign Petition
-                    </button>
+                        <label className="consent-box">
+                          <input
+                            type="checkbox"
+                            checked={form.consent}
+                            onChange={(e) =>
+                              setForm({ ...form, consent: e.target.checked })
+                            }
+                          />
+                          I agree to receive updates about this campaign
+                        </label>
 
-                  </div>
+                        <button onClick={handleSignup}>
+                          Sign Petition
+                        </button>
+
+                      </div>
+                    </>
+                  ) : (
+                    <div className="inactive-message">
+                      <h2>This petition is inactive</h2>
+                      <p>You can still view details, but signing is disabled.</p>
+                    </div>
+                  )}
 
                 </div>
 
