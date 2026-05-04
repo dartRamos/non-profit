@@ -252,10 +252,6 @@ export const signupForAction = async (
 
   const email = data.email.trim().toLowerCase()
 
-  if (isPetition && !data.consent) {
-    throw new Error("User must provide consent")
-  }
-
   const q = query(
     signupsRef,
     where("actionId", "==", actionId),
@@ -275,8 +271,8 @@ export const signupForAction = async (
     ...data,
     email,
 
-    verified: isPetition ? false : true,
-    verificationToken: isPetition ? uuidv4() : null,
+    verified: true,
+    verificationToken: null,
 
     createdAt: serverTimestamp(),
   })

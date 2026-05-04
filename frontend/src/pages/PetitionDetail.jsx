@@ -13,11 +13,14 @@ export default function PetitionDetail({ action }) {
     lastName: "",
     email: "",
     postalCode: "",
-    consent: false,
   })
 
-  const heroImage = action?.image || image
+  // ✅ ADD LOCAL SIGNUPS STATE
+  const [localSignups, setLocalSignups] = useState(
+    action?.stats?.signups || 0
+  )
 
+  const heroImage = action?.image || image
   const isActive = action?.active !== false
 
   const handleSignup = async () => {
@@ -26,47 +29,27 @@ export default function PetitionDetail({ action }) {
       return
     }
 
-    if (!form.consent) {
-      alert("You must agree to receive emails to sign")
-      return
-    }
-
     try {
       await signupForAction(action.id, form)
 
-      const res = await fetch("http://localhost:5000/send-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: form.email,
-          firstName: form.firstName,
-          actionId: action.id,
-        }),
-      })
+      // ✅ INCREMENT GOAL LIVE (optimistic UI update)
+      setLocalSignups((prev) => prev + 1)
 
-      const data = await res.json()
-
-      if (!data.success) {
-        throw new Error(data.error || "Failed to send verification email")
-      }
-
-      alert("Check your email to confirm your signature")
+      alert("Thank you for signing!")
 
       setForm({
         firstName: "",
         lastName: "",
         email: "",
         postalCode: "",
-        consent: false,
       })
     } catch (err) {
       alert(err.message)
     }
   }
 
-  const signups = action?.stats?.signups || 0
+  // ✅ USE LOCAL SIGNUPS INSTEAD OF ACTION STATS
+  const signups = localSignups
   const goalStep = 100
   const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep
   const progress = (signups / currentGoal) * 100
@@ -74,12 +57,11 @@ export default function PetitionDetail({ action }) {
   return (
     <div>
 
-      {/* HERO */}
       <div className="header-image-container">
         <img src={heroImage} className="header-image" alt="header" />
         <img src={rectangle} className="rectangle-54" alt="overlay" />
-        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="image-fade" />
+
         <div className="header-text">
           <h1 className="line">SIGN THE PETITION</h1>
           <h1 className="line">MAKE YOUR VOICE HEARD</h1>
@@ -87,7 +69,6 @@ export default function PetitionDetail({ action }) {
         </div>
       </div>
 
-      {/* MAIN CONTENT*/}
       <div className="container">
 
         <div className="petition-section">
@@ -139,10 +120,8 @@ export default function PetitionDetail({ action }) {
                     />
                   </div>
 
-
                   {isActive ? (
                     <>
-                    
                       <h2>Sign the Petition</h2>
 
                       <div className="signup-box">
@@ -178,17 +157,6 @@ export default function PetitionDetail({ action }) {
                             setForm({ ...form, postalCode: e.target.value })
                           }
                         />
-
-                        <label className="consent-box">
-                          <input
-                            type="checkbox"
-                            checked={form.consent}
-                            onChange={(e) =>
-                              setForm({ ...form, consent: e.target.checked })
-                            }
-                          />
-                          I agree to receive updates about this campaign
-                        </label>
 
                         <button onClick={handleSignup}>
                           Sign Petition
