@@ -16,13 +16,10 @@ export default function About() {
       {/* HERO */}
       <div className="about-hero">
 
-        <img
-          src={rectangle19}
-          className="about-hero-image"
-          alt="about header"
-        />
+       
         
         <div className="image-fade" />
+        
         {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="about-hero-inner">
 

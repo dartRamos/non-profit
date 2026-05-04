@@ -50,6 +50,7 @@ type CTAAction = {
 // ---------------- CREATE ACTION ----------------
 
 export const createAction = async (action: {
+  active?: boolean
   type: "protest" | "petition" | "cta" | "email" | "rally" | "townhall"
   title: string
   subtitle?: string
@@ -107,6 +108,8 @@ export const createAction = async (action: {
 
   await addDoc(actionsRef, {
     ...action,
+
+    active: action.active !== false,
 
     featured: false,
     featuredOrder: 999,
@@ -198,6 +201,7 @@ export const updateAction = async (id: string, data: any) => {
 
   await updateDoc(doc(db, "actions", id), {
     ...data,
+    active: data.active !== false,
     priority: data.type === "cta",
     ctaActions: data.type === "cta" ? data.ctaActions || [] : [],
   })

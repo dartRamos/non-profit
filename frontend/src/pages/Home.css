@@ -153,7 +153,7 @@
   gap: 40px;
   margin-top: 24px;
   margin-bottom: 100px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; 
 }
 
 .header-image-container .donate-button {
