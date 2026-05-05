@@ -31,7 +31,7 @@ export default function Footer() {
 
       setName("");
       setEmail("");
-      alert("Subscribed!");
+      alert("Subscribed! You will now receive news about calls to action and notices for upcoming events.");
     } catch (err) {
       console.error(err);
       alert("Something went wrong");

@@ -7,13 +7,16 @@ import img4 from "../assets/event4.png";
 import img5 from "../assets/event5.png";
 import img6 from "../assets/event6.png";
 import img7 from "../assets/event7.png";
+import img8 from "../assets/IMG_6775.png";
+import img9 from "../assets/IMG_6776.png";
+import img10 from "../assets/IMG_6777.png";
 
 import rectangle from "../assets/rectangle91.png";
 
 import ActionFeed from "../components/ActionFeed.jsx";
 import DonateButton from "../components/DonateButton.jsx";
 
-const baseImages = [img1, img2, img3, img4, img5, img6, img7];
+const baseImages = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10];
 
 const heroImages = Array.from({ length: 10 }, (_, i) => {
   return baseImages[i % baseImages.length];
