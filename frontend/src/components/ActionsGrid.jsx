@@ -1,12 +1,8 @@
 import { Link } from "react-router-dom";
 import "./ActionsGrid.css";
 
-function formatDate(date) {
-  if (!date) return "No date";
-  if (typeof date === "object" && date.toDate) {
-    return date.toDate().toLocaleDateString();
-  }
-  return new Date(date).toLocaleDateString();
+function formatDescription(text = "") {
+  return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 }
 
 export default function ActionGrid({
@@ -32,7 +28,12 @@ export default function ActionGrid({
                     {item.tag && <div className="event-tag">{item.tag}</div>}
                   </div>
 
-                  <div className="event-desc">{item.description}</div>
+                  <div
+                    className="event-desc"
+                    dangerouslySetInnerHTML={{
+                      __html: formatDescription(item.description),
+                    }}
+                  />
                 </div>
 
                 {item.link ? (
