@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getFeaturedActionsByTypes } from "../firebase/actions";
+import { API } from "../config/api"
 
 import headerImage from "../assets/image1.png";
 import rectangle54 from "../assets/rectangle54.png";

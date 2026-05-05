@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { loginAdmin } from "../firebase/auth"
+import { API } from "../config/api"
 
 export default function Login() {
   const [email, setEmail] = useState("")

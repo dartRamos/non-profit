@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import { getActionById, signupForAction } from "../firebase/actions"
 import { sendEmail } from "../api/email"
 import { normalizeTemplates } from "../utils/normalizeTemplates"
+import { API } from "../config/api"
 
 import headerImage from "../assets/image1.png"
 import rectangle54 from "../assets/rectangle54.png"
@@ -116,7 +117,7 @@ export default function ActionDetail() {
         recipientName: a.recipientName || action.recipientName || "",
         recipientPosition: a.recipientPosition || action.recipientPosition || "",
       }))
-      
+
       await sendEmail({
         recipientName: action.recipientName,
         recipientPosition: action.recipientPosition,

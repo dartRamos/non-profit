@@ -2,6 +2,7 @@ import { useState } from "react"
 import image from "../assets/event3.png"
 import rectangle from "../assets/rectangle91.png"
 import { signupForAction } from "../firebase/actions"
+import { API } from "../config/api"
 import DonateButton from "../components/DonateButton.jsx";
 
 import "./PetitionDetail.css"

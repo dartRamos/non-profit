@@ -1,5 +1,6 @@
 import { getActions } from "../firebase/actions"
 import ActionGrid from "../components/ActionsGrid"
+import { API } from "../config/api"
 
 export default function CTAs() {
   const [actions, setActions] = useState([])

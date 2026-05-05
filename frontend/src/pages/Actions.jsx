@@ -13,6 +13,7 @@ import rectangle from "../assets/rectangle91.png"
 
 import ActionFeed from "../components/ActionFeed.jsx"
 import DonateButton from "../components/DonateButton.jsx";
+import { API } from "../config/api"
 
 
 const baseImages = [img1, img2, img3, img4, img5, img6, img7]

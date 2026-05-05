@@ -1,5 +1,6 @@
 import "./Events.css"
 import { useState } from "react"
+import { API } from "../config/api"
 
 import img1 from "../assets/event1.png"
 import img2 from "../assets/event2.png"

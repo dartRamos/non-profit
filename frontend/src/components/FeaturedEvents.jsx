@@ -1,6 +1,7 @@
 import "./FeaturedEvents.css"
 import rectangleCTA from "../assets/rectangle79.png"
 import { Link } from "react-router-dom"
+import { API } from "../config/api"
 import protestImg from "../assets/event5.png"
 import rallyImg from "../assets/event4.png"
 import townhallImg from "../assets/event1.png"

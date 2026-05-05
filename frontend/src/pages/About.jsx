@@ -8,6 +8,7 @@ import rectangle3 from "../assets/rectangle23.png"
 import line2 from "../assets/Line2.png"
 import rectangle4 from "../assets/rectangle80.png"
 import DonateButton from "../components/DonateButton.jsx";
+import { API } from "../config/api"
 
 export default function About() {
   return (

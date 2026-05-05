@@ -1,6 +1,7 @@
 import "./Footer.css"
 import { useState } from "react"
 import { addSubscriber } from "../firebase/subscribers"
+import { API } from "../config/api"
 
 import logo from "../assets/whitelogo.png"
 
