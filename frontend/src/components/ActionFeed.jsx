@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react"
-import { getActions } from "../firebase/actions"
-import ActionGrid from "./ActionsGrid"
-import { API } from "../config/api"
+import { useEffect, useState } from "react";
+import { getActions } from "../firebase/actions";
+import ActionGrid from "./ActionsGrid";
+import { API } from "../config/api.ts";
 
 export default function ActionFeed({ type }) {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     async function load() {
-      const data = await getActions()
-      setItems(data.filter((a) => a.type === type))
+      const data = await getActions();
+      setItems(data.filter((a) => a.type === type));
     }
 
-    load()
-  }, [type])
+    load();
+  }, [type]);
 
-  return <ActionGrid items={items} baseLink="/actions" />
+  return <ActionGrid items={items} baseLink="/actions" />;
 }

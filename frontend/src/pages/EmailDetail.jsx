@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { getActionById, signupForAction } from "../firebase/actions"
-import { sendEmail } from "../api/email"
-import { normalizeTemplates } from "../utils/normalizeTemplates"
-import { API } from "../config/api"
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getActionById, signupForAction } from "../firebase/actions";
+import { sendEmail } from "../api/email";
+import { normalizeTemplates } from "../utils/normalizeTemplates";
+import { API } from "../config/api.ts";
 
-import headerImage from "../assets/event5.png"
-import rectangle54 from "../assets/rectangle54.png"
-import rectangle from "../assets/rectangle91.png"
-import "./EmailDetail.css"
-import DonateButton from "../components/DonateButton.jsx"
+import headerImage from "../assets/event5.png";
+import rectangle54 from "../assets/rectangle54.png";
+import rectangle from "../assets/rectangle91.png";
+import "./EmailDetail.css";
+import DonateButton from "../components/DonateButton.jsx";
 
 export default function EmailDetail() {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const [email, setEmail] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [email, setEmail] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [activePreviewIndex, setActivePreviewIndex] = useState(0)
+  const [activePreviewIndex, setActivePreviewIndex] = useState(0);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -26,47 +26,51 @@ export default function EmailDetail() {
     postalCode: "",
     consent: false,
     comment: "",
-  })
+  });
 
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     async function load() {
-      const found = await getActionById(id)
-      setEmail(found)
-      setLoading(false)
+      const found = await getActionById(id);
+      setEmail(found);
+      setLoading(false);
     }
-    load()
-  }, [id])
+    load();
+  }, [id]);
 
-  if (loading) return <p>Loading...</p>
-  if (!email) return <p>Email campaign not found</p>
+  if (loading) return <p>Loading...</p>;
+  if (!email) return <p>Email campaign not found</p>;
 
   const openMPPFinder = () => {
-    window.open("https://www.ola.org/en/members/current", "_blank", "noopener,noreferrer")
-  }
+    window.open(
+      "https://www.ola.org/en/members/current",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
 
   const handleSubmit = async () => {
-    const { firstName, lastName, email: userEmail, postalCode } = form
+    const { firstName, lastName, email: userEmail, postalCode } = form;
 
-    if (!isActive) return
+    if (!isActive) return;
 
     if (!firstName || !lastName || !userEmail || !postalCode) {
-      alert("Please fill in all required fields")
-      return
+      alert("Please fill in all required fields");
+      return;
     }
 
     try {
-      await signupForAction(id, form)
+      await signupForAction(id, form);
 
-      const templates = normalizeTemplates(email)
+      const templates = normalizeTemplates(email);
 
-      const messages = templates.map(t => ({
+      const messages = templates.map((t) => ({
         ...t,
         recipientName: t.recipientName || email.recipientName || "",
         recipientPosition: t.recipientPosition || email.recipientPosition || "",
-      }))
-      console.log("SENDING MESSAGES:", messages)
+      }));
+      console.log("SENDING MESSAGES:", messages);
       await sendEmail({
         firstName,
         lastName,
@@ -75,35 +79,38 @@ export default function EmailDetail() {
         messages,
         mppName: form.mppName,
         mppEmail: form.mppEmail,
-      })
+      });
 
-      setSubmitted(true)
+      setSubmitted(true);
 
       setEmail((prev) => ({
         ...prev,
         stats: {
           signups: (prev?.stats?.signups || 0) + 1,
         },
-      }))
+      }));
     } catch (err) {
-      console.error(err)
-      alert("Something went wrong. Please try again.")
+      console.error(err);
+      alert("Something went wrong. Please try again.");
     }
-  }
+  };
 
   function renderTemplate(template = "", form, email) {
     const text =
       typeof template === "string"
         ? template
-        : template?.body || template?.subject || ""
-  
+        : template?.body || template?.subject || "";
+
     return text
       .replace(/__recipient_name__/g, email?.recipientName || "recipient name")
-      .replace(/__recipient_position__/g, email?.recipientPosition || "recipient position")
+      .replace(
+        /__recipient_position__/g,
+        email?.recipientPosition || "recipient position"
+      )
       .replace(/__firstName__/g, form.firstName || "first name")
       .replace(/__lastName__/g, form.lastName || "last name")
       .replace(/__email__/g, form.email || "email")
-      .replace(/__postalCode__/g, form.postalCode || "postal code")
+      .replace(/__postalCode__/g, form.postalCode || "postal code");
   }
 
   function renderPreview(text) {
@@ -114,12 +121,12 @@ export default function EmailDetail() {
       __postalCode__: "postal code",
       __recipient_name__: "recipient name",
       __recipient_position__: "recipient position",
-    }
+    };
 
     return text.split("\n").map((line, i) => {
       const parts = line.split(
         /(__firstName__|__lastName__|__email__|__postalCode__|__recipient_name__|__recipient_position__)/
-      )
+      );
 
       return (
         <p key={i}>
@@ -129,29 +136,28 @@ export default function EmailDetail() {
                 <em key={j} className="email-placeholder">
                   {placeholders[part]}
                 </em>
-              )
+              );
             }
-            return part
+            return part;
           })}
         </p>
-      )
-    })
+      );
+    });
   }
 
-  const templates = normalizeTemplates(email)
+  const templates = normalizeTemplates(email);
 
-  const requiresMPP = templates.some(t => t.requireMppInfo === true)
+  const requiresMPP = templates.some((t) => t.requireMppInfo === true);
 
-  const isActive = email?.active !== false
+  const isActive = email?.active !== false;
 
-  const signups = email?.stats?.signups || 0
-  const goalStep = 100
-  const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep
-  const progress = (signups / currentGoal) * 100
+  const signups = email?.stats?.signups || 0;
+  const goalStep = 100;
+  const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep;
+  const progress = (signups / currentGoal) * 100;
 
   return (
     <div>
-
       <div className="header-image-container">
         <img src={headerImage} className="email-header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
@@ -170,7 +176,6 @@ export default function EmailDetail() {
 
           <div className="action-overlay">
             <div className="action-layout">
-
               <div className="action-left">
                 <h1 className="action-title">{email.title}</h1>
 
@@ -188,7 +193,6 @@ export default function EmailDetail() {
 
               <div className="action-right">
                 <div className="signup-panel">
-
                   <div className="signup-stats">
                     <div className="signup-number">{signups}</div>
                     <div className="signup-label">people have taken action</div>
@@ -215,7 +219,9 @@ export default function EmailDetail() {
                               <button
                                 key={i}
                                 onClick={() => setActivePreviewIndex(i)}
-                                className={activePreviewIndex === i ? "active-tab" : ""}
+                                className={
+                                  activePreviewIndex === i ? "active-tab" : ""
+                                }
                               >
                                 Email {i + 1}
                               </button>
@@ -236,7 +242,6 @@ export default function EmailDetail() {
 
                       {isActive ? (
                         <div className="signup-box">
-
                           {requiresMPP && (
                             <>
                               <input
@@ -290,9 +295,7 @@ export default function EmailDetail() {
                           />
 
                           <div className="submit-row">
-                            <button onClick={handleSubmit}>
-                              Submit
-                            </button>
+                            <button onClick={handleSubmit}>Submit</button>
 
                             {requiresMPP && (
                               <button type="button" onClick={openMPPFinder}>
@@ -300,12 +303,14 @@ export default function EmailDetail() {
                               </button>
                             )}
                           </div>
-
                         </div>
                       ) : (
                         <div className="inactive-message">
                           <h2>This email campaign is inactive</h2>
-                          <p>You can still view details, but submissions are disabled.</p>
+                          <p>
+                            You can still view details, but submissions are
+                            disabled.
+                          </p>
                         </div>
                       )}
                     </>
@@ -315,15 +320,12 @@ export default function EmailDetail() {
                       <p>Your message is being sent.</p>
                     </div>
                   )}
-
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </div>
-  )
+  );
 }

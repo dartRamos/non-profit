@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getFeaturedActionsByTypes } from "../firebase/actions";
-import { API } from "../config/api"
+import { API } from "../config/api.ts";
 
 import headerImage from "../assets/image1.png";
 import rectangle54 from "../assets/rectangle54.png";
@@ -49,7 +49,7 @@ export default function Home() {
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
-        
+
         {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
         <div className="image-fade" />
 
@@ -65,9 +65,7 @@ export default function Home() {
           <p className="left">
             Connecting people and sharing real ways to get involved
           </p>
-          <p className="right">
-            Making change the best way we can: together
-          </p>
+          <p className="right">Making change the best way we can: together</p>
           <p className="left2">Stay informed; stay united; stay strong</p>
         </div>
 
@@ -82,10 +80,7 @@ export default function Home() {
           />
 
           {Array.isArray(events) && events.length > 0 && (
-            <FeaturedEvents 
-              events={events} 
-              maxItems={3} 
-            />
+            <FeaturedEvents events={events} maxItems={3} />
           )}
 
           {/* SOCIAL LINKS */}
@@ -95,40 +90,71 @@ export default function Home() {
             </p>
 
             <div className="social-media-links">
-              <a href="https://discord.gg/QX2zY867" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://discord.gg/QX2zY867"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={discord} alt="Discord" />
               </a>
 
-              <a href="https://www.instagram.com/ontariansagainstcorruption/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.instagram.com/ontariansagainstcorruption/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={instagram} alt="Instagram" />
               </a>
 
-              <a href="https://www.tiktok.com/@ontarians.against" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.tiktok.com/@ontarians.against"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={tiktok} alt="TikTok" />
               </a>
 
-              <a href="https://www.facebook.com/people/Ontarians-Against-Corruption-OAC/61574271323531/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.facebook.com/people/Ontarians-Against-Corruption-OAC/61574271323531/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={facebook} alt="Facebook" />
               </a>
 
-              <a href="https://www.reddit.com/user/OntariansAgainst/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.reddit.com/user/OntariansAgainst/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={reddit} alt="Reddit" />
               </a>
 
-              <a href="https://x.com/OntariansAC" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://x.com/OntariansAC"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={twitter} alt="Twitter" />
               </a>
 
-              <a href="https://bsky.app/profile/ontariansagainst.bsky.social" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://bsky.app/profile/ontariansagainst.bsky.social"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={bluesky} alt="Bluesky" />
               </a>
 
-              <a href="https://substack.com/@ontariansagainstcorruption?utm_source=global-search" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://substack.com/@ontariansagainstcorruption?utm_source=global-search"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={substack} alt="Substack" />
               </a>
             </div>
           </div>
-
         </div>
       </div>
     </div>

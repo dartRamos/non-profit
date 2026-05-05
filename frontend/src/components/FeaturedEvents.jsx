@@ -1,35 +1,34 @@
-import "./FeaturedEvents.css"
-import rectangleCTA from "../assets/rectangle79.png"
-import { Link } from "react-router-dom"
-import { API } from "../config/api"
-import protestImg from "../assets/event5.png"
-import rallyImg from "../assets/event4.png"
-import townhallImg from "../assets/event1.png"
-
+import "./FeaturedEvents.css";
+import rectangleCTA from "../assets/rectangle79.png";
+import { Link } from "react-router-dom";
+import { API } from "../config/api.ts";
+import protestImg from "../assets/event5.png";
+import rallyImg from "../assets/event4.png";
+import townhallImg from "../assets/event1.png";
 
 function truncate(text = "", maxLength = 140) {
-  if (!text) return ""
-  if (text.length <= maxLength) return text
-  return text.slice(0, maxLength).trim() + "..."
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength).trim() + "...";
 }
 
 function formatDate(dateStr) {
-  if (!dateStr) return ""
-  const d = new Date(dateStr)
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
   return d.toLocaleDateString("en-CA", {
     year: "numeric",
     month: "short",
     day: "numeric",
-  })
+  });
 }
 
-const EVENT_TYPES = ["protest", "rally", "townhall"]
+const EVENT_TYPES = ["protest", "rally", "townhall"];
 
 const EVENT_IMAGES = {
   protest: protestImg,
   rally: rallyImg,
   townhall: townhallImg,
-}
+};
 
 export default function FeaturedEvents({
   events = [],
@@ -40,44 +39,38 @@ export default function FeaturedEvents({
   leftText = "Together, we can make a change",
   rightText = "We must fight for what is right",
 }) {
-
   const filtered = (events || [])
-  .filter((e) => EVENT_TYPES.includes(e.type))
-  .slice(0, maxItems)
+    .filter((e) => EVENT_TYPES.includes(e.type))
+    .slice(0, maxItems);
 
-  const getLink = (e) => `/events/${e.id}`
+  const getLink = (e) => `/events/${e.id}`;
 
   return (
     <div className="featured-actions-container">
-
       {/* background */}
-      <img src={rectangleCTA} className="featured-actions-bg" alt="background" />
+      <img
+        src={rectangleCTA}
+        className="featured-actions-bg"
+        alt="background"
+      />
 
       <div className="featured-actions-overlay">
         <div className="image-fade-2" />
         <div className="image-fade" />
         <div className="featured-actions-wrapper">
-          
-
           <h2 className="featured-actions-title">{title}</h2>
 
           {/* ✅ STACKED LAYOUT (3 ROWS) */}
           <div className="featured-events-column">
-
             {filtered.map((e) => (
               <div key={e.id} className="featured-event-card-split">
-
                 {/* LEFT IMAGE */}
                 <div className="featured-event-image">
-                  <img
-                    src={EVENT_IMAGES[e.type] || protestImg}
-                    alt={e.title}
-                  />
+                  <img src={EVENT_IMAGES[e.type] || protestImg} alt={e.title} />
                 </div>
 
                 {/* RIGHT CONTENT */}
                 <div className="featured-event-content">
-
                   <h3 className="featured-event-title">{e.title}</h3>
 
                   <p className="featured-event-description">
@@ -86,28 +79,19 @@ export default function FeaturedEvents({
 
                   {/* bottom row */}
                   <div className="featured-event-bottom">
-                    
                     <div className="featured-event-meta-group">
-                      <p className="event-meta">
-                        {formatDate(e.date)}
-                      </p>
+                      <p className="event-meta">{formatDate(e.date)}</p>
 
-                      <p className="event-meta">
-                        {e.location}
-                      </p>
+                      <p className="event-meta">{e.location}</p>
                     </div>
 
                     <Link to={getLink(e)} className="featured-events-btn">
                       {buttonText}
                     </Link>
-
                   </div>
-
                 </div>
-
               </div>
             ))}
-
           </div>
 
           {/* SEE ALL */}
@@ -122,10 +106,8 @@ export default function FeaturedEvents({
             <p className="featured-events-left">{leftText}</p>
             <p className="featured-events-right">{rightText}</p>
           </div>
-
         </div>
-
       </div>
     </div>
-  )
+  );
 }

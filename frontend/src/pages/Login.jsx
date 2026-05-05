@@ -1,19 +1,19 @@
-import { useState } from "react"
-import { loginAdmin } from "../firebase/auth"
-import { API } from "../config/api"
+import { useState } from "react";
+import { loginAdmin } from "../firebase/auth";
+import { API } from "../config/api.ts";
 
 export default function Login() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      await loginAdmin(email, password)
-      alert("Logged in")
+      await loginAdmin(email, password);
+      alert("Logged in");
     } catch {
-      alert("Login failed")
+      alert("Login failed");
     }
-  }
+  };
 
   return (
     <div style={{ padding: 20 }}>
@@ -34,5 +34,5 @@ export default function Login() {
 
       <button onClick={handleLogin}>Login</button>
     </div>
-  )
+  );
 }

@@ -1,62 +1,58 @@
-import { useState } from "react"
-import image from "../assets/event3.png"
-import rectangle from "../assets/rectangle91.png"
-import { signupForAction } from "../firebase/actions"
-import { API } from "../config/api"
+import { useState } from "react";
+import image from "../assets/event3.png";
+import rectangle from "../assets/rectangle91.png";
+import { signupForAction } from "../firebase/actions";
+import { API } from "../config/api.ts";
 import DonateButton from "../components/DonateButton.jsx";
 
-import "./PetitionDetail.css"
+import "./PetitionDetail.css";
 
 export default function PetitionDetail({ action }) {
-
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     postalCode: "",
-  })
+  });
 
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false);
 
-  const [localSignups, setLocalSignups] = useState(
-    action?.stats?.signups || 0
-  )
+  const [localSignups, setLocalSignups] = useState(action?.stats?.signups || 0);
 
-  const heroImage = action?.image || image
-  const isActive = action?.active !== false
+  const heroImage = action?.image || image;
+  const isActive = action?.active !== false;
 
   const handleSignup = async () => {
     if (!form.firstName || !form.lastName || !form.email) {
-      alert("Please fill in required fields")
-      return
+      alert("Please fill in required fields");
+      return;
     }
-  
+
     try {
-      await signupForAction(action.id, form)
-  
-      setLocalSignups((prev) => prev + 1)
-  
-      setSubmitted(true)
-  
+      await signupForAction(action.id, form);
+
+      setLocalSignups((prev) => prev + 1);
+
+      setSubmitted(true);
+
       setForm({
         firstName: "",
         lastName: "",
         email: "",
         postalCode: "",
-      })
+      });
     } catch (err) {
-      alert(err.message)
+      alert(err.message);
     }
-  }
+  };
 
-  const signups = localSignups
-  const goalStep = 100
-  const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep
-  const progress = (signups / currentGoal) * 100
+  const signups = localSignups;
+  const goalStep = 100;
+  const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep;
+  const progress = (signups / currentGoal) * 100;
 
   return (
     <div>
-
       <div className="header-image-container">
         <img src={heroImage} className="header-image" alt="header" />
         <img src={rectangle} className="rectangle-54" alt="overlay" />
@@ -70,17 +66,16 @@ export default function PetitionDetail({ action }) {
       </div>
 
       <div className="container">
-
         <div className="petition-section">
-
-          <img src={rectangle} className="petition-action-bg" alt="background" />
+          <img
+            src={rectangle}
+            className="petition-action-bg"
+            alt="background"
+          />
 
           <div className="petition-overlay">
-
             <div className="petition-layout">
-
               <div className="petition-left">
-
                 <h1 className="petition-title">{action.title}</h1>
 
                 {action.subtitle && (
@@ -97,20 +92,15 @@ export default function PetitionDetail({ action }) {
                     <p key={i}>{line}</p>
                   ))}
                 </div>
-
               </div>
 
               <div className="petition-right">
-
                 <div className="petition-panel">
-
                   <div className="signup-stats">
                     <div className="signup-number">{signups}</div>
                     <div className="signup-label">people have signed</div>
 
-                    <div className="signup-goal">
-                      Goal: {currentGoal}
-                    </div>
+                    <div className="signup-goal">Goal: {currentGoal}</div>
                   </div>
 
                   <div className="signup-bar">
@@ -130,7 +120,6 @@ export default function PetitionDetail({ action }) {
                         <h2>Sign the Petition</h2>
 
                         <div className="signup-box">
-
                           <input
                             placeholder="First Name"
                             value={form.firstName}
@@ -163,30 +152,24 @@ export default function PetitionDetail({ action }) {
                             }
                           />
 
-                          <button onClick={handleSignup}>
-                            Sign Petition
-                          </button>
-
+                          <button onClick={handleSignup}>Sign Petition</button>
                         </div>
                       </>
                     )
                   ) : (
                     <div className="inactive-message">
                       <h2>This petition is inactive</h2>
-                      <p>You can still view details, but signing is disabled.</p>
+                      <p>
+                        You can still view details, but signing is disabled.
+                      </p>
                     </div>
                   )}
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
-  )
+  );
 }

@@ -1,47 +1,45 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { getActionById, signupForAction } from "../firebase/actions"
-import { sendEmail } from "../api/email"
-import { normalizeTemplates } from "../utils/normalizeTemplates"
-import { API } from "../config/api"
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getActionById, signupForAction } from "../firebase/actions";
+import { sendEmail } from "../api/email";
+import { normalizeTemplates } from "../utils/normalizeTemplates";
+import { API } from "../config/api.ts";
 
-import headerImage from "../assets/image1.png"
-import rectangle54 from "../assets/rectangle54.png"
-import rectangle from "../assets/rectangle91.png"
-import DonateButton from "../components/DonateButton.jsx"
+import headerImage from "../assets/image1.png";
+import rectangle54 from "../assets/rectangle54.png";
+import rectangle from "../assets/rectangle91.png";
+import DonateButton from "../components/DonateButton.jsx";
 
-import "./CTADetail.css"
+import "./CTADetail.css";
 
 function formatDescription(text = "") {
-  let formatted = text
+  let formatted = text;
 
-  formatted = formatted.replace(/\n(?!\n)/g, " ") 
+  formatted = formatted.replace(/\n(?!\n)/g, " ");
 
   // BOLD
-  formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
   // LINKS
   formatted = formatted.replace(
     /\[([^\]]+)\]\((https?:\/\/[^\s]+)\)/g,
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
-  )
+  );
 
   // PARAGRAPHS
-  const paragraphs = formatted.split(/\n{2,}/)
+  const paragraphs = formatted.split(/\n{2,}/);
 
-  return paragraphs
-    .map(p => `<p>${p.trim()}</p>`)
-    .join("")
+  return paragraphs.map((p) => `<p>${p.trim()}</p>`).join("");
 }
 
 export default function ActionDetail() {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const [action, setAction] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [action, setAction] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [submitted, setSubmitted] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -50,29 +48,29 @@ export default function ActionDetail() {
     postalCode: "",
     consent: false,
     comment: "",
-  })
+  });
 
-  const isEvent = ["protest", "rally", "townhall"].includes(action?.type)
+  const isEvent = ["protest", "rally", "townhall"].includes(action?.type);
 
   useEffect(() => {
     async function load() {
-      const found = await getActionById(id)
-      setAction(found)
-      setLoading(false)
+      const found = await getActionById(id);
+      setAction(found);
+      setLoading(false);
     }
 
-    load()
-  }, [id])
+    load();
+  }, [id]);
 
-  if (loading) return <p>Loading...</p>
-  if (!action) return <p>Action not found</p>
- 
-  const isActive = action?.active !== false
+  if (loading) return <p>Loading...</p>;
+  if (!action) return <p>Action not found</p>;
 
-  const ctaActions = Array.isArray(action.ctaActions) ? action.ctaActions : []
+  const isActive = action?.active !== false;
 
-  const emailActions = ctaActions.filter((a) => a.type === "email")
-  const petitionActions = ctaActions.filter((a) => a.type === "petition")
+  const ctaActions = Array.isArray(action.ctaActions) ? action.ctaActions : [];
+
+  const emailActions = ctaActions.filter((a) => a.type === "email");
+  const petitionActions = ctaActions.filter((a) => a.type === "petition");
 
   const actionTabs = [
     ...emailActions.map((a, i) => ({
@@ -85,29 +83,33 @@ export default function ActionDetail() {
       label: petitionActions.length > 1 ? `Petition ${i + 1}` : "Petition",
       data: a,
     })),
-  ]
+  ];
 
-  const requiresMPP = actionTabs.some(t => t.data?.requireMppInfo)
+  const requiresMPP = actionTabs.some((t) => t.data?.requireMppInfo);
 
-  const signups = action?.stats?.signups || 0
-  const goalStep = 100
-  const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep
-  const progress = (signups / currentGoal) * 100
+  const signups = action?.stats?.signups || 0;
+  const goalStep = 100;
+  const currentGoal = Math.ceil((signups + 1) / goalStep) * goalStep;
+  const progress = (signups / currentGoal) * 100;
 
   const openMPPFinder = () => {
-    window.open("https://www.ola.org/en/members/current", "_blank", "noopener,noreferrer")
-  }
+    window.open(
+      "https://www.ola.org/en/members/current",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
 
   const handleSubmit = async () => {
     if (!form.firstName || !form.lastName || !form.email || !form.postalCode) {
-      alert("Please fill in required fields")
-      return
+      alert("Please fill in required fields");
+      return;
     }
 
-    if (!isActive) return
+    if (!isActive) return;
 
     try {
-      await signupForAction(id, form)
+      await signupForAction(id, form);
 
       const templates = emailActions.map((a) => ({
         subject: a.subject || "",
@@ -115,8 +117,9 @@ export default function ActionDetail() {
         recipientEmails: a.recipientEmails || [],
         requireMppInfo: a.requireMppInfo === true,
         recipientName: a.recipientName || action.recipientName || "",
-        recipientPosition: a.recipientPosition || action.recipientPosition || "",
-      }))
+        recipientPosition:
+          a.recipientPosition || action.recipientPosition || "",
+      }));
 
       await sendEmail({
         recipientName: action.recipientName,
@@ -131,28 +134,28 @@ export default function ActionDetail() {
 
         mppName: form.mppName,
         mppEmail: form.mppEmail,
-      })
+      });
 
-      setSubmitted(true)
+      setSubmitted(true);
 
       setAction((prev) => ({
         ...prev,
         stats: {
           signups: (prev?.stats?.signups || 0) + 1,
         },
-      }))
+      }));
     } catch (err) {
-      console.error(err)
-      alert("Something went wrong. Please try again.")
+      console.error(err);
+      alert("Something went wrong. Please try again.");
     }
-  }
+  };
 
   function renderTemplate(template = "", form, email) {
     const text =
       typeof template === "string"
         ? template
-        : template?.body || template?.subject || ""
-  
+        : template?.body || template?.subject || "";
+
     return text
       .replace(/\\n/g, "\n") // normalize escaped newlines
       .replace(/__recipient_name__/g, email?.recipientName || "")
@@ -160,26 +163,21 @@ export default function ActionDetail() {
       .replace(/__firstName__/g, form.firstName || "")
       .replace(/__lastName__/g, form.lastName || "")
       .replace(/__email__/g, form.email || "")
-      .replace(/__postalCode__/g, form.postalCode || "")
+      .replace(/__postalCode__/g, form.postalCode || "");
   }
 
   function renderPreview(text = "") {
     return String(text)
       .split(/\n{2,}/)
       .map((block, i) => {
-        const cleaned = block.trim().replace(/\n/g, " ")
-  
-        return (
-          <p key={i}>
-            {cleaned}
-          </p>
-        )
-      })
+        const cleaned = block.trim().replace(/\n/g, " ");
+
+        return <p key={i}>{cleaned}</p>;
+      });
   }
 
   return (
     <div>
-
       <div className="header-image-container">
         <img src={headerImage} className="header-image" alt="header" />
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
@@ -194,14 +192,11 @@ export default function ActionDetail() {
 
       <div className="container">
         <div className="action-section">
-
           <img src={rectangle} className="action-bg" alt="background" />
 
           <div className="action-overlay">
             <div className="action-layout">
-
               <div className="action-left">
-
                 <h1 className="action-title">{action.title}</h1>
 
                 {action.subtitle && (
@@ -221,22 +216,17 @@ export default function ActionDetail() {
                     }}
                   />
                 </div>
-
               </div>
 
               {!isEvent && (
                 <div className="action-right">
-
                   <div className="signup-panel">
-
                     <div className="signup-stats">
                       <div className="signup-number">{signups}</div>
                       <div className="signup-label">
                         people have taken action
                       </div>
-                      <div className="signup-goal">
-                        Goal: {currentGoal}
-                      </div>
+                      <div className="signup-goal">Goal: {currentGoal}</div>
                     </div>
 
                     <div className="signup-bar">
@@ -248,138 +238,145 @@ export default function ActionDetail() {
 
                     {!submitted ? (
                       <>
-
                         <h2>Take Action</h2>
 
-                          {actionTabs.length > 0 && (
-                            <div className="email-preview">
+                        {actionTabs.length > 0 && (
+                          <div className="email-preview">
+                            <h3>
+                              {petitionActions.length > 0
+                                ? "Email Preview and Petition"
+                                : "Email Preview"}
+                            </h3>
 
-                              <h3>
-                                {petitionActions.length > 0
-                                  ? "Email Preview and Petition"
-                                  : "Email Preview"}
-                              </h3>
-
-                              <div className="email-tabs">
-                                {actionTabs.map((tab, i) => (
-                                  <button
-                                    key={i}
-                                    onClick={() => {
-                                      if (tab.type === "petition") {
-                                        const link = tab.data?.petitionLink
-                                        if (link) {
-                                          window.open(link, "_blank", "noopener,noreferrer")
-                                        }
-                                        return
+                            <div className="email-tabs">
+                              {actionTabs.map((tab, i) => (
+                                <button
+                                  key={i}
+                                  onClick={() => {
+                                    if (tab.type === "petition") {
+                                      const link = tab.data?.petitionLink;
+                                      if (link) {
+                                        window.open(
+                                          link,
+                                          "_blank",
+                                          "noopener,noreferrer"
+                                        );
                                       }
-
-                                      setActiveIndex(i)
-                                    }}
-                                    className={
-                                      activeIndex === i && tab.type === "email"
-                                        ? "active-tab"
-                                        : ""
+                                      return;
                                     }
-                                  >
-                                    {tab.type === "email"
-                                      ? `Email ${emailActions.length > 1 ? i + 1 : ""}`
-                                      : petitionActions.length > 1
-                                        ? `Petition ${i - emailActions.length + 1}`
-                                        : "Petition"}
-                                  </button>
-                                ))}
-                              </div>
 
-                              {/* EMAIL PREVIEW ONLY */}
-                              {actionTabs[activeIndex]?.type === "email" && (
-                                <div className="preview-box">
-                                  {renderPreview(
-                                    renderTemplate(
-                                      actionTabs[activeIndex]?.data,
-                                      form,
-                                      action
-                                    )
-                                  )}
-                                </div>
-                              )}
-
-                            </div>
-                          )}
-
-                          {isActive ? (
-                            <div className="signup-box">
-
-                              {requiresMPP && (
-                                <>
-                                  <input
-                                    placeholder="MPP Name"
-                                    value={form.mppName || ""}
-                                    onChange={(e) =>
-                                      setForm({ ...form, mppName: e.target.value })
-                                    }
-                                  />
-
-                                  <input
-                                    placeholder="MPP Email"
-                                    value={form.mppEmail || ""}
-                                    onChange={(e) =>
-                                      setForm({ ...form, mppEmail: e.target.value })
-                                    }
-                                  />
-                                </>
-                              )}
-
-                              <input
-                                placeholder="First Name"
-                                value={form.firstName}
-                                onChange={(e) =>
-                                  setForm({ ...form, firstName: e.target.value })
-                                }
-                              />
-
-                              <input
-                                placeholder="Last Name"
-                                value={form.lastName}
-                                onChange={(e) =>
-                                  setForm({ ...form, lastName: e.target.value })
-                                }
-                              />
-
-                              <input
-                                placeholder="Email"
-                                value={form.email}
-                                onChange={(e) =>
-                                  setForm({ ...form, email: e.target.value })
-                                }
-                              />
-
-                              <input
-                                placeholder="Postal Code"
-                                value={form.postalCode}
-                                onChange={(e) =>
-                                  setForm({ ...form, postalCode: e.target.value })
-                                }
-                              />
-
-                              <div className="submit-row">
-                                <button onClick={handleSubmit}>
-                                  Submit
+                                    setActiveIndex(i);
+                                  }}
+                                  className={
+                                    activeIndex === i && tab.type === "email"
+                                      ? "active-tab"
+                                      : ""
+                                  }
+                                >
+                                  {tab.type === "email"
+                                    ? `Email ${
+                                        emailActions.length > 1 ? i + 1 : ""
+                                      }`
+                                    : petitionActions.length > 1
+                                    ? `Petition ${i - emailActions.length + 1}`
+                                    : "Petition"}
                                 </button>
+                              ))}
+                            </div>
 
-                                {requiresMPP && (
-                                  <button type="button" onClick={openMPPFinder}>
-                                    Find Your MPP
-                                  </button>
+                            {/* EMAIL PREVIEW ONLY */}
+                            {actionTabs[activeIndex]?.type === "email" && (
+                              <div className="preview-box">
+                                {renderPreview(
+                                  renderTemplate(
+                                    actionTabs[activeIndex]?.data,
+                                    form,
+                                    action
+                                  )
                                 )}
                               </div>
+                            )}
+                          </div>
+                        )}
 
+                        {isActive ? (
+                          <div className="signup-box">
+                            {requiresMPP && (
+                              <>
+                                <input
+                                  placeholder="MPP Name"
+                                  value={form.mppName || ""}
+                                  onChange={(e) =>
+                                    setForm({
+                                      ...form,
+                                      mppName: e.target.value,
+                                    })
+                                  }
+                                />
+
+                                <input
+                                  placeholder="MPP Email"
+                                  value={form.mppEmail || ""}
+                                  onChange={(e) =>
+                                    setForm({
+                                      ...form,
+                                      mppEmail: e.target.value,
+                                    })
+                                  }
+                                />
+                              </>
+                            )}
+
+                            <input
+                              placeholder="First Name"
+                              value={form.firstName}
+                              onChange={(e) =>
+                                setForm({ ...form, firstName: e.target.value })
+                              }
+                            />
+
+                            <input
+                              placeholder="Last Name"
+                              value={form.lastName}
+                              onChange={(e) =>
+                                setForm({ ...form, lastName: e.target.value })
+                              }
+                            />
+
+                            <input
+                              placeholder="Email"
+                              value={form.email}
+                              onChange={(e) =>
+                                setForm({ ...form, email: e.target.value })
+                              }
+                            />
+
+                            <input
+                              placeholder="Postal Code"
+                              value={form.postalCode}
+                              onChange={(e) =>
+                                setForm({ ...form, postalCode: e.target.value })
+                              }
+                            />
+
+                            <div className="submit-row">
+                              <button onClick={handleSubmit}>Submit</button>
+
+                              {requiresMPP && (
+                                <button type="button" onClick={openMPPFinder}>
+                                  Find Your MPP
+                                </button>
+                              )}
                             </div>
-                          ) : (
-                            <div className="inactive-message">
-                              <h2>This action is inactive</h2>
-                              <p>You can view details, but cannot submit anything.</p>
-                            </div>
-                          )}
+                          </div>
+                        ) : (
+                          <div className="inactive-message">
+                            <h2>This action is inactive</h2>
+                            <p>
+                              You can view details, but cannot submit anything.
+                            </p>
+                          </div>
+                        )}
                       </>
                     ) : (
                       <div className="success-message">
@@ -387,17 +384,13 @@ export default function ActionDetail() {
                         <p>Your message is being sent.</p>
                       </div>
                     )}
-
                   </div>
-
                 </div>
               )}
-
             </div>
           </div>
-
         </div>
       </div>
     </div>
-  )
+  );
 }

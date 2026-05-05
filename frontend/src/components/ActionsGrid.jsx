@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom"
-import { API } from "../config/api"
-import "./ActionsGrid.css"
+import { Link } from "react-router-dom";
+import { API } from "../config/api.ts";
+import "./ActionsGrid.css";
 
 function formatDate(date) {
-  if (!date) return "No date"
+  if (!date) return "No date";
   if (typeof date === "object" && date.toDate) {
-    return date.toDate().toLocaleDateString()
+    return date.toDate().toLocaleDateString();
   }
-  return new Date(date).toLocaleDateString()
+  return new Date(date).toLocaleDateString();
 }
 
 export default function ActionGrid({
@@ -17,31 +17,20 @@ export default function ActionGrid({
 }) {
   return (
     <div className="grid-section">
-
       <div className="grid-wrapper">
-
         <div className="events-grid">
-
           {items.length === 0 && <p>{emptyMessage}</p>}
 
           {items.map((item) => {
-
-            const isActive = item.active !== false
+            const isActive = item.active !== false;
 
             return (
               <div key={item.id} className="event-card">
-
                 <div className="event-content">
-
                   <h2 className="event-title">{item.title}</h2>
 
                   <div className="event-meta">
-
-                    {item.tag && (
-                      <div className="event-tag">
-                        {item.tag}
-                      </div>
-                    )}
+                    {item.tag && <div className="event-tag">{item.tag}</div>}
 
                     {item.type !== "cta" &&
                       item.type !== "email" &&
@@ -51,13 +40,9 @@ export default function ActionGrid({
                           {item.location}
                         </>
                       )}
-
                   </div>
 
-                  <div className="event-desc">
-                    {item.description}
-                  </div>
-
+                  <div className="event-desc">{item.description}</div>
                 </div>
 
                 {item.link ? (
@@ -77,15 +62,11 @@ export default function ActionGrid({
                     {isActive ? "Learn More" : "Inactive"}
                   </Link>
                 )}
-
               </div>
-            )
-            })}
-
+            );
+          })}
         </div>
-
       </div>
-
     </div>
-  )
+  );
 }
