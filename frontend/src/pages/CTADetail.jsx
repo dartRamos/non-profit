@@ -99,13 +99,35 @@ export default function ActionDetail() {
   };
 
   const handleSubmit = async () => {
-    if (!form.firstName || !form.lastName || !form.email || !form.postalCode) {
-      alert("Please fill in required fields");
+    if (!isActive) return;
+  
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "postalCode",
+    ];
+  
+    if (requiresMPP) {
+      requiredFields.push("mppName", "mppEmail");
+    }
+  
+    const missing = requiredFields.filter(
+      (field) => !form[field] || form[field].trim() === ""
+    );
+  
+    if (missing.length > 0) {
+      alert("Please fill in all required fields");
       return;
     }
-
-    if (!isActive) return;
-
+  
+    const postalRegex = /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/;
+  
+    if (!postalRegex.test(form.postalCode.trim())) {
+      alert("Please enter a valid postal code (e.g. M6M 5M5)");
+      return;
+    }
+  
     try {
       await signupForAction(id, form);
 
@@ -350,7 +372,7 @@ export default function ActionDetail() {
                             />
 
                             <input
-                              placeholder="Postal Code"
+                              placeholder="M5M 5M5"
                               value={form.postalCode}
                               onChange={(e) =>
                                 setForm({ ...form, postalCode: e.target.value })
