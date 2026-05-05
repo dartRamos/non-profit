@@ -83,9 +83,21 @@ export default function FeaturedEvents({
                       <p className="event-meta">{e.location}</p>
                     </div>
 
-                    <Link to={getLink(e)} className="featured-events-btn">
-                      {buttonText}
-                    </Link>
+                      {e.link ? (
+                        <a
+                          href={e.link}
+                          className="featured-events-btn"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {buttonText}
+                        </a>
+                      ) : (
+                        <Link to={getLink(e)} className="featured-events-btn">
+                          {buttonText}
+                        </Link>
+                      )}
+                      
                   </div>
                 </div>
               </div>
