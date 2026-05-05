@@ -71,7 +71,7 @@ export default function Actions() {
           <img src={rectangle} className="events-bg" alt="background" />
 
           <div className="events-overlay">
-            <div className="image-fade-2" />
+          
             {tab === "cta" && <ActionFeed type="cta" />}
             {tab === "petitions" && <ActionFeed type="petition" />}
             {tab === "email" && <ActionFeed type="email" />}
