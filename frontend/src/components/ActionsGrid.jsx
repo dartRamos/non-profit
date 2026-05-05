@@ -30,15 +30,6 @@ export default function ActionGrid({
 
                   <div className="event-meta">
                     {item.tag && <div className="event-tag">{item.tag}</div>}
-
-                    {item.type !== "cta" &&
-                      item.type !== "email" &&
-                      item.type !== "petition" && (
-                        <>
-                          <br />
-                          {item.location}
-                        </>
-                      )}
                   </div>
 
                   <div className="event-desc">{item.description}</div>
