@@ -27,15 +27,19 @@
 
 /* TITLE */
 .event-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-top: 11px;
   font-size: 30px;
   font-weight: 600;
   margin: 0;
+  padding-top: 11px;
 
   line-height: 1.2;
   min-height: calc(1.2em * 2);
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
 }
 
 /* META */
