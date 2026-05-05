@@ -23,11 +23,7 @@ function formatDate(dateStr) {
 
 const EVENT_TYPES = ["protest", "rally", "townhall"];
 
-const EVENT_IMAGES = {
-  protest: protestImg,
-  rally: rallyImg,
-  townhall: townhallImg,
-};
+const EVENT_IMAGES = [protestImg, rallyImg, townhallImg];
 
 export default function FeaturedEvents({
   events = [],
@@ -61,11 +57,14 @@ export default function FeaturedEvents({
 
           {/* ✅ STACKED LAYOUT */}
           <div className="featured-events-column">
-            {filtered.map((e) => (
+            {filtered.map((e, index) => (
               <div key={e.id} className="featured-event-card-split">
                 {/* LEFT IMAGE */}
                 <div className="featured-event-image">
-                  <img src={EVENT_IMAGES[e.type] || protestImg} alt={e.title} />
+                  <img
+                    src={EVENT_IMAGES[index]}
+                    alt={e.title}
+                  />
                 </div>
 
                 {/* RIGHT CONTENT */}
