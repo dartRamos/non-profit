@@ -396,7 +396,7 @@ app.post("/send-email", emailLimiter, async (req, res) => {
         return Promise.all(
           recipients.map((to) =>
             mg.messages.create(process.env.MAILGUN_DOMAIN, {
-              from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
+              from: `Ontarians Against Corruption <mail@${process.env.MAILGUN_DOMAIN}>`,
               to,
               subject,
               text: emailBody,
@@ -425,7 +425,7 @@ ${postalCode}
 `
 
       return mg.messages.create(process.env.MAILGUN_DOMAIN, {
-        from: `Campaign <mail@${process.env.MAILGUN_DOMAIN}>`,
+        from: `Ontarians Against Corruption <mail@${process.env.MAILGUN_DOMAIN}>`,
         to: mppEmailClean,
         subject,
         text: emailBody,
