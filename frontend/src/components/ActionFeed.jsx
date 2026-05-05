@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { getActions } from "../firebase/actions";
 import ActionGrid from "./ActionsGrid";
-import { API } from "../config/api.ts";
-
 export default function ActionFeed({ type }) {
   const [items, setItems] = useState([]);
 

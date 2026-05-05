@@ -13,8 +13,6 @@ import rectangle from "../assets/rectangle91.png";
 
 import ActionFeed from "../components/ActionFeed.jsx";
 import DonateButton from "../components/DonateButton.jsx";
-import { API } from "../config/api.ts";
-
 const baseImages = [img1, img2, img3, img4, img5, img6, img7];
 
 const heroImages = Array.from({ length: 10 }, (_, i) => {

@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import { getActionById, signupForAction } from "../firebase/actions";
 import { sendEmail } from "../api/email";
 import { normalizeTemplates } from "../utils/normalizeTemplates";
-import { API } from "../config/api.ts";
-
 import headerImage from "../assets/image1.png";
 import rectangle54 from "../assets/rectangle54.png";
 import rectangle from "../assets/rectangle91.png";

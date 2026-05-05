@@ -1,8 +1,6 @@
 import "./Footer.css";
 import { useState } from "react";
 import { addSubscriber } from "../firebase/subscribers";
-import { API } from "../config/api.ts";
-
 import logo from "../assets/whitelogo.png";
 
 import discord from "../assets/Discord.png";

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { API } from "../config/api.ts";
 import logo from "../assets/whitelogo.png";
 import "./Nav.css";
 

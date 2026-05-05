@@ -1,8 +1,6 @@
 import { useState } from "react";
 import image from "../assets/event3.png";
 import rectangle from "../assets/rectangle91.png";
-import { API } from "../config/api.ts";
-
 import "./PetitionDetail.css";
 import "./Donate.css";
 

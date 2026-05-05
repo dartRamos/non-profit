@@ -1,4 +1,4 @@
-const API = "https://non-profit-ta9x.onrender.com"
+import { API } from "../config/api"
 
 // ---------------- TYPES ----------------
 

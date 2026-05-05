@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../firebase/useAuth";
 import "./Admin.css";
-import { API } from "../config/api.ts";
-
 import {
   getActions,
   createAction,
@@ -11,8 +9,7 @@ import {
   toggleActionFeatured,
   getActionSignups,
 } from "../firebase/actions";
-
-const API = "https://non-profit-ta9x.onrender.com";
+import { API } from "../config/api"
 
 export default function Admin() {
   const { user, loading } = useAuth();

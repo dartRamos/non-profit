@@ -1,8 +1,6 @@
 import "./FeaturedActions.css";
 import rectangleCTA from "../assets/rectangle79.png";
 import { Link } from "react-router-dom";
-import { API } from "../config/api.ts";
-
 function truncate(text = "", maxLength = 140) {
   if (!text) return "";
   if (text.length <= maxLength) return text;

@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { loginAdmin } from "../firebase/auth";
-import { API } from "../config/api.ts";
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
