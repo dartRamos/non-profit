@@ -21,10 +21,6 @@ function formatDate(dateStr) {
   });
 }
 
-const EVENT_TYPES = ["protest", "rally", "townhall"];
-
-const EVENT_IMAGES = [protestImg, rallyImg, townhallImg];
-
 export default function FeaturedEvents({
   events = [],
   maxItems = 3,
@@ -35,7 +31,6 @@ export default function FeaturedEvents({
   rightText = "We must fight for what is right",
 }) {
   const filtered = (events || [])
-    .filter((e) => EVENT_TYPES.includes(e.type))
     .slice(0, maxItems);
 
   const getLink = (e) => `/events/${e.id}`;
@@ -62,7 +57,7 @@ export default function FeaturedEvents({
                 {/* LEFT IMAGE */}
                 <div className="featured-event-image">
                   <img
-                    src={EVENT_IMAGES[index]}
+                    src={e.image}
                     alt={e.title}
                   />
                 </div>
@@ -97,7 +92,7 @@ export default function FeaturedEvents({
                           {buttonText}
                         </Link>
                       )}
-                      
+
                   </div>
                 </div>
               </div>
