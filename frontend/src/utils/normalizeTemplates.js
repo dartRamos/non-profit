@@ -19,6 +19,9 @@ export function normalizeTemplates(source) {
         body: t,
         subject: "Campaign Message",
         requireMppInfo: false,
+        recipientEmails: [],
+        recipientName: "",
+        recipientPosition: "",
       }
     }
 
@@ -27,6 +30,8 @@ export function normalizeTemplates(source) {
       subject: t.subject || "Campaign Message",
       requireMppInfo: t.requireMppInfo === true,
       recipientEmails: t.recipientEmails || [],
+      recipientName: t.recipientName || "",
+      recipientPosition: t.recipientPosition || "",
     }
   })
 }

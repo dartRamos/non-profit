@@ -17,30 +17,32 @@ export const signupVolunteer = async (data: {
   name: string
   email: string
 }) => {
-  const email = data.email.trim().toLowerCase()
+  const res = await fetch("http://localhost:5000/volunteer", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
 
-  const q = query(volunteerRef, where("email", "==", email))
-  const existing = await getDocs(q)
+  const json = await res.json()
 
-  if (!existing.empty) {
-    throw new Error("Already signed up as volunteer")
+  if (!json.success) {
+    throw new Error(json.error || "Volunteer signup failed")
   }
 
-  await addDoc(volunteerRef, {
-    name: data.name,
-    email,
-    createdAt: serverTimestamp(),
-  })
+  return json
 }
 
 // ---------------- GET VOLUNTEERS ----------------
 
 export const getVolunteers = async () => {
-  const q = query(volunteerRef, orderBy("createdAt", "desc"))
-  const snapshot = await getDocs(q)
+  const res = await fetch("http://localhost:5000/volunteers")
+  const json = await res.json()
 
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }))
+  if (!json.success) {
+    throw new Error(json.error || "Failed to fetch volunteers")
+  }
+
+  return json.volunteers
 }

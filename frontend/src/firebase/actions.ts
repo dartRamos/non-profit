@@ -1,23 +1,8 @@
-import { db } from "./config"
-import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  setDoc,
-  doc,
-  query,
-  orderBy,
-  increment,
-  where,
-  getDoc,
-  serverTimestamp
-} from "firebase/firestore"
+const API = "http://localhost:5000"
 
-import { v4 as uuidv4 } from "uuid"
+// ---------------- TYPES ----------------
 
-type ActionSignup = {
+export type ActionSignup = {
   firstName: string
   lastName: string
   email: string
@@ -26,282 +11,160 @@ type ActionSignup = {
   comment?: string
 }
 
-// ---------------- COLLECTIONS ----------------
+// ---------------- ACTIONS ----------------
 
-const actionsRef = collection(db, "actions")
-const signupsRef = collection(db, "action_signups")
-
-// ---------------- TYPES ----------------
-
-type CTAAction = {
-  type: "email" | "petition"
-
-  recipientEmails?: string[]
-  recipientEmail?: string
-  subject?: string
-  body?: string
-
-  petitionLink?: string
-
-  requireUserInput?: boolean
-  requireMppInfo?: boolean
-}
-
-// ---------------- CREATE ACTION ----------------
-
-export const createAction = async (action: {
-  active?: boolean
-  type: "protest" | "petition" | "cta" | "email" | "rally" | "townhall"
-  title: string
-  subtitle?: string
-  description?: string
-  date?: string
-  location?: string
-  image?: string
-  link?: string
-  tag?: string
-
-  priority?: boolean
-  ctaActions?: CTAAction[]
-}) => {
-
-  if (action.type === "cta") {
-    if (!action.ctaActions || action.ctaActions.length === 0) {
-      throw new Error("CTA must have at least one action")
-    }
-
-    const normalized = action.ctaActions.map((a) => ({
-      ...a,
-      recipientEmails:
-        a.recipientEmails ||
-        (a.recipientEmail ? [a.recipientEmail] : []),
-    }))
-
-    const hasInvalid = normalized.some((a) => {
-      if (a.type === "email") {
-
-        const requiresUserInput = a.requireUserInput || a.requireMppInfo
-      
-        if (requiresUserInput) {
-          return !a.subject || !a.body
-        }
-      
-        return (
-          !Array.isArray(a.recipientEmails) ||
-          a.recipientEmails.length === 0 ||
-          !a.subject ||
-          !a.body
-        )
-      }
-      if (a.type === "petition") {
-        return !a.petitionLink
-      }
-      return true
-    })
-
-    if (hasInvalid) {
-      throw new Error("Invalid CTA actions")
-    }
-
-    action.ctaActions = normalized
-  }
-
-  await addDoc(actionsRef, {
-    ...action,
-
-    active: action.active !== false,
-
-    featured: false,
-    featuredOrder: 999,
-
-    priority: action.type === "cta",
-    ctaActions: action.type === "cta" ? action.ctaActions || [] : [],
-
-    stats: {
-      signups: 0,
-    },
-
-    createdAt: serverTimestamp(),
-  })
-}
-
-// ---------------- GET ALL ----------------
-
+// GET ALL ACTIONS
 export const getActions = async () => {
-  const q = query(actionsRef, orderBy("createdAt", "desc"))
-  const snapshot = await getDocs(q)
+  const res = await fetch(`${API}/actions`)
+  const json = await res.json()
 
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
-  }))
+  if (!json.success) {
+    throw new Error(json.error || "Failed to fetch actions")
+  }
+
+  return json.actions
 }
 
-// ---------------- GET BY ID ----------------
-
+// GET ACTION BY ID
 export const getActionById = async (id: string) => {
-  const ref = doc(db, "actions", id)
-  const snapshot = await getDoc(ref)
+  const res = await fetch(`${API}/actions/${id}`)
+  const json = await res.json()
 
-  if (!snapshot.exists()) return null
-
-  return {
-    id: snapshot.id,
-    ...snapshot.data(),
+  if (!json.success) {
+    throw new Error(json.error || "Failed to fetch action")
   }
+
+  return json.action
 }
 
-// ---------------- DELETE ----------------
+// CREATE ACTION
+export const createAction = async (action: any) => {
+  const res = await fetch(`${API}/actions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(action),
+  })
 
-export const deleteAction = async (id: string) => {
-  await deleteDoc(doc(db, "actions", id))
+  const json = await res.json()
+
+  if (!json.success) {
+    throw new Error(json.error || "Failed to create action")
+  }
+
+  return json
 }
 
-// ---------------- UPDATE ----------------
-
+// UPDATE ACTION
 export const updateAction = async (id: string, data: any) => {
+  const res = await fetch(`${API}/actions/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
 
-  if (data.type === "cta") {
+  const json = await res.json()
 
-    const normalized = (data.ctaActions || []).map((a) => ({
-      ...a,
-      recipientEmails:
-        a.recipientEmails ||
-        (a.recipientEmail ? [a.recipientEmail] : []),
-    }))
-
-    const hasInvalid = normalized.some((a) => {
-      if (a.type === "email") {
-
-        const requiresUserInput = a.requireUserInput || a.requireMppInfo
-      
-        if (requiresUserInput) {
-          return !a.subject || !a.body
-        }
-      
-        return (
-          !Array.isArray(a.recipientEmails) ||
-          a.recipientEmails.length === 0 ||
-          !a.subject ||
-          !a.body
-        )
-      }
-      if (a.type === "petition") {
-        return !a.petitionLink
-      }
-      return true
-    })
-
-    if (hasInvalid) {
-      throw new Error("Invalid CTA actions")
-    }
-
-    data.ctaActions = normalized
+  if (!json.success) {
+    throw new Error(json.error || "Failed to update action")
   }
 
-  await updateDoc(doc(db, "actions", id), {
-    ...data,
-    active: data.active !== false,
-    priority: data.type === "cta",
-    ctaActions: data.type === "cta" ? data.ctaActions || [] : [],
-  })
+  return json
 }
 
-// ---------------- FEATURE TOGGLE ----------------
+// DELETE ACTION
+export const deleteAction = async (id: string) => {
+  const res = await fetch(`${API}/actions/${id}`, {
+    method: "DELETE",
+  })
 
+  const json = await res.json()
+
+  if (!json.success) {
+    throw new Error(json.error || "Failed to delete action")
+  }
+
+  return json
+}
+
+// TOGGLE FEATURED
 export const toggleActionFeatured = async (id: string, current: boolean) => {
-  await updateDoc(doc(db, "actions", id), {
-    featured: !current,
-    featuredOrder: !current ? serverTimestamp() : 999,
+  const res = await fetch(`${API}/actions/${id}/featured`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ featured: !current }),
   })
-}
 
-// ---------------- FILTER HELPERS ----------------
+  const json = await res.json()
 
-export const getFeaturedActionsByTypes = async (types: string[]) => {
-  const q = query(
-    actionsRef,
-    where("featured", "==", true),
-    where("type", "in", types),
-    orderBy("featuredOrder", "asc")
-  )
-
-  const snapshot = await getDocs(q)
-
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
-  }))
-}
-
-// ---------------- SIGNUP ----------------
-
-export const signupForAction = async (
-  actionId: string,
-  data: ActionSignup
-) => {
-  const actionRef = doc(db, "actions", actionId)
-  const actionSnap = await getDoc(actionRef)
-
-  if (!actionSnap.exists()) {
-    throw new Error("Action not found")
+  if (!json.success) {
+    throw new Error(json.error || "Failed to toggle featured")
   }
 
-  const action = actionSnap.data()
-  const isPetition = action.type === "petition"
-
-  const email = data.email.trim().toLowerCase()
-
-  const q = query(
-    signupsRef,
-    where("actionId", "==", actionId),
-    where("email", "==", email)
-  )
-
-  const existing = await getDocs(q)
-
-  if (!existing.empty) {
-    throw new Error("Already signed up")
-  }
-
-  const signupId = `${actionId}_${email}`
-
-  await setDoc(doc(db, "action_signups", signupId), {
-    actionId,
-    ...data,
-    email,
-
-    verified: true,
-    verificationToken: null,
-
-    createdAt: serverTimestamp(),
-  })
-
-  await updateDoc(doc(db, "actions", actionId), {
-    "stats.signups": increment(1),
-  })
+  return json
 }
 
-// ---------------- ADMIN SIGNUPS ----------------
+// SIGNUP FOR ACTION
+export const signupForAction = async (actionId: string, data: ActionSignup) => {
+  const res = await fetch(`${API}/signup-action`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      actionId,
+      ...data,
+    }),
+  })
 
+  const json = await res.json()
+
+  if (!json.success) {
+    throw new Error(json.error || "Signup failed")
+  }
+
+  return json
+}
+
+// GET SIGNUPS
 export const getActionSignups = async (actionId: string) => {
-  const q = query(signupsRef, where("actionId", "==", actionId))
-  const snapshot = await getDocs(q)
+  const res = await fetch(`${API}/actions/${actionId}/signups`)
+  const json = await res.json()
 
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
-  }))
+  if (!json.success) {
+    throw new Error(json.error || "Failed to fetch signups")
+  }
+
+  return json.signups
 }
 
-// ---------------- EXPORT CSV ----------------
+// GET FEATURED ACTIONS BY TYPES
+export const getFeaturedActionsByTypes = async (types: string[]) => {
+  const res = await fetch(
+    `${API}/actions/featured?types=${types.join(",")}`
+  )
 
+  const json = await res.json()
+
+  if (!json.success) {
+    throw new Error(json.error || "Failed to fetch featured actions")
+  }
+
+  return json.actions
+}
+
+// EXPORT CSV
 export const exportActionSignupsCSV = async (actionId: string) => {
   const data = await getActionSignups(actionId)
 
   const headers = ["firstName", "lastName", "email", "postalCode", "createdAt"]
 
-  const rows = data.map((s) =>
+  const rows = data.map((s: any) =>
     headers.map((h) => JSON.stringify(s[h] || "")).join(",")
   )
 

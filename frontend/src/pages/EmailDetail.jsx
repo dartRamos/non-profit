@@ -49,7 +49,7 @@ export default function EmailDetail() {
     const { firstName, lastName, email: userEmail, postalCode } = form
 
     if (!isActive) return
-    
+
     if (!firstName || !lastName || !userEmail || !postalCode) {
       alert("Please fill in all required fields")
       return
@@ -60,15 +60,18 @@ export default function EmailDetail() {
 
       const templates = normalizeTemplates(email)
 
+      const messages = templates.map(t => ({
+        ...t,
+        recipientName: t.recipientName || email.recipientName || "",
+        recipientPosition: t.recipientPosition || email.recipientPosition || "",
+      }))
+      console.log("SENDING MESSAGES:", messages)
       await sendEmail({
-        recipientName: email.recipientName,
-        recipientPosition: email.recipientPosition,
         firstName,
         lastName,
         email: userEmail,
         postalCode,
-        messages: templates,
-
+        messages,
         mppName: form.mppName,
         mppEmail: form.mppEmail,
       })

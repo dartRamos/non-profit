@@ -11,8 +11,7 @@ import {
   getActionSignups,
 } from "../firebase/actions"
 
-import { getSubscribers } from "../firebase/subscribers"
-import { getVolunteers } from "../firebase/volunteers"
+const API = "http://localhost:5000"
 
 export default function Admin() {
   const { user, loading } = useAuth()
@@ -59,9 +58,19 @@ export default function Admin() {
   }
 
   const load = async () => {
-    setActions(await getActions())
-    setSubscribers(await getSubscribers())
-    setVolunteers(await getVolunteers())
+    const [actionsRes, subRes, volRes] = await Promise.all([
+      fetch(`${API}/actions`),
+      fetch(`${API}/subscribers`),
+      fetch(`${API}/volunteers`),
+    ])
+  
+    const actionsJson = await actionsRes.json()
+    const subJson = await subRes.json()
+    const volJson = await volRes.json()
+  
+    setActions(actionsJson.actions || [])
+    setSubscribers(subJson.subscribers || [])
+    setVolunteers(volJson.volunteers || [])
   }
 
   useEffect(() => {
@@ -143,20 +152,27 @@ export default function Admin() {
       })
       .filter(Boolean)
       
-    const payload = {
-      ...form,
-      ctaActions: cleanedCTA,
-    }
+      const payload = {
+        ...form,
+        emailTemplates: form.emailTemplates.map(t => ({
+          subject: t.subject,
+          body: t.body,
+          recipientEmails: t.recipientEmails,
+          recipientName: t.recipientName,
+          recipientPosition: t.recipientPosition,
+        })),
+        ctaActions: cleanedCTA,
+      }
 
-    if (editingAction) {
-      await updateAction(editingAction.id, payload)
-    } else {
-      await createAction(payload)
-    }
+      if (editingAction) {
+        await updateAction(editingAction.id, payload)
+      } else {
+        await createAction(payload)
+      }
 
-    resetForm()
-    load()
-  }
+      resetForm()
+      load()
+    }
 
   return (
     <div className="admin-wrapper">

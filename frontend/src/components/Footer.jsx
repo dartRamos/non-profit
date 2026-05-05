@@ -24,7 +24,11 @@ export default function Footer() {
     }
 
     try {
-      await addSubscriber({ name, email })
+      await fetch("http://localhost:5000/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email })
+      })
 
       setName("")
       setEmail("")

@@ -108,6 +108,15 @@ export default function ActionDetail() {
     try {
       await signupForAction(id, form)
 
+      const templates = emailActions.map((a) => ({
+        subject: a.subject || "",
+        body: a.body || "",
+        recipientEmails: a.recipientEmails || [],
+        requireMppInfo: a.requireMppInfo === true,
+        recipientName: a.recipientName || action.recipientName || "",
+        recipientPosition: a.recipientPosition || action.recipientPosition || "",
+      }))
+      
       await sendEmail({
         recipientName: action.recipientName,
         recipientPosition: action.recipientPosition,
