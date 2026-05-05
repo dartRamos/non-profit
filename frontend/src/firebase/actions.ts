@@ -1,4 +1,4 @@
-const API = "http://localhost:5000"
+const API = "https://non-profit-ta9x.onrender.com"
 
 // ---------------- TYPES ----------------
 
