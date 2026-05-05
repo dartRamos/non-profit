@@ -17,7 +17,7 @@ export const signupVolunteer = async (data: {
   name: string
   email: string
 }) => {
-  const res = await fetch("http://localhost:5000/volunteer", {
+  const res = await fetch("https://non-profit-ta9x.onrender.com/volunteer", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const signupVolunteer = async (data: {
 // ---------------- GET VOLUNTEERS ----------------
 
 export const getVolunteers = async () => {
-  const res = await fetch("http://localhost:5000/volunteers")
+  const res = await fetch("https://non-profit-ta9x.onrender.com/volunteers")
   const json = await res.json()
 
   if (!json.success) {

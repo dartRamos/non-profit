@@ -23,7 +23,7 @@ export default function Footer() {
     }
 
     try {
-      await fetch("http://localhost:5000/subscribe", {
+      await fetch("https://non-profit-ta9x.onrender.com/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email }),

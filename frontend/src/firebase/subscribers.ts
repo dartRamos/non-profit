@@ -4,7 +4,7 @@ import { collection, getDocs } from "firebase/firestore"
 const subscribersRef = collection(db, "subscribers")
 
 export const addSubscriber = async (subscriber) => {
-  const res = await fetch("http://localhost:5000/subscribe", {
+  const res = await fetch("https://non-profit-ta9x.onrender.com/subscribe", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
