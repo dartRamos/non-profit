@@ -1,12 +1,10 @@
 import { db } from "./config"
 import { collection, getDocs, addDoc } from "firebase/firestore"
 
-// OLD COLLECTIONS
 const protestsRef = collection(db, "protests")
 const petitionsRef = collection(db, "petitions")
 const imagesRef = collection(db, "images")
 
-// NEW COLLECTION
 const actionsRef = collection(db, "actions")
 
 export const migrateData = async () => {

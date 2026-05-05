@@ -64,9 +64,7 @@ app.get("/", (req, res) => {
   res.send("Backend is running")
 })
 
-/* =========================================================
-   📢 ACTIONS CRUD
-========================================================= */
+/*ACTIONS CRUD*/
 
 // GET ALL ACTIONS
 app.get("/actions", async (req, res) => {
@@ -219,9 +217,7 @@ app.get("/actions/:id/signups", async (req, res) => {
   }
 })
 
-/* =========================================================
-   📩 SIGNUP ACTION
-========================================================= */
+/* SIGNUP ACTION*/
 app.post("/signup-action", async (req, res) => {
   try {
     const { actionId, firstName, lastName, email, postalCode } = req.body
@@ -258,9 +254,7 @@ app.post("/signup-action", async (req, res) => {
   }
 })
 
-/* =========================================================
-   📩 SUBSCRIBERS
-========================================================= */
+/* 📩 SUBSCRIBERS */
 app.get("/subscribers", async (req, res) => {
   const snapshot = await db.collection("subscribers").get()
 
@@ -293,9 +287,7 @@ app.post("/subscribe", async (req, res) => {
   }
 })
 
-/* =========================================================
-   🤝 VOLUNTEERS
-========================================================= */
+/* 🤝 VOLUNTEERS */
 app.get("/volunteers", async (req, res) => {
   const snapshot = await db.collection("volunteer_signups").get()
 

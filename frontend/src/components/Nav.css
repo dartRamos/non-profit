@@ -36,7 +36,7 @@
   justify-content: center;
 }
 
-/* hamburger button (hidden on desktop) */
+/* hamburger button */
 .hamburger {
   display: none;
   font-size: 40px;

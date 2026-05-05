@@ -179,7 +179,7 @@
   color: white;
 }
 
-/* TABLET RESPONSIVENESS (NOT MOBILE REDESIGN) */
+/* TABLET RESPONSIVENESS */
 @media (max-width: 900px) {
   .footer-top-content {
     flex-direction: column;

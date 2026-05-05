@@ -155,7 +155,7 @@ export default function ActionDetail() {
         : template?.body || template?.subject || "";
 
     return text
-      .replace(/\\n/g, "\n") // normalize escaped newlines
+      .replace(/\\n/g, "\n")
       .replace(/__recipient_name__/g, email?.recipientName || "")
       .replace(/__recipient_position__/g, email?.recipientPosition || "")
       .replace(/__firstName__/g, form.firstName || "")
