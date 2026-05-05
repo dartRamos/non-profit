@@ -114,7 +114,7 @@ export default function Footer() {
 
               <div className="footer-social-column">
                 <div className="social-grid">
-                  <a href="https://discord.gg/QX2zY867">
+                  <a href="https://discord.gg/7d6nJJp7A2">
                     <img src={discord} />
                   </a>
                   <a href="https://www.instagram.com/ontariansagainstcorruption/">

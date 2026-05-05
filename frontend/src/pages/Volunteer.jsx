@@ -91,7 +91,7 @@ export default function Volunteer() {
                 Sign Up
               </button>
 
-              <h3> Join our Discord to join the team! </h3>
+              <h3> Join our Volunteer's Discord to join the team! </h3>
               <p>
                 Stay connected with others in the Ontarians Against Corruption
                 Discord. Click the icon to join our community, stay informed on
@@ -101,7 +101,7 @@ export default function Volunteer() {
               <p>We look forward to hearing from you!</p>
 
               <a
-                href="https://discord.gg/QX2zY867"
+                href="https://discord.gg/7d6nJJp7A2"
                 target="_blank"
                 rel="noopener noreferrer"
               >

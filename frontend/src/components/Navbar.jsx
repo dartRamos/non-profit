@@ -27,9 +27,6 @@ export default function Nav({ user }) {
         <Link to="/Events" onClick={() => setOpen(false)}>
           Events
         </Link>
-        <Link to="/Volunteer" onClick={() => setOpen(false)}>
-          Volunteer
-        </Link>
         <a
           href="https://calendar.google.com/calendar/u/0/embed?src=331963ac174c5deee40a307b7d8e26d8eecc2aeaccd1d3112b802eef967731eb@group.calendar.google.com&ctz=America/Toronto"
           target="_blank"
@@ -38,7 +35,9 @@ export default function Nav({ user }) {
         >
           Calendar
         </a>
-
+        <Link to="/Volunteer" onClick={() => setOpen(false)}>
+          Volunteer
+        </Link>
         {user && (
           <Link to="/admin" onClick={() => setOpen(false)}>
             Admin

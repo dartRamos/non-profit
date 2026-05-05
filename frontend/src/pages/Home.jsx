@@ -89,7 +89,7 @@ export default function Home() {
 
             <div className="social-media-links">
               <a
-                href="https://discord.gg/QX2zY867"
+                href="https://discord.gg/7d6nJJp7A2"
                 target="_blank"
                 rel="noopener noreferrer"
               >

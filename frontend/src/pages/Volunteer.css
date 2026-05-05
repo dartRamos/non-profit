@@ -85,6 +85,10 @@
   font-weight: 500;
 }
 
+.volunteer-input::placeholder {
+  color: black;
+}
+
 .volunteer-button {
   width: 504px;
   height: 72px;
@@ -110,6 +114,7 @@
   display: block;
   margin: 20px auto 0 auto;
   height: auto;
+  width: 250px;
 }
 
 @media (min-width: 1440px) {

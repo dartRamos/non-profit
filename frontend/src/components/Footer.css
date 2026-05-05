@@ -72,6 +72,10 @@
   font-weight: 500;
 }
 
+.footer-input::placeholder {
+  color: black;
+}
+
 .footer-button {
   width: 100%;
   height: 60px;
