@@ -41,13 +41,15 @@
 .featured-actions-list,
 .featured-actions-list.row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 
   width: 100%;
   padding: 0 40px;
   box-sizing: border-box;
+
+  grid-template-columns: repeat(3, 1fr);
 }
+
 
 /* CARD */
 .featured-actions-card {
@@ -80,8 +82,8 @@
   font-weight: 600;
   margin: 0;
 
-  line-height: 1.2em;
-  height: calc(1.2em * 2);
+  line-height: 1.2;
+  min-height: calc(1.2em * 2);
 
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -100,6 +102,8 @@
   -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  min-height: calc(1.4em * 7);
 }
 
 /* button */
@@ -209,4 +213,20 @@
 .priority-btn {
   background-color: #ff3b3b !important;
   color: white !important;
+}
+
+/* tablet */
+@media (max-width: 1100px) {
+  .featured-actions-list,
+  .featured-actions-list.row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* mobile */
+@media (max-width: 700px) {
+  .featured-actions-list,
+  .featured-actions-list.row {
+    grid-template-columns: 1fr;
+  }
 }
