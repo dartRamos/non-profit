@@ -7,7 +7,7 @@ const rateLimit = require("express-rate-limit")
 
 // ---------------- FIREBASE ADMIN ----------------
 const admin = require("firebase-admin")
-const serviceAccount = require("./serviceAccountKey.json")
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -22,17 +22,20 @@ app.use(express.json())
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://localhost:5173"
+  "http://localhost:5173",
+  "https://onac.ca",
+  "https://www.onac.ca"
 ]
 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true)
-
+  
     if (allowedOrigins.includes(origin)) {
       return callback(null, true)
     }
-
+  
+    console.log("Blocked CORS origin:", origin)
     return callback(new Error("Not allowed by CORS"))
   },
   credentials: true
@@ -451,7 +454,7 @@ ${postalCode}
 })
 
 // ---------------- START SERVER ----------------
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
