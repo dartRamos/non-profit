@@ -8,8 +8,8 @@
 }
 
 .white-logo {
-  width: 123px;
-  height: 123px;
+  width: clamp(90px, 8vw, 123px);
+  height: auto;
   margin-left: 40px;
 }
 
@@ -51,6 +51,10 @@
 @media (max-width: 1100px) {
   .hamburger {
     display: block;
+  }
+
+  .white-logo {
+    margin-left: 16px;
   }
 
   .navbar-links {

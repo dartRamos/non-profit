@@ -13,13 +13,16 @@ import Footer from "./components/Footer.jsx"
 import Donate from "./pages/Donate.jsx"
 import ActionRouter from "./pages/ActionRouter"
 import Volunteer from "./pages/Volunteer.jsx"
+import ScrollToTop from "./components/ScrollToTop"; 
 
 export default function App() {
-  const { user, loading } = useAuth()
+  const { user, loading } = useAuth();
 
   return (
     <div>
       <Nav user={user} />
+
+      <ScrollToTop /> {/* 👈 ADD THIS HERE */}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -35,5 +38,5 @@ export default function App() {
 
       <Footer />
     </div>
-  )
+  );
 }
