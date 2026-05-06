@@ -223,6 +223,18 @@ export default function ActionDetail() {
                   <p className="action-subtitle">{action.subtitle}</p>
                 )}
 
+                <button
+                  className="scroll-to-signup"
+                  onClick={() => {
+                    document.getElementById("signup-panel")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  Jump to Sign Up ↓
+                </button>
+
                 <div className="action-meta-row">
                   {action.location && <span>📍 {action.location}</span>}
                   {action.date && <span>📅 {action.date}</span>}
@@ -236,11 +248,12 @@ export default function ActionDetail() {
                     }}
                   />
                 </div>
+
               </div>
 
               {!isEvent && (
                 <div className="action-right">
-                  <div className="signup-panel">
+                  <div className="signup-panel" id="signup-panel">
                     <div className="signup-stats">
                       <div className="signup-number">{signups}</div>
                       <div className="signup-label">

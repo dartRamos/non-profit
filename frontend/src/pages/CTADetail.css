@@ -31,6 +31,9 @@
   margin: 40px;
   gap: 20px;
   position: relative;
+
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .action-overlay {
@@ -44,22 +47,35 @@
 /* LEFT */
 
 .action-left {
-  flex: 1;
-  min-width: 300px;
+  flex: 1 1 500px;
+  min-width: 0;
+
   background-color: #1a1a1a;
   padding: 10px;
+
+  box-sizing: border-box;
 }
 
 .action-title {
-  font-size: 50px;
+  font-size: clamp(28px, 3vw, 50px);
   margin-bottom: 10px;
   color: #ffc745;
+  line-height: 1.1;
 }
 
 .action-subtitle {
-  font-size: 24px;
+  font-size: clamp(18px, 2vw, 24px);
   color: #ffc745;
   margin-bottom: 20px;
+}
+
+.action-description p {
+  margin-bottom: 14px;
+  line-height: 1.6;
+  color: #ddd;
+
+  max-width: 100%;
+  font-size: clamp(16px, 1.6vw, 20px);
 }
 
 .action-meta-row {
@@ -69,19 +85,11 @@
   font-size: 14px;
 }
 
-.action-description p {
-  margin-bottom: 14px;
-  line-height: 1.5;
-  color: #ddd;
-  max-width: 670px;
-  font-size: 20px;
-}
-
 /* RIGHT PANEL */
 
 .action-right {
-  flex: 1;
-  min-width: 280px;
+  flex: 1 1 360px;
+  min-width: 0;
 }
 
 .signup-panel {
@@ -93,7 +101,9 @@
   border: 1px solid #333;
 
   width: 100%;
-  max-width: 670px;
+  max-width: 100%;
+
+  box-sizing: border-box;
 }
 
 /* STATS */
@@ -137,6 +147,9 @@
 }
 
 .signup-box input {
+  width: 100%;
+  box-sizing: border-box;
+
   padding: 12px;
   background: #222;
   border: 1px solid #333;
@@ -170,12 +183,16 @@
 
 .submit-row button {
   flex: 1;
+  min-width: 0;
+
   padding: 14px 16px;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  font-size: 20px;
+
+  font-size: clamp(16px, 2vw, 20px);
 }
+
 .submit-row button:first-child {
   background: #ffc745;
   color: black;
@@ -210,7 +227,46 @@
   margin-bottom: 10px;
 }
 
+.scroll-to-signup {
+  display: none;
+  background: none;
+  border: none;
+  color: #ffc745;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.scroll-to-signup:hover {
+  color: black;
+  background: #ffc745;
+}
+
+@media (max-width: 900px) {
+  .action-layout {
+    flex-direction: column;
+    margin: 20px;
+  }
+
+  .signup-panel {
+    position: static;
+  }
+
+  .scroll-to-signup {
+    display: inline-block;
+  }
+}
+
 @media (max-width: 600px) {
+  .action-layout {
+    margin: 16px;
+  }
+
+  .action-title {
+    font-size: 26px;
+  }
+
   .submit-row {
     flex-direction: column;
   }
