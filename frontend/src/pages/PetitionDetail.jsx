@@ -81,6 +81,18 @@ export default function PetitionDetail({ action }) {
                   <p className="petition-subtitle">{action.subtitle}</p>
                 )}
 
+                <button
+                  className="scroll-to-signup"
+                  onClick={() => {
+                    document.getElementById("signup-panel")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  Jump to Sign Up ↓
+                </button>
+
                 <div className="petition-meta-row">
                   {action.location && <span>📍 {action.location}</span>}
                   {action.date && <span>📅 {action.date}</span>}
@@ -94,7 +106,7 @@ export default function PetitionDetail({ action }) {
               </div>
 
               <div className="petition-right">
-                <div className="petition-panel">
+                <div className="petition-panel" id="signup-panel">
                   <div className="signup-stats">
                     <div className="signup-number">{signups}</div>
                     <div className="signup-label">people have signed</div>

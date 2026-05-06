@@ -207,6 +207,18 @@ export default function EmailDetail() {
                   {email.date && <span>📅 {email.date}</span>}
                 </div>
 
+                <button
+                  className="scroll-to-signup"
+                  onClick={() => {
+                    document.getElementById("signup")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  Take Action ↓
+                </button>
+
                 <div className="action-description">
                   {email.description?.split("\n").map((line, i) => (
                     <p key={i}>{line}</p>
@@ -215,7 +227,7 @@ export default function EmailDetail() {
               </div>
 
               <div className="action-right">
-                <div className="signup-panel">
+                <div className="signup-panel" id="signup">
                   <div className="signup-stats">
                     <div className="signup-number">{signups}</div>
                     <div className="signup-label">people have taken action</div>
