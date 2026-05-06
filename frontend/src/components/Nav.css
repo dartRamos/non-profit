@@ -1,5 +1,6 @@
 .navbar-custom {
   display: flex;
+  align-items: center;
   background-color: #191919;
   height: 146px;
   justify-content: space-between;
@@ -43,8 +44,10 @@
   color: white;
   background: none;
   border: none;
-  margin-right: 40px;
+  margin-right: 16px;
   cursor: pointer;
+
+  align-self: center;
 }
 
 /* MOBILE */
