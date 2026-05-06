@@ -1,199 +1,292 @@
 .admin-wrapper {
   display: flex;
   min-height: 100vh;
-  background: #111;
-  color: white;
+  background: #0f0f0f;
+  color: #fff;
   font-family: Arial, sans-serif;
 }
 
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
 
 .admin-sidebar {
-  width: 220px;
+  width: 240px;
   background: #000;
+  border-right: 1px solid #222;
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-sidebar h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #ffc745;
+}
+
+.admin-sidebar button {
+  background: transparent;
+  border: 1px solid #333;
+  color: #ddd;
+
+  padding: 10px 12px;
+  text-align: left;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.admin-sidebar button:hover {
+  background: #1a1a1a;
+  border-color: #555;
+  color: #fff;
+}
+
+/* ================= MAIN AREA ================= */
+
+.admin-content {
+  flex: 1;
+  padding: 32px;
+  overflow-x: hidden;
+}
+
+/* layout split */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.admin-main {
+  min-width: 0;
+}
+
+/* ================= HEADINGS ================= */
+
+.admin-main h1 {
+  font-size: 28px;
+  margin-bottom: 18px;
+  color: #fff;
+}
+
+/* filter buttons row */
+.admin-main > div:first-of-type button {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #ccc;
+
+  padding: 8px 12px;
+  margin-right: 8px;
+  margin-bottom: 10px;
+
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.admin-main > div:first-of-type button:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+/* ================= FORM ================= */
+
+.admin-form {
+  background: #141414;
+  border: 1px solid #222;
   padding: 20px;
-  border-right: 1px solid #333;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  margin-bottom: 24px;
+}
+
+.admin-content input,
+.admin-content textarea,
+.admin-content select {
+  width: 100%;
+  padding: 12px;
+
+  background: #0f0f0f;
+  border: 1px solid #2a2a2a;
+  color: white;
+
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.admin-content input:focus,
+.admin-content textarea:focus,
+.admin-content select:focus {
+  outline: none;
+  border-color: #ffc745;
+}
+
+/* textarea nicer */
+.admin-content textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* primary action button */
+.admin-form > button {
+  background: #ffc745;
+  color: #000;
+
+  border: none;
+  padding: 12px 14px;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-form > button:hover {
+  opacity: 0.9;
+}
+
+/* ================= EMAIL / CTA BUILDER ================= */
+
+.email-builder {
+  background: #0f0f0f;
+  border: 1px solid #222;
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.email-builder h3 {
+  margin: 0 0 6px 0;
+  color: #ffc745;
+  font-size: 16px;
+}
+
+.email-block {
+  background: #141414;
+  border: 1px solid #222;
+  padding: 12px;
+
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.admin-sidebar h3 {
-  margin-bottom: 20px;
-}
-
-.admin-sidebar button {
-  background: transparent;
-  border: 1px solid #444;
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-}
-
-.admin-sidebar button:hover {
+/* remove clutter buttons inside builder */
+.email-block button {
   background: #222;
-  border-color: #666;
-}
-
-/*MAIN CONTENT*/
-
-.admin-content {
-  flex: 1;
-  padding: 30px;
-}
-
-/*FORM*/
-
-.admin-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  max-width: 600px;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #222;
-}
-
-/* LABEL */
-.admin-label {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-bottom: 4px;
-}
-
-/*INPUTS */
-
-.admin-content input,
-.admin-content textarea {
-  width: 100%;
-  padding: 12px;
-  background: #1b1b1b;
+  color: #ddd;
   border: 1px solid #333;
-  color: white;
-  font-size: 14px;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-}
 
-.admin-content input:focus,
-.admin-content textarea:focus {
-  outline: none;
-  border: 1px solid #ffc745;
-}
-
-/* TEXTAREA SIZE */
-.admin-content textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-/*ROWS*/
-
-.admin-row {
-  display: flex;
-  gap: 12px;
-}
-
-.admin-row input {
-  flex: 1;
-}
-
-/*BUTTONS*/
-
-.admin-content button {
-  background: #ffc745;
-  color: black;
-  border: none;
-  padding: 10px 14px;
-  margin-right: 8px;
-  margin-top: 5px;
+  padding: 8px;
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
 }
 
-.admin-content button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-/*CARDS*/
-
-.admin-card {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  padding: 18px;
-  margin-top: 15px;
-  max-width: 600px;
-  transition: border 0.2s ease;
-}
-
-.admin-card:hover {
+.email-block button:hover {
   border-color: #555;
 }
 
+/* ================= ACTION CARDS ================= */
+
+.admin-card {
+  background: #121212;
+  border: 1px solid #222;
+
+  padding: 16px;
+  margin-top: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .admin-card h3 {
-  margin-bottom: 5px;
+  font-size: 18px;
+  margin: 0;
 }
 
 .admin-card p {
-  font-size: 14px;
+  margin: 0;
+  font-size: 13px;
   color: #aaa;
-  margin-bottom: 10px;
 }
 
-/*IMAGE GRID*/
+/* buttons inside card */
+.admin-card button {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #ddd;
 
-.image-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 15px;
+  padding: 8px 10px;
+  margin-top: 6px;
+
+  cursor: pointer;
+  font-size: 13px;
 }
 
-/*SIGNUPS PANEL */
+.admin-card button:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+/* highlight special button */
+.priority-toggle.active {
+  background: #ffc745;
+  color: #000;
+  border: none;
+}
+
+/* ================= RIGHT PANEL ================= */
+
+.admin-right {
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
 
 .admin-signups-panel {
-  margin-top: 30px;
-  padding: 20px;
   background: #111;
-  border: 1px solid #333;
+  border: 1px solid #222;
+
+  padding: 18px;
+
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
-.admin-signup-card {
-  padding: 10px;
-  border-bottom: 1px solid #222;
+.admin-signups-panel h2 {
+  margin-top: 0;
+  color: #ffc745;
 }
 
-.admin-signup-card p {
-  margin: 2px 0;
+.admin-signups-panel p {
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* individual signup entries */
+.admin-signups-panel div {
+  padding: 10px 0;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.admin-signups-panel strong {
+  display: block;
   font-size: 14px;
 }
 
-.admin-layout {
-  display: flex;
-  gap: 20px;
+/* ================= SCROLLBAR ================= */
+
+.admin-signups-panel::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* LEFT SIDE */
-.admin-main {
-  flex: 2;
-  min-width: 0;
-}
-
-/* RIGHT SIDE  */
-.admin-right {
-  flex: 3;
-  top: 20px;
-}
-
-.admin-signups-panel {
-  margin-top: 0;
-  background: #111;
-  border: 1px solid #333;
-  padding: 20px;
-  max-height: 80vh;
-  overflow-y: auto;
+.admin-signups-panel::-webkit-scrollbar-thumb {
+  background: #333;
 }
