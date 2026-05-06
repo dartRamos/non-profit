@@ -51,7 +51,7 @@ export default function Actions() {
             className={tab === "cta" ? "active" : ""}
             onClick={() => setTab("cta")}
           >
-            OAC’s Call to Actions
+            OAC’s Calls to Action
           </button>
 
           <button
