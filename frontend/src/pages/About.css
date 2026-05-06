@@ -293,7 +293,7 @@
 
 .about-section-title{
   color: black;
-  font-size: 38px;
+  font-size: clamp(24px, 3vw, 38px);
   font-weight: 600;
 }
 
@@ -309,6 +309,7 @@
 .goal-box {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
@@ -316,7 +317,7 @@
 
 /* titles */
 .goal-title {
-  font-size: 38px;
+  font-size: clamp(22px, 2.2vw, 38px);
   margin: 0;
   color: black;
   margin-bottom: 20px;
@@ -325,7 +326,7 @@
 
 /* descriptions */
 .goal-description {
-  font-size: 20px;
+  font-size: clamp(14px, 1.4vw, 20px);
   margin-top: 6px;
   color: black;
   line-height: 1.4;
