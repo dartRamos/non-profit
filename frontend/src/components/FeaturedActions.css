@@ -84,6 +84,7 @@
 
   line-height: 1.2;
   min-height: calc(1.2em * 2);
+  font-size: clamp(16px, 6vw, 32px);
 
   display: -webkit-box;
   -webkit-line-clamp: 2;

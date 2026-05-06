@@ -142,3 +142,64 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  .featured-event-card-split {
+    flex-direction: column;
+    height: auto;
+    background: #191919;
+  }
+
+  .featured-event-image {
+    width: 100%;
+    height: 200px;
+  }
+
+  .featured-event-content {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .featured-event-title {
+    font-size: 28px;
+  }
+
+  .featured-event-description {
+    font-size: 20px;
+  }
+
+  .featured-event-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .featured-events-btn {
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .featured-events-text-lines {
+    margin-top: 40px;
+    font-size: 18px;
+    gap: 12px;
+  }
+
+  .featured-events-left,
+  .featured-events-right {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    text-align: center;
+
+    margin: 0;
+    align-self: center;
+  }
+
+  .featured-events-left,
+  .featured-events-right {
+    height: auto;
+    padding: 10px;
+  }
+  
+}

@@ -44,10 +44,10 @@
   width: fit-content;
   height: auto;
 
-  padding: 10px 20px;
+  padding: 6px 12px;
   margin-bottom: 16px;
 
-  font-size: clamp(28px, 5vw, 62px);
+  font-size: clamp(18px, 5vw, 48px);
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
@@ -156,9 +156,68 @@
   flex-wrap: wrap; 
 }
 
+.social-media-links img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
 .header-image-container .donate-button {
   position: absolute;
   top: 0px;
   right: 0px;
   z-index: 10;
+}
+
+@media (max-width: 768px) {
+  
+  .header-image-container {
+    min-height: 400px !important;
+    height: 70vh !important;
+  }
+
+  .header-text {
+    width: 100%;
+  }
+
+  .line {
+    text-align: center;
+    font-size: clamp(16px, 5vw, 28px);
+    padding: 8px 10px;
+    white-space: normal;
+  }
+
+  .text-lines {
+    margin-top: 40px;
+    font-size: 18px;
+  }
+
+  .left,
+  .right,
+  .left2 {
+    width: 90%;
+    max-width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .left,
+  .right,
+  .left2 {
+    align-self: center;
+  }
+
+  .left2 {
+    margin-left: 0;
+  }
+
+  .social-media-links {
+    gap: 40px;
+  }
+
+  .social-media-links img {
+    width: 40px;
+    height: 40px;
+  }
+
 }

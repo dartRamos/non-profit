@@ -121,14 +121,6 @@ export default function Home() {
               </a>
 
               <a
-                href="https://www.reddit.com/user/OntariansAgainst/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={reddit} alt="Reddit" />
-              </a>
-
-              <a
                 href="https://x.com/OntariansAC"
                 target="_blank"
                 rel="noopener noreferrer"
