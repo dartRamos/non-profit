@@ -46,33 +46,42 @@
 
   width: min(1130px, 90%);
   margin: 80px auto;
+
+  overflow-wrap: break-word;
+  word-break: break-word;
+  box-sizing: border-box;
+
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .volunteer-form-overlay h2 {
-  font-size: 38px;
+  font-size: clamp(26px, 3vw, 38px);
 }
 
 .volunteer-form-overlay h3 {
-  font-size: 38px;
+  font-size: clamp(20px, 2.5vw, 32px);
   margin-top: 40px;
 }
 
 .volunteer-form-overlay p {
-  font-size: 20px;
+  font-size: clamp(14px, 1.6vw, 20px);
+  line-height: 1.5;
 }
 
 .volunteer-input-row {
   display: flex;
-  gap: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
 
   justify-content: center;
   width: 100%;
-  margin: 30px auto 0 auto;
+  margin-top: 30px;
 }
 
 .volunteer-input {
-  width: 232px;
-  height: 72px;
+  width: min(232px, 100%);
+  height: 64px;
 
   padding: 10px 14px;
 
@@ -81,7 +90,7 @@
 
   border: 4px solid black;
 
-  font-size: 20px;
+  font-size: clamp(16px, 1.5vw, 20px);
   font-weight: 500;
 }
 
@@ -90,8 +99,9 @@
 }
 
 .volunteer-button {
-  width: 504px;
-  height: 72px;
+  width: min(504px, 100%);
+  height: auto;
+  min-height: 64px;
 
   margin-top: 20px;
   margin-left: auto;
@@ -104,7 +114,7 @@
 
   border: 4px solid black;
 
-  font-size: 24px;
+  font-size: clamp(18px, 2vw, 24px);
   font-weight: 500;
 
   cursor: pointer;
@@ -113,13 +123,34 @@
 .discord-icon {
   display: block;
   margin: 20px auto 0 auto;
+
+  width: min(200px, 70%);
   height: auto;
-  width: 250px;
+
+  max-width: 100%;
 }
 
 @media (min-width: 1440px) {
   .volunteer-form-overlay {
     width: 1130px;
     height: 1125px;
+  }
+}
+
+@media (max-width: 600px) {
+  .volunteer-form-overlay {
+    padding: 20px;
+    margin: 40px auto;
+  }
+
+  .volunteer-input-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .volunteer-input,
+  .volunteer-button {
+    width: 100%;
+    max-width: 100%;
   }
 }

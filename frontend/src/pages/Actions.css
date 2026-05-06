@@ -36,6 +36,7 @@
 
   font-size: clamp(30px, 7vw, 62px);
   line-height: 1.1;
+  color: white;
 }
 
 .actions-tabs {
