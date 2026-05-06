@@ -4,11 +4,14 @@
 
 .events-grid {
   display: grid;
-
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
 
   align-items: stretch;
+
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* CARD */
@@ -24,6 +27,9 @@
 
   padding: 15px;
   box-sizing: border-box;
+
+  min-width: 0;
+  overflow: hidden;
 }
 
 /* TITLE */
@@ -65,6 +71,12 @@
   flex-grow: 1;
 }
 
+.event-title,
+.event-desc {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 /* BUTTON */
 .event-btn {
   margin-top: auto;
@@ -83,7 +95,8 @@
   align-items: center;
 
   width: 100%;
-  max-width: 241px;
+  max-width: 100%;
+  box-sizing: border-box;
 
   height: auto;
   min-height: 44px;
@@ -157,7 +170,7 @@
   }
 
   .event-desc {
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 7;
   }
 
   .event-btn {
