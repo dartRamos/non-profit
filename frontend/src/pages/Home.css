@@ -189,16 +189,19 @@
 
   .text-lines {
     margin-top: 40px;
-    font-size: 18px;
+    font-size: 20x;
   }
 
   .left,
   .right,
   .left2 {
-    width: 90%;
-    max-width: 100%;
     justify-content: center;
     text-align: center;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    font-size: clamp(14px, 4.5vw, 28px);
+   
   }
 
   .left,

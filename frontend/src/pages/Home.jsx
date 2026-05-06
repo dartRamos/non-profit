@@ -63,7 +63,7 @@ export default function Home() {
           <p className="left">
             Connecting people and sharing real ways to get involved
           </p>
-          <p className="right">Making change the best way we can: together</p>
+          <p className="right">Making change the best way we can; together</p>
           <p className="left2">Stay informed; stay united; stay strong</p>
         </div>
 
