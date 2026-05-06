@@ -16,8 +16,31 @@ export default function ActionGrid({
         <div className="events-grid">
           {items.length === 0 && <p>{emptyMessage}</p>}
 
-          {items.map((item) => {
+          {[...items]
+            .sort((a, b) => {
+              const aInactive = a.active === false;
+              const bInactive = b.active === false;
+
+              const aPriority = a.priority === true;
+              const bPriority = b.priority === true;
+
+              // 1. inactive always last
+              if (aInactive !== bInactive) return aInactive ? 1 : -1;
+
+              // 2. priority always first (among active items)
+              if (aPriority !== bPriority) return aPriority ? -1 : 1;
+
+              // 3. keep original order otherwise
+              return 0;
+            })
+            .map((item) => {
             const isActive = item.active !== false;
+
+            const label = !isActive
+              ? "INACTIVE"
+              : item.priority
+              ? "PRIORITY"
+              : "Learn More";
 
             return (
               <div key={item.id} className="event-card">
@@ -39,18 +62,22 @@ export default function ActionGrid({
                 {item.link ? (
                   <a
                     href={item.link}
-                    className={`event-btn ${!isActive ? "inactive" : ""}`}
+                    className={`event-btn ${!isActive ? "inactive" : ""} ${
+                      item.priority ? "priority-btn" : ""
+                    }`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {isActive ? "Learn More" : "Inactive"}
+                    {label}
                   </a>
                 ) : (
                   <Link
                     to={`${baseLink}/${item.id}`}
-                    className={`event-btn ${!isActive ? "inactive" : ""}`}
+                    className={`event-btn ${!isActive ? "inactive" : ""} ${
+                      item.priority ? "priority-btn" : ""
+                    }`}
                   >
-                    {isActive ? "Learn More" : "Inactive"}
+                    {label}
                   </Link>
                 )}
               </div>

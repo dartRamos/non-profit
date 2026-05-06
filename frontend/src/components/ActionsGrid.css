@@ -59,12 +59,15 @@
   overflow: hidden;
 
   line-height: 1.3;
-  min-height: calc(1.3em * 4);
+
+  margin-bottom: 15px;
+
+  flex-grow: 1;
 }
 
 /* BUTTON */
 .event-btn {
-  margin-top: 20px;
+  margin-top: auto;
 
   background: #ffc745;
   color: black;
@@ -118,8 +121,11 @@
 }
 
 .event-btn.inactive {
-  background: red;
-  color: white;
-  border-color: red;
-  opacity: 0.9;
+  background: #ffc745 !important;
+  color: black !important;
+}
+
+.event-content {
+  display: flex;
+  flex-direction: column;
 }

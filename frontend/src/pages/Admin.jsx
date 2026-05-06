@@ -32,6 +32,7 @@ export default function Admin() {
     image: "",
     location: "",
     active: true,
+    priority: false,
     recipientName: "",
     recipientPosition: "",
     emailTemplates: [
@@ -90,6 +91,7 @@ export default function Admin() {
       image: "",
       location: "",
       active: true,
+      priority: false,
       recipientName: "",
       recipientPosition: "",
       emailTemplates: [
@@ -520,8 +522,10 @@ export default function Admin() {
                 </button>
               </div>
 
-              {filteredActions.map((a) => (
-                <div key={a.id} className="admin-card">
+              {[...filteredActions]
+                .sort((a, b) => (b.priority === true) - (a.priority === true))
+                .map((a) => (
+                  <div key={a.id} className="admin-card">
                   <h3>{a.title}</h3>
                   <p>Type: {a.type}</p>
 
@@ -534,6 +538,7 @@ export default function Admin() {
                       setEditingAction(a);
                       setForm({
                         ...a,
+                        priority: a.priority || false,
                         emailTemplates: a.emailTemplates || [
                           {
                             subject: "",
@@ -567,6 +572,22 @@ export default function Admin() {
                   >
                     {a.active === false ? "Activate" : "Deactivate"}
                   </button>
+                    
+                  <button
+                    type="button"
+                    className={`priority-toggle ${a.priority ? "active" : ""}`}
+                    onClick={async () => {
+                      await updateAction(a.id, {
+                        ...a,
+                        priority: !a.priority,
+                      });
+
+                      load();
+                    }}
+                  >
+                    {a.priority ? "Priority: On" : "Priority: Off"}
+                  </button>
+                    
 
                   <button onClick={() => deleteAction(a.id)}>Delete</button>
                 </div>
