@@ -38,10 +38,9 @@ export default function Volunteer() {
         <img src={rectangle54} className="rectangle-54" alt="overlay" />
 
         <div className="image-fade" />
-        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
+        <DonateButton onClick={() => (window.location.href = "/donate")} />
 
         <div className="hero-center-text">JOIN US</div>
- 
       </div>
 
       <div className="container">

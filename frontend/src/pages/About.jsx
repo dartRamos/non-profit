@@ -16,11 +16,9 @@ export default function About() {
       <div className="about-hero">
         <div className="image-fade" />
 
-        {/* <DonateButton onClick={() => window.location.href = "/donate"} /> */}
+        <DonateButton onClick={() => (window.location.href = "/donate")} />
         <div className="about-hero-inner">
-
           <div className="about-hero-main">
-
             <div className="about-title-wrapper">
               <h1 className="about-title">WHO WE ARE</h1>
             </div>
@@ -29,27 +27,27 @@ export default function About() {
               <img src={logo} className="about-logo" alt="oac logo" />
 
               <div className="about-text-container">
-              <p className="about-description">
-                Many people across Ontario feel frustrated with the current
-                state of provincial politics. Whether it’s transparency,
-                accountability, or representation, there’s a growing sense that
-                a lot of us feel disconnected from the political process.
-                <br />
-                <br />
-                Ontarians Against Corruption is being built to help change that.
-                We are a centralized, accessible hub where people can learn,
-                organize, and take action together on provincial and municipal
-                issues.
-              </p>
+                <p className="about-description">
+                  Many people across Ontario feel frustrated with the current
+                  state of provincial politics. Whether it’s transparency,
+                  accountability, or representation, there’s a growing sense
+                  that a lot of us feel disconnected from the political process.
+                  <br />
+                  <br />
+                  Ontarians Against Corruption is being built to help change
+                  that. We are a centralized, accessible hub where people can
+                  learn, organize, and take action together on provincial and
+                  municipal issues.
+                </p>
 
-              <div className="text-lines-3">
-                <p className="left-3">A project built by the community</p>
-                <p className="right-3">for the community</p>
+                <div className="text-lines-3">
+                  <p className="left-3">A project built by the community</p>
+                  <p className="right-3">for the community</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
 
       {/* BODY */}
@@ -265,14 +263,18 @@ export default function About() {
             <p className="rect-4-text">
               Ultimately, the Ontarians Against Corruption is meant to be a
               community-driven initiative.
-              <br /><br />
+              <br />
+              <br />
               It only works if people participate—whether that means helping
-              moderate discussions, contributing research, managing social media,
-              organizing events, or simply staying informed and sharing information.
-              <br /><br />
-              Every movement begins with a small group of people willing to take the
-              first step.
-              <br /><br />
+              moderate discussions, contributing research, managing social
+              media, organizing events, or simply staying informed and sharing
+              information.
+              <br />
+              <br />
+              Every movement begins with a small group of people willing to take
+              the first step.
+              <br />
+              <br />
               We care about the future of Ontario and want to help build a more
               engaged civic community, and I thank you for joining us.
             </p>
@@ -280,6 +282,5 @@ export default function About() {
         </div>
       </div>
     </div>
-    
   );
 }
