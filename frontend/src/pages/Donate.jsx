@@ -7,7 +7,7 @@ import "./Donate.css";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function Donate() {
-  const GOAL_AMOUNT = 400;
+  const GOAL_AMOUNT = 200;
 
   const [selectedAmount, setSelectedAmount] = useState(null);
   const [raisedAmount, setRaisedAmount] = useState(null);
@@ -69,7 +69,7 @@ export default function Donate() {
                   </p>
 
                   <p>
-                    Our goal is to raise $400 per year to maintain and
+                    Our goal is to raise $400 every 6 months to maintain and
                     improve the platform so we can continue organizing and
                     coordinating public actions across Ontario.
                   </p>
@@ -88,7 +88,7 @@ export default function Donate() {
                   {/* GOAL */}
                   <div className="goal-section">
                     <div className="goal-header">
-                      <h3>1 Year Operating Goal</h3>
+                      <h3>6 Month Operating Goal</h3>
 
                       <span>
                         {raisedAmount === null ? "Loading..." : `$${raisedAmount} / $${GOAL_AMOUNT}`}
