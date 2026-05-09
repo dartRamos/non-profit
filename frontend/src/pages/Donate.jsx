@@ -69,7 +69,7 @@ export default function Donate() {
                   </p>
 
                   <p>
-                    Our goal is to raise $400 every 6 months to maintain and
+                    Our goal is to raise $200 every 6 months to maintain and
                     improve the platform so we can continue organizing and
                     coordinating public actions across Ontario.
                   </p>

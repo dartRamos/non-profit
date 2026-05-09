@@ -24,13 +24,10 @@ export default function ActionGrid({
               const aPriority = a.priority === true;
               const bPriority = b.priority === true;
 
-              // 1. inactive always last
               if (aInactive !== bInactive) return aInactive ? 1 : -1;
 
-              // 2. priority always first (among active items)
               if (aPriority !== bPriority) return aPriority ? -1 : 1;
 
-              // 3. keep original order otherwise
               return 0;
             })
             .map((item) => {
