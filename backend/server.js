@@ -5,6 +5,9 @@ const formData = require("form-data")
 const Mailgun = require("mailgun.js")
 const rateLimit = require("express-rate-limit")
 
+// --------------- PAYPAL -------------------
+const paypal = require("@paypal/checkout-server-sdk");
+
 // ---------------- FIREBASE ADMIN ----------------
 const admin = require("firebase-admin")
 
@@ -23,6 +26,13 @@ admin.initializeApp({
 })
 
 const db = admin.firestore()
+
+const environment = new paypal.core.SandboxEnvironment(
+  process.env.PAYPAL_CLIENT_ID,
+  process.env.PAYPAL_SECRET
+);
+
+const client = new paypal.core.PayPalHttpClient(environment);
 
 // ---------------- APP SETUP ----------------
 const app = express()
@@ -142,6 +152,20 @@ app.get("/actions/:id", async (req, res) => {
     res.status(500).json({ success: false, error: "Failed to fetch action" })
   }
 })
+
+app.get("/fundraising", async (req, res) => {
+  try {
+    const doc = await db.collection("fundraising").doc("campaign").get();
+
+    res.json({
+      success: true,
+      raised: doc.data()?.raised || 0,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Failed to fetch funding" });
+  }
+});
 
 // CREATE ACTION
 app.post("/actions", async (req, res) => {
@@ -329,9 +353,7 @@ app.post("/volunteer", async (req, res) => {
   }
 })
 
-/* =========================================================
-   📩 EMAIL (UNCHANGED)
-========================================================= */
+/* 📩 EMAIL (UNCHANGED) */
 app.post("/send-email", emailLimiter, async (req, res) => {
   try {
     const {
@@ -454,8 +476,65 @@ ${postalCode}
   }
 })
 
+/* PAYPAL */
+
+app.post("/paypal-success", async (req, res) => {
+  try {
+    const { orderID } = req.body;
+
+    if (!orderID) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing orderID",
+      });
+    }
+
+    // VERIFY PAYMENT WITH PAYPAL
+    const request = new paypal.orders.OrdersCaptureRequest(orderID);
+    
+    request.requestBody({});
+    
+    const order = await client.execute(request);
+
+    const capture =
+      order.result.purchase_units?.[0]?.payments?.captures?.[0];
+
+    const amountValue = capture?.amount?.value;
+
+    if (!amountValue) {
+      console.log("FULL PAYPAL RESPONSE:", JSON.stringify(order.result, null, 2));
+      throw new Error("Missing capture amount in PayPal response");
+    }
+
+    const amount = Number(amountValue);
+
+    // UPDATE FUNDRAISING TOTAL
+    const ref = db.collection("fundraising").doc("campaign");
+
+    await db.collection("fundraising").doc("campaign").set(
+      {
+        raised: admin.firestore.FieldValue.increment(amount),
+      },
+      { merge: true }
+    );
+
+    res.json({
+      success: true,
+      added: amount,
+    });
+  } catch (err) {
+    console.error("PAYPAL ERROR:", err);
+
+    res.status(500).json({
+      success: false,
+      error: "Payment verification failed",
+    });
+  }
+});
+
 // ---------------- START SERVER ----------------
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+

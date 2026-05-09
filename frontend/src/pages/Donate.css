@@ -1,3 +1,60 @@
+/* GOAL SECTION */
+
+.goal-section {
+  margin-bottom: 30px;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.goal-header h3 {
+  margin: 0;
+  color: white;
+  font-size: 20px;
+}
+
+.goal-header span {
+  color: #ffc745;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.goal-bar {
+  width: 100%;
+  height: 16px;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.goal-fill {
+  height: 100%;
+  background: #ffc745;
+  transition: width 0.4s ease;
+}
+
+.goal-percent {
+  margin-top: 10px;
+  color: #ffc745;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.goal-subtext {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* DONATION GRID */
+
 .donation-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -36,9 +93,35 @@
   box-sizing: border-box;
 }
 
+.custom-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .custom-input:focus {
   outline: none;
   border-color: #ffc745;
+}
+
+.donation-error {
+  color: #ff6b6b;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.donate-button {
+  grid-column: span 2;
+  padding: 20px;
+  background: #ffc745;
+  color: black;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.donate-button:hover {
+  opacity: 0.9;
 }
 
 .donate-button:disabled {
