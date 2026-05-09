@@ -229,6 +229,18 @@ export default function Admin() {
                   onChange={(e) => setForm({ ...form, tag: e.target.value })}
                 />
 
+                <input
+                  placeholder="Event Date (e.g. May 20, 2026)"
+                  value={form.date}
+                  onChange={(e) => setForm({ ...form, date: e.target.value })}
+                />
+
+                <input
+                  placeholder="Location (e.g. Queen's Park, Toronto)"
+                  value={form.location}
+                  onChange={(e) => setForm({ ...form, location: e.target.value })}
+                />
+
                 <select
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value })}

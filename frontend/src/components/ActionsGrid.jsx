@@ -48,6 +48,18 @@ export default function ActionGrid({
                   <h2 className="event-title">{item.title}</h2>
 
                   <div className="event-meta">
+                    {(item.date || item.location) && (
+                      <div className="event-info">
+                        <span className="event-date">
+                          {item.date ? item.date : "\u00A0"}
+                        </span>
+                      
+                        <span className="event-location">
+                          {item.location ? item.location : "\u00A0"}
+                        </span>
+                      </div>
+                    )}
+
                     {item.tag && <div className="event-tag">{item.tag}</div>}
                   </div>
 

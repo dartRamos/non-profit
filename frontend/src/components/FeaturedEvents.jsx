@@ -11,16 +11,6 @@ function truncate(text = "", maxLength = 140) {
   return text.slice(0, maxLength).trim() + "...";
 }
 
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("en-CA", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
 export default function FeaturedEvents({
   events = [],
   maxItems = 3,
@@ -73,7 +63,9 @@ export default function FeaturedEvents({
                   {/* bottom row */}
                   <div className="featured-event-bottom">
                     <div className="featured-event-meta-group">
-                      <p className="event-meta">{formatDate(e.date)}</p>
+                      <span className="event-date">
+                        {e.date ? e.date : "\u00A0"}
+                      </span>
 
                       <p className="event-meta">{e.location}</p>
                     </div>
