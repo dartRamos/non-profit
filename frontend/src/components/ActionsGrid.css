@@ -163,6 +163,10 @@
     opacity: 0.8;
   }
 
+  .event-card.inactive-card {
+    filter: brightness(0.6);
+  }
+
   @media (max-width: 1100px) {
     .events-grid {
       grid-template-columns: repeat(2, 1fr);

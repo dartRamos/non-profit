@@ -40,7 +40,10 @@ export default function ActionGrid({
               : "Learn More";
 
             return (
-              <div key={item.id} className="event-card">
+              <div
+                key={item.id}
+                className={`event-card ${!isActive ? "inactive-card" : ""}`}
+              >
                 <div className="event-content">
                   <h2 className="event-title">{item.title}</h2>
 
