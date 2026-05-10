@@ -363,6 +363,15 @@
   z-index: 10;
 }
 
+.about-donate-row {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+
+  box-sizing: border-box;
+}
+
 .about-foot-section {
   position: relative;
   margin-top: 60px;

@@ -13,10 +13,14 @@ export default function About() {
   return (
     <div>
       {/* HERO */}
+      <div className="about-donate-row">
+        <DonateButton onClick={() => (window.location.href = "/donate")} />
+      </div>
+
       <div className="about-hero">
+
         <div className="image-fade" />
 
-        <DonateButton onClick={() => (window.location.href = "/donate")} />
         <div className="about-hero-inner">
           <div className="about-hero-main">
             <div className="about-title-wrapper">
