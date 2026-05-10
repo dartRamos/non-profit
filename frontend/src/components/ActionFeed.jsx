@@ -13,5 +13,19 @@ export default function ActionFeed({ type }) {
     load();
   }, [type]);
 
-  return <ActionGrid items={items} baseLink="/actions" />;
+  return (
+    <ActionGrid
+      items={items}
+      baseLink="/actions"
+      sectionDescription={
+        type === "cta"
+          ? "These are collective actions created and shared by OAC."
+          : type === "email"
+          ? "These are email campaigns created and hosted by other organizers."
+          : type === "petition"
+          ? "Important external petitions to sign."
+          : ""
+      }
+    />
+  );
 }

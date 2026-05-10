@@ -9,10 +9,15 @@ export default function ActionGrid({
   items = [],
   baseLink = "/actions",
   emptyMessage = "No actions available at the moment. Please check back later!",
+  sectionDescription = "",
 }) {
   return (
     <div className="grid-section">
       <div className="grid-wrapper">
+        {sectionDescription && (
+          <p className="section-description">{sectionDescription}</p>
+        )}
+
         <div className="events-grid">
           {items.length === 0 && <p>{emptyMessage}</p>}
 

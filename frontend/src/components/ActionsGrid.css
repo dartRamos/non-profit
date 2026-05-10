@@ -167,6 +167,14 @@
     filter: brightness(0.6);
   }
 
+  .section-description {
+    color: white;
+    font-size: clamp(15px, 1.4vw, 20px);
+    line-height: 1.5;
+    margin-bottom: 28px;
+    opacity: 0.9;
+  }
+
   @media (max-width: 1100px) {
     .events-grid {
       grid-template-columns: repeat(2, 1fr);
