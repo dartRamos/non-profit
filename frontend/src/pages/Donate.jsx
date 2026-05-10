@@ -17,7 +17,7 @@ export default function Donate() {
       "https://non-profit-ta9x.onrender.com/fundraising"
     );
     const data = await res.json();
-  
+
     if (data.success) {
       setRaisedAmount(data.raised);
     }
@@ -30,6 +30,9 @@ export default function Donate() {
   const progressPercent = raisedAmount
     ? Math.min((raisedAmount / GOAL_AMOUNT) * 100, 100)
     : 0;
+
+  // CHECK IF GOAL IS MET
+  const goalReached = raisedAmount >= GOAL_AMOUNT;
 
   const heroImage = image;
 
@@ -91,7 +94,9 @@ export default function Donate() {
                       <h3>6 Month Operating Goal</h3>
 
                       <span>
-                        {raisedAmount === null ? "Loading..." : `$${raisedAmount} / $${GOAL_AMOUNT}`}
+                        {raisedAmount === null
+                          ? "Loading..."
+                          : `$${raisedAmount} / $${GOAL_AMOUNT}`}
                       </span>
                     </div>
 
@@ -113,65 +118,86 @@ export default function Donate() {
                     </p>
                   </div>
 
-                  {/* DONATION */}
-                  <h2>Select Donation Amount</h2>
+                  {/* IF GOAL REACHED */}
+                  {goalReached ? (
+                    <div className="goal-complete-message">
+                      <h2>Goal Reached!</h2>
 
-                  <div className="donation-grid">
-                    {["5", "10", "20", "50", "100"].map((amt) => (
-                      <button
-                        key={amt}
-                        className={`donation-box ${
-                          selectedAmount === amt ? "active" : ""
-                        }`}
-                        onClick={() => setSelectedAmount(amt)}
-                      >
-                        ${amt}
-                      </button>
-                    ))}
-                  </div>
+                      <p>
+                        We have officially met our 6 month donation goal.
+                        Thank you to everyone who contributed and helped keep
+                        this operation running. Your support directly helps us
+                        maintain the platform, organize actions, and continue
+                        pushing forward.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* DONATION */}
+                      <h2>Select Donation Amount</h2>
 
-                  {!selectedAmount && (
-                    <p className="donation-error">
-                      Please select an amount to continue
-                    </p>
-                  )}
+                      <div className="donation-grid">
+                        {["5", "10", "20", "50", "100"].map((amt) => (
+                          <button
+                            key={amt}
+                            className={`donation-box ${
+                              selectedAmount === amt ? "active" : ""
+                            }`}
+                            onClick={() => setSelectedAmount(amt)}
+                          >
+                            ${amt}
+                          </button>
+                        ))}
+                      </div>
 
-                  {selectedAmount && (
-                    <PayPalButtons
-                      style={{
-                        layout: "vertical",
-                        color: "gold",
-                        shape: "rect",
-                        label: "donate",
-                      }}
-                      forceReRender={[selectedAmount]}
-                      createOrder={(data, actions) => {
-                        return actions.order.create({
-                          purchase_units: [
-                            {
-                              amount: {
-                                value: selectedAmount,
-                                currency_code: "CAD",
-                              },
-                            },
-                          ],
-                        });
-                      }}
-                      onApprove={async (data, actions) => {            
-                        await fetch("https://non-profit-ta9x.onrender.com/paypal-success", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          orderID: data.orderID,
-                        }),
-                      });
+                      {!selectedAmount && (
+                        <p className="donation-error">
+                          Please select an amount to continue
+                        </p>
+                      )}
 
-                      await fetchRaisedAmount();
-                      alert("Thank you for your donation!");
-                    }}
-                    />
+                      {selectedAmount && (
+                        <PayPalButtons
+                          style={{
+                            layout: "vertical",
+                            color: "gold",
+                            shape: "rect",
+                            label: "donate",
+                          }}
+                          forceReRender={[selectedAmount]}
+                          createOrder={(data, actions) => {
+                            return actions.order.create({
+                              purchase_units: [
+                                {
+                                  amount: {
+                                    value: selectedAmount,
+                                    currency_code: "CAD",
+                                  },
+                                },
+                              ],
+                            });
+                          }}
+                          onApprove={async (data, actions) => {
+                            await fetch(
+                              "https://non-profit-ta9x.onrender.com/paypal-success",
+                              {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                  orderID: data.orderID,
+                                }),
+                              }
+                            );
+
+                            await fetchRaisedAmount();
+
+                            alert("Thank you for your donation!");
+                          }}
+                        />
+                      )}
+                    </>
                   )}
 
                 </div>
