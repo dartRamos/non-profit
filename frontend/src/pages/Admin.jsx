@@ -568,9 +568,10 @@ export default function Admin() {
                   </button>
 
                   <button
+                    className={`featured-toggle ${a.featured ? "active" : ""}`}
                     onClick={() => toggleActionFeatured(a.id, a.featured)}
                   >
-                    {a.featured ? "Unfeature" : "Feature"}
+                    {a.featured ? "Featured: On" : "Featured: Off"}
                   </button>
 
                   <button

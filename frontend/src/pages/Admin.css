@@ -290,3 +290,9 @@
 .admin-signups-panel::-webkit-scrollbar-thumb {
   background: #333;
 }
+
+.featured-toggle.active {
+  background: #ffc745;
+  color: #000;
+  border: none;
+}
