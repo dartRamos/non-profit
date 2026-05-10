@@ -535,7 +535,17 @@ export default function Admin() {
               </div>
 
               {[...filteredActions]
-                .sort((a, b) => (b.priority === true) - (a.priority === true))
+                .sort((a, b) => {
+                  const aScore =
+                    (a.priority === true ? 2 : 0) +
+                    (a.featured === true ? 1 : 0);
+                
+                  const bScore =
+                    (b.priority === true ? 2 : 0) +
+                    (b.featured === true ? 1 : 0);
+                
+                  return bScore - aScore;
+                })
                 .map((a) => (
                   <div key={a.id} className="admin-card">
                   <h3>{a.title}</h3>
