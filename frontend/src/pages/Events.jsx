@@ -49,7 +49,7 @@ export default function Events() {
           />
         ))}
 
-        <DonateButton onClick={() => (window.location.href = "/donate")} />
+        {/* <DonateButton onClick={() => (window.location.href = "/donate")} /> */}
 
         <div className="hero-center-text">GET INVOLVED</div>
       </div>
