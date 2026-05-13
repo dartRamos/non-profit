@@ -230,8 +230,8 @@ export default function Admin() {
                 />
 
                 <input
-                  placeholder="Event Date (e.g. May 20, 2026)"
-                  value={form.date}
+                  type="date"
+                  value={form.date || ""}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
                 />
 

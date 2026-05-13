@@ -25,15 +25,22 @@ export default function ActionGrid({
             .sort((a, b) => {
               const aInactive = a.active === false;
               const bInactive = b.active === false;
-
+            
+              if (aInactive !== bInactive) {
+                return aInactive ? 1 : -1;
+              }
+            
               const aPriority = a.priority === true;
               const bPriority = b.priority === true;
-
-              if (aInactive !== bInactive) return aInactive ? 1 : -1;
-
-              if (aPriority !== bPriority) return aPriority ? -1 : 1;
-
-              return 0;
+            
+              if (aPriority !== bPriority) {
+                return aPriority ? -1 : 1;
+              }
+            
+              const aDate = a.date ? new Date(a.date).getTime() : Infinity;
+              const bDate = b.date ? new Date(b.date).getTime() : Infinity;
+            
+              return aDate - bDate;
             })
             .map((item) => {
             const isActive = item.active !== false;
@@ -56,7 +63,14 @@ export default function ActionGrid({
                     {(item.date || item.location) && (
                       <div className="event-info">
                         <span className="event-date">
-                          {item.date ? item.date : "\u00A0"}
+                        {item.date
+                          ? new Date(item.date + "T00:00:00").toLocaleDateString("en-CA", {
+                              weekday: "long",
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })
+                          : "\u00A0"}
                         </span>
                       
                         <span className="event-location">
