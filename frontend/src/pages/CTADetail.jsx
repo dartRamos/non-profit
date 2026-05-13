@@ -171,29 +171,42 @@ export default function ActionDetail() {
   };
 
   function renderTemplate(template = "", form, email) {
-    const text =
+    const data =
       typeof template === "string"
-        ? template
-        : template?.body || template?.subject || "";
-
-    return text
+        ? { body: template }
+        : template || {};
+  
+    const body = (data.body || "")
       .replace(/\\n/g, "\n")
-      .replace(/__recipient_name__/g, email?.recipientName || "")
-      .replace(/__recipient_position__/g, email?.recipientPosition || "")
+      .replace(/__recipient_name__/g, data.recipientName || "")
+      .replace(/__recipient_position__/g, data.recipientPosition || "")
       .replace(/__firstName__/g, form.firstName || "")
       .replace(/__lastName__/g, form.lastName || "")
       .replace(/__email__/g, form.email || "")
       .replace(/__postalCode__/g, form.postalCode || "");
+  
+    const recipientLine = [
+      data.recipientPosition,
+      data.recipientName,
+    ]
+      .filter(Boolean)
+      .join(" ");
+  
+    return `Dear ${recipientLine || "Your MPP"},
+  
+  ${body}
+  
+  Sincerely,
+  *Your Name*
+  *Your Email*
+  *Your Postal Code*`;
   }
 
   function renderPreview(text = "") {
     return String(text)
-      .split(/\n{2,}/)
-      .map((block, i) => {
-        const cleaned = block.trim().replace(/\n/g, " ");
-
-        return <p key={i}>{cleaned}</p>;
-      });
+      .split("\n")
+      .filter((line) => line.trim() !== "")
+      .map((line, i) => <p key={i}>{line}</p>);
   }
 
   return (
