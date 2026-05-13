@@ -639,7 +639,6 @@ export default function Admin() {
                           <p>Postal Code: {s.postalCode || "N/A"}</p>
                         )}
 
-                        <p>------------------------------------</p>
                       </div>
                     );
                   })}
@@ -658,7 +657,6 @@ export default function Admin() {
               <div key={s.id}>
                 <strong>{s.name}</strong>
                 <p>{s.email}</p>
-                <p>------------------------------------</p>
               </div>
             ))}
           </div>
@@ -673,7 +671,6 @@ export default function Admin() {
               <div key={v.id}>
                 <strong>{v.name}</strong>
                 <p>{v.email}</p>
-                <p>----------------------</p>
               </div>
             ))}
           </div>
