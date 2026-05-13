@@ -71,9 +71,9 @@ export default function ActionDetail() {
   const petitionActions = ctaActions.filter((a) => a.type === "petition");
 
   const actionTabs = [
-    ...emailActions.map((a, i) => ({
+    ...emailActions.map((a) => ({
       type: "email",
-      label: `Email ${i + 1}`,
+      label: a.recipientName?.trim() || "Your MPP",
       data: a,
     })),
     ...petitionActions.map((a, i) => ({
@@ -277,7 +277,7 @@ export default function ActionDetail() {
                           <div className="email-preview">
                             <h3>
                               {petitionActions.length > 0
-                                ? "Email Preview and Petition"
+                                ? "Email Preview and Links"
                                 : "Email Preview"}
                             </h3>
 
@@ -307,9 +307,7 @@ export default function ActionDetail() {
                                   }
                                 >
                                   {tab.type === "email"
-                                    ? `Email ${
-                                        emailActions.length > 1 ? i + 1 : ""
-                                      }`
+                                    ? tab.label
                                     : petitionActions.length > 1
                                     ? `Petition ${i - emailActions.length + 1}`
                                     : "Petition"}
