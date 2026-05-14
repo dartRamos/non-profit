@@ -129,7 +129,6 @@ export default function ActionDetail() {
     }
   
     try {
-      await signupForAction(id, form);
 
       const templates = emailActions.map((a) => ({
         subject: a.subject || "",
@@ -156,6 +155,8 @@ export default function ActionDetail() {
         mppEmail: form.mppEmail,
       });
 
+      await signupForAction(id, form);
+      
       setSubmitted(true);
 
       setAction((prev) => ({
