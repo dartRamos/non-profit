@@ -7,7 +7,7 @@ import "./Donate.css";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function Donate() {
-  const GOAL_AMOUNT = 200;
+  const GOAL_AMOUNT = 682.50;
 
   const [selectedAmount, setSelectedAmount] = useState(null);
   const [raisedAmount, setRaisedAmount] = useState(null);
@@ -31,7 +31,6 @@ export default function Donate() {
     ? Math.min((raisedAmount / GOAL_AMOUNT) * 100, 100)
     : 0;
 
-  // CHECK IF GOAL IS MET
   const goalReached = raisedAmount >= GOAL_AMOUNT;
 
   const heroImage = image;
@@ -72,9 +71,19 @@ export default function Donate() {
                   </p>
 
                   <p>
-                    Our goal is to raise $200 every 6 months to maintain and
+                    Our goal is to raise $682.50 every 6 months to maintain and
                     improve the platform so we can continue organizing and
                     coordinating public actions across Ontario.
+                  </p>
+
+                  <p style={{ color: "#ffc745" }}>
+                    The monthly costs for running the platform are approximately:
+                    <br/>
+                    Mailgun (email service): $103/month
+                    <br/>
+                    Render (hosting): $9.60/month
+                    <br/>
+                    URL domain: $1.10/month
                   </p>
 
                   <p>

@@ -116,3 +116,7 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+.monthly-cost-breakdown{
+  color: #ffc745;
+}
