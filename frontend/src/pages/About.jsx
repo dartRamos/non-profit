@@ -14,7 +14,7 @@ export default function About() {
     <div>
       {/* HERO */}
       <div className="about-donate-row">
-        {/* <DonateButton onClick={() => (window.location.href = "/donate")} /> */}
+        <DonateButton onClick={() => (window.location.href = "/donate")} />
       </div>
 
       <div className="about-hero">
