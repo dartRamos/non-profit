@@ -5,10 +5,10 @@ const formData = require("form-data");
 const Mailgun = require("mailgun.js");
 const rateLimit = require("express-rate-limit");
 
-// --------------- PAYPAL -------------------
+// PAYPAL
 const paypal = require("@paypal/checkout-server-sdk");
 
-// ---------------- FIREBASE ADMIN ----------------
+// FIREBASE ADMIN
 const admin = require("firebase-admin");
 
 let serviceAccount;
@@ -32,7 +32,7 @@ const environment = new paypal.core.LiveEnvironment(
 
 const client = new paypal.core.PayPalHttpClient(environment);
 
-// ---------------- APP SETUP ----------------
+// APP SETUP
 const app = express();
 
 app.use(express.json());
@@ -60,7 +60,7 @@ app.use(
   })
 );
 
-// ---------------- MAILGUN ----------------
+// MAILGUN
 const mailgun = new Mailgun(formData);
 
 const mg = mailgun.client({
@@ -68,7 +68,7 @@ const mg = mailgun.client({
   key: process.env.MAILGUN_API_KEY,
 });
 
-// ---------------- RATE LIMIT ----------------
+// RATE LIMIT
 const emailLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
@@ -78,7 +78,7 @@ const emailLimiter = rateLimit({
   },
 });
 
-// ---------------- HEALTH ----------------
+// HEALTH 
 app.get("/", (req, res) => {
   res.send("Backend is running");
 });
@@ -260,7 +260,7 @@ app.get("/actions/:id/signups", async (req, res) => {
   }
 });
 
-/* SIGNUP ACTION - UPDATED (NO USER DATA STORED) */
+//  SIGNUP ACTION 
 app.post("/signup-action", async (req, res) => {
   try {
     const { actionId, firstName, lastName, email } = req.body;
@@ -271,7 +271,6 @@ app.post("/signup-action", async (req, res) => {
 
     const signupId = `${actionId}_${email.toLowerCase()}`;
 
-    // ❌ NO LONGER SAVING USER DATA
     await db.collection("action_signups").doc(signupId).set({
       actionId,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -294,7 +293,7 @@ app.post("/signup-action", async (req, res) => {
   }
 });
 
-/* 📩 SUBSCRIBERS */
+// 📩 SUBSCRIBERS
 app.get("/subscribers", async (req, res) => {
   const snapshot = await db.collection("subscribers").get();
 
@@ -327,7 +326,7 @@ app.post("/subscribe", async (req, res) => {
   }
 });
 
-/* 🤝 VOLUNTEERS */
+// VOLUNTEERS
 app.get("/volunteers", async (req, res) => {
   const snapshot = await db.collection("volunteer_signups").get();
 
@@ -360,7 +359,7 @@ app.post("/volunteer", async (req, res) => {
   }
 });
 
-/* 📩 EMAIL (UNCHANGED) */
+// EMAIL (UNCHANGED)
 app.post("/send-email", emailLimiter, async (req, res) => {
   try {
     const {
@@ -483,7 +482,7 @@ ${postalCode}
   }
 });
 
-/* PAYPAL */
+// PAYPAL
 
 app.post("/paypal-success", async (req, res) => {
   try {
@@ -539,7 +538,7 @@ app.post("/paypal-success", async (req, res) => {
   }
 });
 
-// ---------------- START SERVER ----------------
+// START SERVER
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
