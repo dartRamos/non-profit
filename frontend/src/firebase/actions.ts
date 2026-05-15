@@ -131,6 +131,18 @@ export const signupForAction = async (actionId: string, data: ActionSignup) => {
   return json
 }
 
+// GET SIGNUPS
+export const getActionSignups = async (actionId: string) => {
+  const res = await fetch(`${API}/actions/${actionId}/signups`)
+  const json = await res.json()
+
+  if (!json.success) {
+    throw new Error(json.error || "Failed to fetch signups")
+  }
+
+  return json.signups
+}
+
 // GET FEATURED ACTIONS BY TYPES
 export const getFeaturedActionsByTypes = async (types: string[]) => {
   const res = await fetch(
@@ -144,4 +156,27 @@ export const getFeaturedActionsByTypes = async (types: string[]) => {
   }
 
   return json.actions
+}
+
+// EXPORT CSV
+export const exportActionSignupsCSV = async (actionId: string) => {
+  const data = await getActionSignups(actionId)
+
+  const headers = ["firstName", "lastName", "email", "postalCode", "createdAt"]
+
+  const rows = data.map((s: any) =>
+    headers.map((h) => JSON.stringify(s[h] || "")).join(",")
+  )
+
+  const csv = [headers.join(","), ...rows].join("\n")
+
+  const blob = new Blob([csv], { type: "text/csv" })
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `action-${actionId}-signups.csv`
+  a.click()
+
+  URL.revokeObjectURL(url)
 }

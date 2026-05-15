@@ -88,56 +88,23 @@ app.get("/", (req, res) => {
 // GET ALL ACTIONS
 app.get("/actions", async (req, res) => {
   try {
+    const snapshot = await db.collection("actions").orderBy("createdAt", "desc").get()
 
-    res.set("Cache-Control", "public, max-age=1800")
+    const actions = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
 
-    const snapshot = await db
-      .collection("actions")
-      .where("active", "==", true)
-      .orderBy("createdAt", "desc")
-      .get()
-
-      const actions = snapshot.docs.map(doc => {
-        const data = doc.data()
-      
-        return {
-          id: doc.id,
-          title: data.title,
-          subtitle: data.subtitle,
-          type: data.type,
-          image: data.image,
-          tag: data.tag,
-          date: data.date,
-          location: data.location,
-          active: data.active,
-          featured: data.featured,
-          priority: data.priority,
-          stats: data.stats,
-          createdAt: data.createdAt,
-        }
-      })
-
-    res.json({
-      success: true,
-      actions
-    })
-
+    res.json({ success: true, actions })
   } catch (err) {
     console.error(err)
-
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch actions"
-    })
+    res.status(500).json({ success: false, error: "Failed to fetch actions" })
   }
 })
 
 // GET FEATURED ACTIONS
 app.get("/actions/featured", async (req, res) => {
   try {
-
-    res.set("Cache-Control", "public, max-age=1800")
-
     const types = (req.query.types || "")
       .split(",")
       .map(t => t.trim())
@@ -156,25 +123,10 @@ app.get("/actions/featured", async (req, res) => {
       .where("type", "in", types)
       .get()
 
-      const actions = snapshot.docs.map(doc => {
-        const data = doc.data()
-      
-        return {
-          id: doc.id,
-          title: data.title,
-          subtitle: data.subtitle,
-          type: data.type,
-          image: data.image,
-          tag: data.tag,
-          date: data.date,
-          location: data.location,
-          active: data.active,
-          featured: data.featured,
-          priority: data.priority,
-          stats: data.stats,
-          createdAt: data.createdAt,
-        }
-      })
+    const actions = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
 
     res.json({ success: true, actions })
   } catch (err) {
@@ -189,9 +141,6 @@ app.get("/actions/featured", async (req, res) => {
 // GET SINGLE ACTION
 app.get("/actions/:id", async (req, res) => {
   try {
-
-    res.set("Cache-Control", "public, max-age=1800")
-
     const docRef = await db.collection("actions").doc(req.params.id).get()
 
     if (!docRef.exists) {
@@ -206,9 +155,6 @@ app.get("/actions/:id", async (req, res) => {
 
 app.get("/fundraising", async (req, res) => {
   try {
-
-    res.set("Cache-Control", "public, max-age=600")
-
     const doc = await db.collection("fundraising").doc("campaign").get();
 
     res.json({
@@ -285,17 +231,44 @@ app.patch("/actions/:id/featured", async (req, res) => {
   }
 })
 
-/* SIGNUP ACTION */
+// GET SIGNUPS
+app.get("/actions/:id/signups", async (req, res) => {
+  try {
+    const snapshot = await db
+      .collection("action_signups")
+      .where("actionId", "==", req.params.id)
+      .get()
+
+    const signups = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+
+    res.json({ success: true, signups })
+  } catch (err) {
+    res.status(500).json({ success: false, error: "Failed to fetch signups" })
+  }
+})
+
+/* SIGNUP ACTION*/
 app.post("/signup-action", async (req, res) => {
   try {
-    const { actionId } = req.body
+    const { actionId, firstName, lastName, email, postalCode } = req.body
 
-    if (!actionId) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing actionId",
-      })
+    if (!actionId || !firstName || !lastName || !email) {
+      return res.status(400).json({ success: false, error: "Missing fields" })
     }
+
+    const signupId = `${actionId}_${email.toLowerCase()}`
+
+    await db.collection("action_signups").doc(signupId).set({
+      actionId,
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      postalCode: postalCode || "",
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    })
 
     const actionRef = db.collection("actions").doc(actionId)
 
@@ -310,12 +283,7 @@ app.post("/signup-action", async (req, res) => {
 
     res.json({ success: true })
   } catch (err) {
-    console.error(err)
-
-    res.status(500).json({
-      success: false,
-      error: "Signup failed",
-    })
+    res.status(500).json({ success: false, error: "Signup failed" })
   }
 })
 
@@ -540,24 +508,8 @@ app.post("/paypal-success", async (req, res) => {
 
     const amount = Number(amountValue);
 
-    const donationRef = db.collection("paypal_orders").doc(orderID)
-
-    const existing = await donationRef.get()
-
-    if (existing.exists) {
-      return res.status(400).json({
-        success: false,
-        error: "Order already processed",
-      })
-    }
-
-    await donationRef.set({
-      processedAt: admin.firestore.FieldValue.serverTimestamp(),
-      amount,
-    })
-
-
     // UPDATE FUNDRAISING TOTAL
+    const ref = db.collection("fundraising").doc("campaign");
 
     await db.collection("fundraising").doc("campaign").set(
       {
