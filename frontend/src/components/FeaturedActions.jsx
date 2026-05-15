@@ -48,7 +48,7 @@ export default function FeaturedActions({
 
                   {a.tag && <div className="featured-actions-tag">{a.tag}</div>}
 
-                  <p>{truncate(a.shortdescription || a.description, 300)}</p>
+                  <p>{truncate(a.description, 300)}</p>
                 </div>
 
                 {a.link ? (
