@@ -263,35 +263,26 @@ app.get("/actions/:id/signups", async (req, res) => {
 //  SIGNUP ACTION 
 app.post("/signup-action", async (req, res) => {
   try {
-    const { actionId, firstName, lastName, email } = req.body;
+    const { actionId } = req.body
 
-    if (!actionId || !firstName || !lastName || !email) {
-      return res.status(400).json({ success: false, error: "Missing fields" });
+    if (!actionId) {
+      return res.status(400).json({ success: false, error: "Missing actionId" })
     }
 
-    const signupId = `${actionId}_${email.toLowerCase()}`;
-
-    await db.collection("action_signups").doc(signupId).set({
-      actionId,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-
-    const actionRef = db.collection("actions").doc(actionId);
-
-    await actionRef.set(
+    await db.collection("actions").doc(actionId).set(
       {
         stats: {
           signups: admin.firestore.FieldValue.increment(1),
         },
       },
       { merge: true }
-    );
+    )
 
-    res.json({ success: true });
+    res.json({ success: true })
   } catch (err) {
-    res.status(500).json({ success: false, error: "Signup failed" });
+    res.status(500).json({ success: false, error: "Signup failed" })
   }
-});
+})
 
 // 📩 SUBSCRIBERS
 app.get("/subscribers", async (req, res) => {
