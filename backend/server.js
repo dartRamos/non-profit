@@ -284,7 +284,7 @@ app.post("/signup-action", async (req, res) => {
   }
 })
 
-// 📩 SUBSCRIBERS
+// SUBSCRIBERS
 app.get("/subscribers", async (req, res) => {
   const snapshot = await db.collection("subscribers").get();
 

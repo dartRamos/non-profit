@@ -7,7 +7,6 @@ import {
   updateAction,
   deleteAction,
   toggleActionFeatured,
-  getActionSignups,
 } from "../firebase/actions";
 import { API } from "../config/api"
 
@@ -46,15 +45,6 @@ export default function Admin() {
     ],
     ctaActions: [],
   });
-
-  const [selectedActionSignups, setSelectedActionSignups] = useState([]);
-  const [viewingActionId, setViewingActionId] = useState(null);
-
-  const loadSignups = async (actionId) => {
-    const data = await getActionSignups(actionId);
-    setSelectedActionSignups(data);
-    setViewingActionId(actionId);
-  };
 
   const load = async () => {
     const [actionsRes, subRes, volRes] = await Promise.all([
@@ -551,10 +541,6 @@ export default function Admin() {
                   <h3>{a.title}</h3>
                   <p>Type: {a.type}</p>
 
-                  <button onClick={() => loadSignups(a.id)}>
-                    View Signups
-                  </button>
-
                   <button
                     onClick={() => {
                       setEditingAction(a);
@@ -615,35 +601,6 @@ export default function Admin() {
                   <button onClick={() => deleteAction(a.id)}>Delete</button>
                 </div>
               ))}
-            </div>
-
-            <div className="admin-right">
-              {viewingActionId && (
-                <div className="admin-signups-panel">
-                  <h2>Signups</h2>
-                  <p>Total: {selectedActionSignups.length}</p>
-
-                  {selectedActionSignups.map((s) => {
-                    const actionType = actions.find(
-                      (a) => a.id === viewingActionId
-                    )?.type;
-
-                    return (
-                      <div key={s.id}>
-                        <strong>
-                          {s.firstName} {s.lastName}
-                        </strong>
-                        <p>{s.email}</p>
-
-                        {actionType === "petition" && (
-                          <p>Postal Code: {s.postalCode || "N/A"}</p>
-                        )}
-
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
             </div>
           </div>
         )}
