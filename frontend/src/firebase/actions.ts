@@ -1,6 +1,6 @@
 import { API } from "../config/api"
 
-// ---------------- TYPES ----------------
+// TYPES
 
 export type ActionSignup = {
   firstName: string
@@ -10,8 +10,6 @@ export type ActionSignup = {
   consent: true
   comment?: string
 }
-
-// ---------------- ACTIONS ----------------
 
 // GET ALL ACTIONS
 export const getActions = async () => {

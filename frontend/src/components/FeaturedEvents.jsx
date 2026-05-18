@@ -40,7 +40,7 @@ export default function FeaturedEvents({
         <div className="featured-actions-wrapper">
           <h2 className="featured-actions-title">{title}</h2>
 
-          {/* ✅ STACKED LAYOUT */}
+          {/* STACKED LAYOUT */}
           <div className="featured-events-column">
             {filtered.map((e, index) => (
               <div key={e.id} className="featured-event-card-split">

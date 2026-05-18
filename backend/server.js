@@ -32,7 +32,6 @@ const environment = new paypal.core.LiveEnvironment(
 
 const client = new paypal.core.PayPalHttpClient(environment);
 
-// APP SETUP
 const app = express();
 
 app.use(express.json());
@@ -82,8 +81,6 @@ const emailLimiter = rateLimit({
 app.get("/", (req, res) => {
   res.send("Backend is running");
 });
-
-/*ACTIONS CRUD*/
 
 // GET ALL ACTIONS
 app.get("/actions", async (req, res) => {
@@ -350,7 +347,7 @@ app.post("/volunteer", async (req, res) => {
   }
 });
 
-// EMAIL (UNCHANGED)
+// EMAIL
 app.post("/send-email", emailLimiter, async (req, res) => {
   try {
     const {

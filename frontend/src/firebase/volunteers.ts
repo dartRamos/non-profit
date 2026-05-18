@@ -11,7 +11,7 @@ import {
 
 const volunteerRef = collection(db, "volunteer_signups")
 
-// ---------------- SIGN UP ----------------
+// SIGN UP
 
 export const signupVolunteer = async (data: {
   name: string
@@ -34,7 +34,7 @@ export const signupVolunteer = async (data: {
   return json
 }
 
-// ---------------- GET VOLUNTEERS ----------------
+// GET VOLUNTEERS
 
 export const getVolunteers = async () => {
   const res = await fetch("https://non-profit-ta9x.onrender.com/volunteers")

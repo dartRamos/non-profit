@@ -6,7 +6,7 @@
   font-family: Arial, sans-serif;
 }
 
-/* ================= SIDEBAR ================= */
+/* SIDEBAR */
 
 .admin-sidebar {
   width: 240px;
@@ -44,7 +44,7 @@
   color: #fff;
 }
 
-/* ================= MAIN AREA ================= */
+/* MAIN AREA */
 
 .admin-content {
   flex: 1;
@@ -64,7 +64,7 @@
   min-width: 0;
 }
 
-/* ================= HEADINGS ================= */
+/* HEADINGS */
 
 .admin-main h1 {
   font-size: 28px;
@@ -91,7 +91,7 @@
   color: #fff;
 }
 
-/* ================= FORM ================= */
+/* FORM */
 
 .admin-form {
   background: #141414;
@@ -150,7 +150,7 @@
   opacity: 0.9;
 }
 
-/* ================= EMAIL / CTA BUILDER ================= */
+/* EMAIL / CTA BUILDER */
 
 .email-builder {
   background: #0f0f0f;
@@ -192,7 +192,7 @@
   border-color: #555;
 }
 
-/* ================= ACTION CARDS ================= */
+/* ACTION CARDS */
 
 .admin-card {
   background: #121212;
@@ -242,7 +242,7 @@
   border: none;
 }
 
-/* ================= RIGHT PANEL ================= */
+/* RIGHT PANEL */
 
 .admin-right {
   position: sticky;
@@ -281,7 +281,7 @@
   font-size: 14px;
 }
 
-/* ================= SCROLLBAR ================= */
+/* SCROLLBAR */
 
 .admin-signups-panel::-webkit-scrollbar {
   width: 6px;

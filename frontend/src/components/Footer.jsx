@@ -122,7 +122,7 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* META ROW (NOW OUTSIDE) */}
+            {/* META ROW */}
             <div className="footer-meta-row">
               <p>© 2026 Ontarians Against Corruption</p>
               <p className="privacy-text">Privacy Policy</p>
