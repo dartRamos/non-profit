@@ -110,7 +110,7 @@ export default function Footer() {
 
                 <div className="footer-social-column">
                   <div className="social-grid">
-                    <a href="https://discord.gg/7d6nJJp7A2"><img src={discord} /></a>
+                    <a href="https://discord.gg/CBNqJ67fzg"><img src={discord} /></a>
                     <a href="https://www.instagram.com/ontariansagainstcorruption/"><img src={instagram} /></a>
                     <a href="https://x.com/OntariansAC"><img src={twitter} /></a>
                     <a href="https://www.tiktok.com/@ontarians.against"><img src={tiktok} /></a>

@@ -99,7 +99,7 @@ export default function Volunteer() {
               <p>We look forward to hearing from you!</p>
 
               <a
-                href="https://discord.gg/7d6nJJp7A2"
+                href="https://discord.gg/CBNqJ67fzg"
                 target="_blank"
                 rel="noopener noreferrer"
               >
