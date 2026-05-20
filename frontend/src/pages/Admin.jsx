@@ -691,15 +691,13 @@ export default function Admin() {
 
                 <div className="petition-signup-list">
                   {petitionSignups.map((s) => (
-                    <div key={s.id} className="petition-signup-card">
-                      <div className="petition-signup-name">
+                    <div key={s.id}>
+                      <strong>
                         {s.firstName} {s.lastName}
-                      </div>
+                      </strong>
 
-                      <div className="petition-signup-info">
-                        <span>{s.email}</span>
-                        <span>{s.postalCode}</span>
-                      </div>
+                      <p className="petition-line">{s.email}</p>
+                      <p className="petition-line">{s.postalCode}</p>
                     </div>
                   ))}
                 </div>

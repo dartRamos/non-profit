@@ -399,3 +399,8 @@
   color: #aaa;
   font-size: 13px;
 }
+
+.petition-line {
+  margin: 0;
+  line-height: 1.3;
+}
