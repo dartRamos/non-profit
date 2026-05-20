@@ -7,7 +7,10 @@ import {
   updateAction,
   deleteAction,
   toggleActionFeatured,
+  getActionSignups,
+  exportActionSignupsCSV 
 } from "../firebase/actions";
+
 import { API } from "../config/api"
 
 export default function Admin() {
@@ -19,6 +22,8 @@ export default function Admin() {
   const [subscribers, setSubscribers] = useState([]);
   const [actionFilter, setActionFilter] = useState("all");
   const [volunteers, setVolunteers] = useState([]);
+  const [selectedPetition, setSelectedPetition] = useState(null);
+  const [petitionSignups, setPetitionSignups] = useState([]);
 
   const [form, setForm] = useState({
     title: "",
@@ -114,6 +119,10 @@ export default function Admin() {
     return false;
   });
 
+  const petitionActions = actions.filter(
+    (a) => a.type === "petition"
+  );
+
   const handleSubmit = async () => {
     const cleanedCTA = (form.ctaActions || [])
       .filter((a) => a.type === "email" || a.type === "petition")
@@ -163,6 +172,17 @@ export default function Admin() {
     load();
   };
 
+  const loadPetitionSignups = async (actionId) => {
+    try {
+      const signups = await getActionSignups(actionId);
+      setPetitionSignups(signups || []);
+      setSelectedPetition(actionId);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to load petition signups");
+    }
+  };
+
   return (
     <div className="admin-wrapper">
       <div className="admin-sidebar">
@@ -171,6 +191,7 @@ export default function Admin() {
         <button onClick={() => setTab("events")}>Events</button>
         <button onClick={() => setTab("subscribers")}>Subscribers</button>
         <button onClick={() => setTab("volunteers")}>Volunteers</button>
+        <button onClick={() => setTab("petition-signups")}>Petition Signups</button>
       </div>
 
       <div className="admin-content">
@@ -632,6 +653,61 @@ export default function Admin() {
             ))}
           </div>
         )}
+
+        {tab === "petition-signups" && (
+          <div className="admin-signups-panel">
+            <div className="petition-signup-header">
+              <h2>Petition Signups</h2>
+
+              {selectedPetition && (
+                <button
+                  className="export-btn"
+                  onClick={() => exportActionSignupsCSV(selectedPetition)}
+                >
+                  Export CSV
+                </button>
+              )}
+            </div>
+
+            <div className="petition-selector">
+              {petitionActions.map((a) => (
+                <button
+                  key={a.id}
+                  className={`petition-tab ${
+                    selectedPetition === a.id ? "active" : ""
+                  }`}
+                  onClick={() => loadPetitionSignups(a.id)}
+                >
+                  {a.title}
+                </button>
+              ))}
+            </div>
+
+            {selectedPetition && (
+              <>
+                <div className="petition-signup-count">
+                  Total Signups: {petitionSignups.length}
+                </div>
+
+                <div className="petition-signup-list">
+                  {petitionSignups.map((s) => (
+                    <div key={s.id} className="petition-signup-card">
+                      <div className="petition-signup-name">
+                        {s.firstName} {s.lastName}
+                      </div>
+
+                      <div className="petition-signup-info">
+                        <span>{s.email}</span>
+                        <span>{s.postalCode}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
       </div>
     </div>
   );

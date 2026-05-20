@@ -296,3 +296,106 @@
   color: #000;
   border: none;
 }
+
+/* PETITION SIGNUPS */
+
+.petition-signup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.petition-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+.petition-tab {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #ccc;
+
+  padding: 10px 14px;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  font-size: 13px;
+}
+
+.petition-tab:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+.petition-tab.active {
+  background: #ffc745;
+  color: #000;
+  border: none;
+}
+
+.export-btn {
+  background: #ffc745;
+  color: #000;
+
+  border: none;
+  padding: 10px 14px;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.export-btn:hover {
+  opacity: 0.9;
+}
+
+.petition-signup-count {
+  color: #aaa;
+  font-size: 14px;
+
+  margin-bottom: 16px;
+}
+
+.petition-signup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.petition-signup-card {
+  background: #141414;
+  border: 1px solid #222;
+
+  padding: 16px;
+
+  transition: border-color 0.2s ease;
+}
+
+.petition-signup-card:hover {
+  border-color: #444;
+}
+
+.petition-signup-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+
+  margin-bottom: 10px;
+}
+
+.petition-signup-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  color: #aaa;
+  font-size: 13px;
+}

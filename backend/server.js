@@ -242,7 +242,7 @@ app.patch("/actions/:id/featured", async (req, res) => {
 app.get("/actions/:id/signups", async (req, res) => {
   try {
     const snapshot = await db
-      .collection("action_signups")
+      .collection("petition_signups")
       .where("actionId", "==", req.params.id)
       .get();
 
@@ -251,21 +251,51 @@ app.get("/actions/:id/signups", async (req, res) => {
       ...doc.data(),
     }));
 
-    res.json({ success: true, signups });
+    res.json({
+      success: true,
+      signups,
+    });
   } catch (err) {
-    res.status(500).json({ success: false, error: "Failed to fetch signups" });
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch signups",
+    });
   }
 });
 
 //  SIGNUP ACTION 
 app.post("/signup-action", async (req, res) => {
   try {
-    const { actionId } = req.body
+    const {
+      actionId,
+      firstName,
+      lastName,
+      email,
+      postalCode,
+    } = req.body;
 
     if (!actionId) {
-      return res.status(400).json({ success: false, error: "Missing actionId" })
+      return res.status(400).json({
+        success: false,
+        error: "Missing actionId",
+      });
     }
 
+    // GET ACTION
+    const actionRef = await db.collection("actions").doc(actionId).get();
+
+    if (!actionRef.exists) {
+      return res.status(404).json({
+        success: false,
+        error: "Action not found",
+      });
+    }
+
+    const actionData = actionRef.data();
+
+    // ALWAYS INCREMENT SIGNUP COUNT
     await db.collection("actions").doc(actionId).set(
       {
         stats: {
@@ -273,13 +303,52 @@ app.post("/signup-action", async (req, res) => {
         },
       },
       { merge: true }
-    )
+    );
 
-    res.json({ success: true })
+    // ONLY SAVE PERSONAL DATA FOR PETITIONS
+    if (actionData.type === "petition") {
+      if (!firstName || !lastName || !email || !postalCode) {
+        return res.status(400).json({
+          success: false,
+          error: "Missing signup fields",
+        });
+      }
+
+      const existingSignup = await db
+        .collection("petition_signups")
+        .where("actionId", "==", actionId)
+        .where("email", "==", email.trim().toLowerCase())
+        .limit(1)
+        .get();
+
+      if (!existingSignup.empty) {
+        return res.status(400).json({
+          success: false,
+          error: "You already signed this petition",
+        });
+      }
+
+      await db.collection("petition_signups").add({
+        actionId,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim().toLowerCase(),
+        postalCode: postalCode.trim().toUpperCase(),
+
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+
+    res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ success: false, error: "Signup failed" })
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      error: "Signup failed",
+    });
   }
-})
+});
 
 // SUBSCRIBERS
 app.get("/subscribers", async (req, res) => {

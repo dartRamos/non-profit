@@ -1,7 +1,7 @@
 import { useState } from "react";
 import image from "../assets/event3.png";
 import rectangle from "../assets/rectangle91.png";
-import { signupForAction } from "../firebase/actions";
+import { signPetition } from "../firebase/petitionSignups";
 import DonateButton from "../components/DonateButton.jsx";
 
 import "./PetitionDetail.css";
@@ -28,7 +28,10 @@ export default function PetitionDetail({ action }) {
     }
 
     try {
-      await signupForAction(action.id, form);
+      await signPetition({
+        actionId: action.id,
+        ...form,
+      });
 
       setLocalSignups((prev) => prev + 1);
 
