@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import "./ActionsGrid.css";
 
-function formatDescription(text = "") {
-  return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+function cleanDescription(text = "") {
+  return String(text)
+    .replace(/<[^>]*>/g, "") // remove HTML tags
+    .replace(/\*\*(.*?)\*\*/g, "$1") // remove markdown bold
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1"); // remove markdown links
 }
 
 export default function ActionGrid({
@@ -25,95 +28,111 @@ export default function ActionGrid({
             .sort((a, b) => {
               const aInactive = a.active === false;
               const bInactive = b.active === false;
-            
+
               if (aInactive !== bInactive) {
                 return aInactive ? 1 : -1;
               }
-            
+
               const aPriority = a.priority === true;
               const bPriority = b.priority === true;
-            
+
               if (aPriority !== bPriority) {
                 return aPriority ? -1 : 1;
               }
-            
-              const aDate = a.date ? new Date(a.date).getTime() : Infinity;
-              const bDate = b.date ? new Date(b.date).getTime() : Infinity;
-            
+
+              const aDate = a.date
+                ? new Date(a.date).getTime()
+                : Infinity;
+
+              const bDate = b.date
+                ? new Date(b.date).getTime()
+                : Infinity;
+
               return aDate - bDate;
             })
             .map((item) => {
-            const isActive = item.active !== false;
+              const isActive = item.active !== false;
 
-            const label = !isActive
-              ? "INACTIVE"
-              : item.priority
-              ? "PRIORITY"
-              : "Learn More";
+              const label = !isActive
+                ? "INACTIVE"
+                : item.priority
+                ? "PRIORITY"
+                : "Learn More";
 
-            return (
-              <div
-                key={item.id}
-                className={`event-card ${!isActive ? "inactive-card" : ""}`}
-              >
-                <div className="event-content">
-                  <h2 className="event-title">{item.title}</h2>
+              return (
+                <div
+                  key={item.id}
+                  className={`event-card ${
+                    !isActive ? "inactive-card" : ""
+                  }`}
+                >
+                  <div className="event-content">
+                    <h2 className="event-title">{item.title}</h2>
 
-                  <div className="event-meta">
-                    {(item.date || item.location) && (
-                      <div className="event-info">
-                        <span className="event-date">
-                        {item.date
-                          ? new Date(item.date + "T00:00:00").toLocaleDateString("en-CA", {
-                              weekday: "long",
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            })
-                          : "\u00A0"}
-                        </span>
-                      
-                        <span className="event-location">
-                          {item.location ? item.location : "\u00A0"}
-                        </span>
-                      </div>
-                    )}
+                    <div className="event-meta">
+                      {(item.date || item.location) && (
+                        <div className="event-info">
+                          <span className="event-date">
+                            {item.date
+                              ? new Date(
+                                  item.date + "T00:00:00"
+                                ).toLocaleDateString("en-CA", {
+                                  weekday: "long",
+                                  month: "long",
+                                  day: "numeric",
+                                  year: "numeric",
+                                })
+                              : "\u00A0"}
+                          </span>
 
-                    {item.tag && <div className="event-tag">{item.tag}</div>}
+                          <span className="event-location">
+                            {item.location
+                              ? item.location
+                              : "\u00A0"}
+                          </span>
+                        </div>
+                      )}
+
+                      {item.tag && (
+                        <div className="event-tag">
+                          {item.tag}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="event-desc">
+                      {cleanDescription(item.description)}
+                    </div>
                   </div>
 
-                  <div
-                    className="event-desc"
-                    dangerouslySetInnerHTML={{
-                      __html: formatDescription(item.description),
-                    }}
-                  />
+                  {item.link ? (
+                    <a
+                      href={item.link}
+                      className={`event-btn ${
+                        !isActive ? "inactive" : ""
+                      } ${
+                        item.priority ? "priority-btn" : ""
+                      }`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={`${baseLink}/${item.id}`}
+                      className={`event-btn ${
+                        !isActive ? "inactive" : ""
+                      } ${
+                        item.priority ? "priority-btn" : ""
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  )}
                 </div>
-
-                {item.link ? (
-                  <a
-                    href={item.link}
-                    className={`event-btn ${!isActive ? "inactive" : ""} ${
-                      item.priority ? "priority-btn" : ""
-                    }`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {label}
-                  </a>
-                ) : (
-                  <Link
-                    to={`${baseLink}/${item.id}`}
-                    className={`event-btn ${!isActive ? "inactive" : ""} ${
-                      item.priority ? "priority-btn" : ""
-                    }`}
-                  >
-                    {label}
-                  </Link>
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </div>

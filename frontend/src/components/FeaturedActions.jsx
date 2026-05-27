@@ -1,10 +1,21 @@
 import "./FeaturedActions.css";
 import rectangleCTA from "../assets/rectangle79.png";
 import { Link } from "react-router-dom";
+
+function cleanText(text = "") {
+  return String(text)
+    .replace(/<[^>]*>/g, "") // remove HTML
+    .replace(/\*\*(.*?)\*\*/g, "$1") // remove markdown bold
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1"); // remove markdown links
+}
+
 function truncate(text = "", maxLength = 140) {
-  if (!text) return "";
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength).trim() + "...";
+  const cleaned = cleanText(text);
+
+  if (!cleaned) return "";
+  if (cleaned.length <= maxLength) return cleaned;
+
+  return cleaned.slice(0, maxLength).trim() + "...";
 }
 
 const ACTION_TYPES = ["cta", "petition", "email"];
@@ -37,6 +48,7 @@ export default function FeaturedActions({
       <div className="featured-actions-overlay">
         <div className="image-fade-2" />
         <div className="image-fade" />
+
         <div className="featured-actions-wrapper">
           <h2 className="featured-actions-title">{title}</h2>
 
@@ -46,7 +58,11 @@ export default function FeaturedActions({
                 <div className="featured-actions-info">
                   <h3>{a.title}</h3>
 
-                  {a.tag && <div className="featured-actions-tag">{a.tag}</div>}
+                  {a.tag && (
+                    <div className="featured-actions-tag">
+                      {a.tag}
+                    </div>
+                  )}
 
                   <p>{truncate(a.description, 300)}</p>
                 </div>
@@ -77,7 +93,10 @@ export default function FeaturedActions({
           </div>
 
           <div className="featured-actions-see-all-container">
-            <Link to={seeAllLink} className="featured-actions-see-all-btn">
+            <Link
+              to={seeAllLink}
+              className="featured-actions-see-all-btn"
+            >
               See All
             </Link>
           </div>
