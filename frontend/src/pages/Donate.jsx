@@ -7,7 +7,7 @@ import "./Donate.css";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function Donate() {
-  const GOAL_AMOUNT = 682.50;
+  const GOAL_AMOUNT = 2000;
 
   const [selectedAmount, setSelectedAmount] = useState(null);
   const [raisedAmount, setRaisedAmount] = useState(null);
@@ -71,19 +71,21 @@ export default function Donate() {
                   </p>
 
                   <p>
-                    Our goal is to raise $682.50 every 6 months to maintain and
+                    Our goal is to raise $2000 per year to maintain and
                     improve the platform so we can continue organizing and
                     coordinating public actions across Ontario.
                   </p>
 
                   <p style={{ color: "#ffc745" }}>
-                    The monthly costs for running the platform are approximately:
+                    The yearly costs for running the platform are approximately:
                     <br/>
-                    Mailgun (email service): $103/month
+                    Email Service: $1,236/year
                     <br/>
-                    Render (hosting): $9.60/month
+                    Website Backend: $115.20/year
                     <br/>
-                    URL domain: $1.10/month
+                    Domain: $13.20/year
+                    <br/>
+                    Google Alternative Workspace: $252/year
                   </p>
 
                   <p>
@@ -100,7 +102,7 @@ export default function Donate() {
                   {/* GOAL */}
                   <div className="goal-section">
                     <div className="goal-header">
-                      <h3>6 Month Operating Goal</h3>
+                      <h3>Yearly Operating Goal</h3>
 
                       <span>
                         {raisedAmount === null
